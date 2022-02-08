@@ -1,0 +1,19 @@
+use videowebsite;
+
+CREATE TABLE IF NOT EXISTS `vw_user` (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `username` varchar(100) NOT NULL DEFAULT '' COMMENT '用户名',
+  `password` varchar(100) NOT NULL DEFAULT '' COMMENT '密码',
+  `nickname` varchar(100) NOT NULL DEFAULT 'stranger' COMMENT '昵称',
+  `gender` varchar(20) DEFAULT NULL COMMENT '性别',
+  `email` varchar(100) DEFAULT NULL COMMENT '电子邮箱',
+  `status` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '用户身份(1:普通用户,2:管理员)',
+  `State` int(11) unsigned DEFAULT NULL COMMENT '状态信息',
+  `create_at` timestamp NULL DEFAULT NULL COMMENT '创建时间',
+  `update_at` timestamp NULL DEFAULT NULL COMMENT '更新时间',
+  `delete_at` timestamp NULL DEFAULT NULL COMMENT '删除时间',
+  PRIMARY KEY (`id`),
+  KEY `username` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=250 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统用户表';
+
+INSERT INTO vw_user(username, password, nickname, status) VALUES('admin', 'admin', 'admin', '2');
