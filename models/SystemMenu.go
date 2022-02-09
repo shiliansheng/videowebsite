@@ -1,11 +1,10 @@
 package models
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/astaxie/beego/orm"
-    _ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 // 菜单
@@ -18,7 +17,7 @@ type SystemMenu struct {
 	Sort     string    `json:"sort"`
 	Target   string    `json:"target"`
 	Remark   string    `json:"remark"`
-	State   int       `json:"state"`
+	State    int       `json:"state"`
 	CreateAt time.Time `json:"create_at";orm:"auto_now;type(datetime)"`
 }
 
@@ -62,7 +61,7 @@ func (m *SystemMenu) GetSystemInit() SystemInit {
 	// logo
 	systemInit.LogoInfo.Title = "LAYUI MINI"
 	systemInit.LogoInfo.Image = "../static/img/logo.png"
-	fmt.Println("INIT END.........")
+	// fmt.Println("INIT END.........")
 	// 菜单
 	systemInit.MenuInfo = m.GetMenuList()
 
@@ -74,8 +73,8 @@ func (m *SystemMenu) GetMenuList() []*MenuTreeList {
 	o := orm.NewOrm()
 	var menuList []SystemMenu
 	_, _ = o.QueryTable(m.TableName()).Filter("state", 1).OrderBy("-sort").All(&menuList)
-    fmt.Println("QUERY END.........")
-    fmt.Println(menuList)
+	// fmt.Println("QUERY END.........")
+	// fmt.Println(menuList)
 	return m.buildMenuChild(0, menuList)
 }
 

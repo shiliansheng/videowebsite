@@ -17,6 +17,8 @@
 - [x] 将菜单目录转接数据库
 - [x] 规范数据库格式
 
+- [x] 增加用户列表展示
+
 
 # app tree
 ```
@@ -54,6 +56,7 @@ root
  |——— views
  |   |——— admin
  |   |   |——— index.html
+ |   |   |——— userlist.html
  |   |   └─── welcome.html
  |   |——— video
  |   |   |——— index.html

@@ -3,6 +3,8 @@ package controllers
 import (
 	"strings"
 	"videowebsite/models"
+
+	"github.com/astaxie/beego"
 )
 
 type AdminController struct {
@@ -43,14 +45,28 @@ func (c *AdminController) Login() {
 
 func (c *AdminController) Index() {
 	user, _ := c.GetSession("user").(models.User)
-	c.Data["UserName"] = user.Username
+	c.Data["UserName"] = user.Nickname
 	c.TplName = "admin/index.html"
 }
 
 func (c *AdminController) Welcome() {
-	userCount, _ := c.Orm.QueryTable(new(models.User).TableName()).Count()
-	c.Data["UserCount"] = userCount
+	c.Data["UserCount"] = new(models.User).GetUserCount()
 	c.Data["VideoCount"] = 123
 	c.Data["ViewCount"] = 456
 	c.TplName = "admin/welcome.html"
+}
+
+func (c *AdminController) Userlist() {
+	c.Data["Httpport"] = beego.AppConfig.String("httpport")
+	c.TplName = "admin/userlist.html"
+}
+
+func (c *AdminController) Getuserlist() {
+	userListJson, err := new(models.User).GetUserListJson()
+	if err != nil {
+		c.Ctx.WriteString("<script>alert('获取用户列表失败');window.history.go(-1);</script>")
+		return
+	}
+	c.Data["json"] = userListJson
+	c.ServeJSON()
 }

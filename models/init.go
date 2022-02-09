@@ -9,6 +9,8 @@ import (
 	"github.com/astaxie/beego/orm"
 )
 
+var Orm orm.Ormer
+
 func init() {
 	dbhost := beego.AppConfig.String("dbhost")
 	dbport := beego.AppConfig.String("dbport")
@@ -25,6 +27,8 @@ func init() {
 	}
 	orm.RegisterModel(new(SystemMenu), new(User))
 	// orm.RunSyncdb("default", false, true)
+
+	Orm = orm.NewOrm()
 
 	systemInit := new(SystemMenu).GetSystemInit()
 	menuJson, _ := json.Marshal(systemInit)
