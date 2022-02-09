@@ -1,7 +1,9 @@
 package models
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -23,6 +25,15 @@ func init() {
 	}
 	orm.RegisterModel(new(SystemMenu), new(User))
 	// orm.RunSyncdb("default", false, true)
+
+	systemInit := new(SystemMenu).GetSystemInit()
+	menuJson, _ := json.Marshal(systemInit)
+	path := beego.AppConfig.String("menuinitpath")
+	file, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0666)
+	if err != nil {
+		fmt.Println("open file failed:", err)
+	}
+	file.Write(menuJson)
 }
 
 //返回带前缀的表名

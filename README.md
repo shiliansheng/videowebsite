@@ -3,7 +3,7 @@ video website by layuimini and beego
 
 ```
 上传
-git pull --tags origin main
+git push origin main
 
 同步
 

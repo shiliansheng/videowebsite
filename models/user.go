@@ -13,6 +13,7 @@ type User struct {
 	// LastTime time.Time
 	// LastIp   string
 	State    int8      // 用户状态
+	Remark   string    // 备注
 	CreateAt time.Time // 创建时间
 	UpdateAt time.Time // 更新时间
 	DeleteAt time.Time // 删除时间

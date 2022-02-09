@@ -7,7 +7,6 @@ import (
 )
 
 func init() {
-	beego.Router("/index.html", &controllers.IndexController{})
-	beego.Router("/", &controllers.IndexController{})
 	beego.AutoRouter(&controllers.AdminController{})
 }
+//http://localhost:8088/admin/index.html#/page/welcome.html

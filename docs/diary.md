@@ -10,13 +10,22 @@
 - [x] 上传到github上
 - [ ] 完善session
 
+## 2020.2.9
+
+- [x] 完善session
+- [x] 完善接收`admin/index`下的ifrmae
+- [x] 将菜单目录转接数据库
+- [x] 规范数据库格式
+
+
 # app tree
 ```
 root
  |——— conf
  |   └─── app.conf
  |——— controllers
- |   |─── baseController.go
+ |   |─── admin.go
+ |   |─── base.go
  |   └─── 
  |——— db
  |   |——— init.sql
@@ -27,9 +36,10 @@ root
  |   |——— note.md
  |   └─── problems.md
  |——— models
+ |   |——— init.go
  |   |——— 
- |   |——— 
- |   └─── 
+ |   |——— SystemMenu.go
+ |   └─── user.go
  |——— routers
  |   └─── router.go
  |——— static
@@ -38,13 +48,13 @@ root
  |   |——— img
  |   |——— lib
  |   └─── js
- |——— models
+ |——— utils
  |   |——— functions.go
  |   └─── 
  |——— views
  |   |——— admin
  |   |   |——— index.html
- |   |   └─── 
+ |   |   └─── welcome.html
  |   |——— video
  |   |   |——— index.html
  |   |   └─── 

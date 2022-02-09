@@ -18,7 +18,7 @@ type SystemMenu struct {
 	Sort     string    `json:"sort"`
 	Target   string    `json:"target"`
 	Remark   string    `json:"remark"`
-	Status   int       `json:"status"`
+	State   int       `json:"state"`
 	CreateAt time.Time `json:"create_at";orm:"auto_now;type(datetime)"`
 }
 
@@ -57,7 +57,7 @@ func (m *SystemMenu) GetSystemInit() SystemInit {
 
 	// 首页
 	systemInit.HomeInfo.Title = "首页"
-	systemInit.HomeInfo.Href = "../views/page/welcome.html"
+	systemInit.HomeInfo.Href = "welcome.html"
 
 	// logo
 	systemInit.LogoInfo.Title = "LAYUI MINI"
@@ -73,7 +73,7 @@ func (m *SystemMenu) GetSystemInit() SystemInit {
 func (m *SystemMenu) GetMenuList() []*MenuTreeList {
 	o := orm.NewOrm()
 	var menuList []SystemMenu
-	_, _ = o.QueryTable(m.TableName()).Filter("status", 1).OrderBy("-sort").All(&menuList)
+	_, _ = o.QueryTable(m.TableName()).Filter("state", 1).OrderBy("-sort").All(&menuList)
     fmt.Println("QUERY END.........")
     fmt.Println(menuList)
 	return m.buildMenuChild(0, menuList)
@@ -85,12 +85,12 @@ func (m *SystemMenu) buildMenuChild(pid int, menuList []SystemMenu) []*MenuTreeL
 	for _, v := range menuList {
 		if pid == v.Pid {
 			node := &MenuTreeList{
-				Id:     v.Id,
+				//Id:     v.Id,
 				Title:  v.Title,
 				Icon:   v.Icon,
 				Href:   v.Href,
 				Target: v.Target,
-				Pid:    v.Pid,
+				//Pid:    v.Pid,
 			}
 			child := v.buildMenuChild(v.Id, menuList)
 			if len(child) != 0 {

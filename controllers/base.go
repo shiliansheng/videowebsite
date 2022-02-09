@@ -18,13 +18,10 @@ func (c *BaseController) Prepare() {
 	controllerName, actionName := c.GetControllerAndAction()
 	c.ControllerName, c.ActionName = controllerName, actionName
 	c.Orm = orm.NewOrm()
-
 	if strings.ToLower(c.ControllerName) == "admincontroller" && strings.ToLower(c.ActionName) != "login" {
 		if c.GetSession("user") == nil {
-			c.History("未登录", "/views/page/login.html")
+			c.History("未登录", "login.html")
 		}
-	} else {
-
 	}
 }
 

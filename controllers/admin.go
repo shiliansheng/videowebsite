@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"strings"
 	"videowebsite/models"
 )
@@ -24,7 +23,6 @@ func (c *AdminController) Login() {
 		password := c.GetString("password")
 		user := models.User{Username: username}
 		c.Orm.Read(&user, "username")
-		fmt.Println(user)
 		if user.Password == "" {
 			c.History("账户不存在", "")
 		}
@@ -37,12 +35,22 @@ func (c *AdminController) Login() {
 		} else {
 			aimUrl = ""
 		}
-		// c.SetSession("user", user)
+		c.SetSession("user", user)
 		c.History("登录成功", aimUrl)
 	}
 	c.TplName = "login.html"
 }
 
 func (c *AdminController) Index() {
+	user, _ := c.GetSession("user").(models.User)
+	c.Data["UserName"] = user.Username
 	c.TplName = "admin/index.html"
+}
+
+func (c *AdminController) Welcome() {
+	userCount, _ := c.Orm.QueryTable(new(models.User).TableName()).Count()
+	c.Data["UserCount"] = userCount
+	c.Data["VideoCount"] = 123
+	c.Data["ViewCount"] = 456
+	c.TplName = "admin/welcome.html"
 }
