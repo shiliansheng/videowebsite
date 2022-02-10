@@ -14,7 +14,7 @@ type User struct {
 	Nickname string `json:"nickname"` // 昵称
 	Sex      string `json:"sex"`      // 性别
 	Email    string `json:"email"`    // e-mail
-	Status   int    `json:"status"`   // 用户身份
+	Status   string `json:"status"`   // 用户身份
 	// LastTime time.Time
 	// LastIp   string
 	State    int8      `json:"state"`    // 用户状态

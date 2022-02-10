@@ -20,8 +20,9 @@
 - [x] 增加用户列表展示
 
 ## 2022.2.10
-- [ ] [添加用户表单正则验证](https://www.cnblogs.com/raphael1982/p/8012634.html)
-- [ ] 
+- [x] [添加用户表单正则验证](https://www.cnblogs.com/raphael1982/p/8012634.html)
+- [x] 添加用户页面前后端交互(ajax)
+- [x] 修改用户模板部署
 
 # app tree
 ```
@@ -53,6 +54,10 @@ root
  |   |——— img
  |   |——— lib
  |   └─── js
+ |       └─── admin
+ |           |——— useradd.js
+ |           |——— useredit.js
+ |           └─── js
  |——— utils
  |   |——— functions.go
  |   └─── 

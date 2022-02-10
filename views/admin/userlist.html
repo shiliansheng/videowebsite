@@ -90,9 +90,9 @@
                 {field: 'nickname', width: 120, title: '昵称'},
                 {field: 'sex', width: 75, title: '性别', sort: true},
                 {field: 'email', width: 180, title: '电子邮箱'},
-                {field: 'status', width: 80, title: '身份'},
-                {field: 'createat', width: 180, title: '添加时间', sort: true},
-                {field: 'remark', width: 180, title: '备注'},
+                {field: 'status', width: 90, title: '身份'},
+                {field: 'createat', width: 200, title: '添加时间', sort: true},
+                {field: 'remark', width: 200, title: '备注'},
                 {title: '操作', minWidth: 100, toolbar: '#currentTableBar', align: "center"}
             ]],
             limits: [10, 15, 20, 25, 50, 100],
@@ -133,7 +133,7 @@
                     maxmin:true,
                     shadeClose: true,
                     area: ['100%', '100%'],
-                    content: 'admin/useradd.html',
+                    content: 'useradd.html',
                 });
                 $(window).on("resize", function () {
                     layer.full(index);
