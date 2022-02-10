@@ -2,7 +2,7 @@ use videowebsite;
 DROP TABLE IF EXISTS `vw_user`;
 CREATE TABLE `vw_user` (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
-  `username` varchar(100) NOT NULL DEFAULT '' COMMENT '用户名',
+  `username` varchar(100) NOT NULL UNIQUE DEFAULT '' COMMENT '用户名',
   `password` varchar(100) NOT NULL DEFAULT '' COMMENT '密码',
   `nickname` varchar(100) NOT NULL DEFAULT 'stranger' COMMENT '昵称',
   `sex` varchar(20) DEFAULT '保密' COMMENT '性别',
@@ -13,8 +13,7 @@ CREATE TABLE `vw_user` (
   `create_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `delete_at` timestamp NULL DEFAULT NULL COMMENT '删除时间',
-  PRIMARY KEY (`id`),
-  KEY `username` (`username`)
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统用户表';
 
 INSERT INTO vw_user(username, password, nickname, status) VALUES('admin', 'admin', 'admin', '2');

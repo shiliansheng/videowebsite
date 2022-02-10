@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"strconv"
 	"strings"
 	"videowebsite/models"
 
@@ -45,7 +46,7 @@ func (c *AdminController) Login() {
 
 func (c *AdminController) Index() {
 	user, _ := c.GetSession("user").(models.User)
-	c.Data["UserName"] = user.Nickname
+	c.Data["Nickname"] = user.Nickname
 	c.TplName = "admin/index.html"
 }
 
@@ -69,4 +70,19 @@ func (c *AdminController) Getuserlist() {
 	}
 	c.Data["json"] = userListJson
 	c.ServeJSON()
+}
+
+func (c *AdminController) Useradd() {
+	user := models.User{}
+	user.Username = c.Input().Get("username")
+	user.Password = c.Input().Get("password")
+	user.Nickname = c.Input().Get("nickname")
+	user.Sex = c.Input().Get("sex")
+	user.Email = c.Input().Get("email")
+	user.Status, _ = strconv.Atoi(c.Input().Get("status"))
+	user.Remark = c.Input().Get("remark")
+
+	if user.Nickname == "" {
+		user.Nickname = "stranger"
+	}
 }
