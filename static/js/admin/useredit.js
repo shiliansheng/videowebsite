@@ -34,11 +34,10 @@ layui.use(["form"], function () {
 	//监听提交
 	form.on("submit(saveBtn)", function (data) {
 		$.ajax({
-			url: "useradd.html",
+			url: "useredit.html",
 			type: "post",
 			data: data.field,
 			success: function (res) {
-				console.log(res);
 				if (res.code == 0) {
                     // layer.msg("添加用户成功");
 					layer.close(layer.index);

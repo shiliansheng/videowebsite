@@ -17,3 +17,24 @@ CREATE TABLE `vw_user` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统用户表';
 
 INSERT INTO vw_user(username, password, nickname, status) VALUES('admin', 'admin', 'admin', '管理员');
+
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test10', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test11', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test12', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test13', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test14', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test15', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test16', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test17', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test18', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test19', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test20', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test21', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test22', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test23', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test24', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test25', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test26', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test27', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test28', '123456', '123456', '普通用户');
+INSERT INTO vw_user(username, password, nickname, status) VALUES('test29', '123456', '123456', '普通用户');

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"strconv"
 	"strings"
 	"time"
 	"videowebsite/models"
@@ -63,7 +64,10 @@ func (c *AdminController) Userlist() {
 }
 
 func (c *AdminController) Getuserlist() {
-	userListJson, err := new(models.User).GetUserListJson()
+	// fmt.Println(c.Input())
+	page, _ := strconv.Atoi(c.Input().Get("page"))
+	limit, _ := strconv.Atoi(c.Input().Get("limit"))
+	userListJson, err := new(models.User).GetUserListJson(page, limit)
 	if err != nil {
 		c.Ctx.WriteString("<script>alert('获取用户列表失败');window.history.go(-1);</script>")
 		return
@@ -78,13 +82,7 @@ func (c *AdminController) Useradd() {
 		user := models.User{
 			Username: c.Input().Get("username"),
 			Password: c.Input().Get("password"),
-			Nickname: func() string {
-				name := c.Input().Get("nickname")
-				if name == "" {
-					name = "stranger"
-				}
-				return name
-			}(),
+			Nickname: func() string { name := c.GetNickname(c.Input().Get("nickname")); return name }(),
 			Sex:      c.Input().Get("sex"),
 			Email:    c.Input().Get("email"),
 			Status:   c.Input().Get("status"),
@@ -106,5 +104,76 @@ func (c *AdminController) Useradd() {
 	}
 	if ext == "html" {
 		c.TplName = "admin/useradd.html"
+	}
+}
+
+func (c *AdminController) Useredit() {
+	if c.Ctx.Request.Method == "GET" {
+		c.Data["ID"] = c.Input().Get("id")
+		c.Data["Username"] = c.Input().Get("username")
+		c.Data["Password"] = c.Input().Get("password")
+		c.Data["Nickname"] = c.Input().Get("nickname")
+		checkmap := map[string]int{
+			"保密": 0, "男": 1, "女": 2, "普通用户": 0, "管理员": 1,
+		}
+		checkarr := [3][]string{
+			{"checked", " ", " "}, {" ", "checked", " "}, {" ", " ", "checked"},
+		}
+		index := checkmap[c.Input().Get("sex")]
+		c.Data["Sex_Secret"] = checkarr[index][0]
+		c.Data["Sex_Male"] = checkarr[index][1]
+		c.Data["Sex_Female"] = checkarr[index][2]
+		c.Data["Email"] = c.Input().Get("email")
+
+		index = checkmap[c.Input().Get("status")]
+		c.Data["Status_Common"] = checkarr[index][0]
+		c.Data["Status_Manager"] = checkarr[index][1]
+		c.Data["Remark"] = c.Input().Get("remark")
+	} else if c.Ctx.Request.Method == "POST" {
+		user := models.User{Id: func() int { ret, _ := strconv.Atoi(c.Input().Get("id")); return ret }()}
+		c.Orm.Read(&user)
+		user.Username = c.Input().Get("username")
+		user.Password = c.Input().Get("password")
+		user.Nickname = func() string { name := c.GetNickname(c.Input().Get("nickname")); return name }()
+		user.Sex = c.Input().Get("sex")
+		user.Email = c.Input().Get("email")
+		user.Status = c.Input().Get("status")
+		user.Remark = c.Input().Get("remark")
+		user.UpdateAt = time.Now()
+		resp := make(map[string]interface{})
+		_, err := c.Orm.Update(&user)
+		if err != nil {
+			resp["code"] = "202"
+			resp["msg"] = "update user failed\n" + err.Error()
+		} else {
+			resp["code"] = "0"
+			resp["msg"] = "update user success"
+		}
+		c.Data["json"] = resp
+		c.ServeJSON()
+	}
+	c.TplName = "admin/useredit.html"
+}
+
+func (c *AdminController) Userdel() {
+	if c.Ctx.Request.Method == "POST" {
+		id, _ := strconv.Atoi(c.Input().Get("id"))
+		resp := make(map[string]interface{})
+		if id == c.GetSession("user").(models.User).Id {
+			resp["code"] = "203"
+			resp["msg"] = "不能删除自己"
+		} else {
+			user := models.User{Id: id}
+			_, err := c.Orm.Delete(&user)
+			if err != nil {
+				resp["code"] = "204"
+				resp["msg"] = "删除用户失败\n" + err.Error()
+			} else {
+				resp["code"] = "0"
+				resp["msg"] = "删除用户成功"
+			}
+		}
+		c.Data["json"] = resp
+		c.ServeJSON()
 	}
 }

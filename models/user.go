@@ -40,25 +40,26 @@ func (m *User) GetUserCount() int {
 	return int(userCount)
 }
 
-func (m *User) GetUserListJson() (UserJson, error) {
+func (m *User) GetUserListJson(page, limit int) (UserJson, error) {
 	userJson := UserJson{
 		Code: 0,
 		Msg:  "",
 	}
-	userlist, err := getUserList()
+	userlist, err := getUserList(page, limit)
 	if err != nil {
 		userJson.Code = MSG_FAIL
 		userJson.Msg = "获取用户列表失败"
 		return userJson, err
 	}
-	userJson.Count = len(userlist)
+	userJson.Count = m.GetUserCount()
 	userJson.Data = userlist
 	return userJson, nil
 
 }
 
-func getUserList() ([]User, error) {
+func getUserList(page, limit int) ([]User, error) {
 	var userList []User
-	_, err := Orm.QueryTable(new(User).TableName()).All(&userList)
+	//_, err := Orm.QueryTable(new(User).TableName()).All(&userList)
+	_, err := Orm.QueryTable(new(User).TableName()).Limit(limit, limit * (page - 1)).All(&userList)
 	return userList, err
 }

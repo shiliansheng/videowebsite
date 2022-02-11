@@ -38,7 +38,6 @@ layui.use(["form"], function () {
 			type: "post",
 			data: data.field,
 			success: function (res) {
-				console.log(res);
 				if (res.code == 0) {
                     // layer.msg("添加用户成功");
 					layer.close(layer.index);

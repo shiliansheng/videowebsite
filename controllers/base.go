@@ -33,3 +33,10 @@ func (c *BaseController) History(msg string, url string) {
 		c.Redirect(url, 302)
 	}
 }
+
+func (c *BaseController) GetNickname(name string) string {
+	if name == "" {
+		name = "stranger"
+	}
+	return name
+}
