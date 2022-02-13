@@ -14,6 +14,12 @@ type BaseController struct {
 	ActionName     string
 }
 
+type Responser struct {
+	Code int `json:"code"`
+	Msg string `json:"msg"`
+	
+}
+
 func (c *BaseController) Prepare() {
 	controllerName, actionName := c.GetControllerAndAction()
 	c.ControllerName, c.ActionName = controllerName, actionName

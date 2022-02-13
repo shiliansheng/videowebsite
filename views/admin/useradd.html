@@ -16,7 +16,7 @@
 </head>
 <body>
 <!-- <form class="layui-form layuimini-form" method="post" name="addform"> -->
-<div class="layui-form layuimini-form">
+<div class="layui-form layuimini-form layui-col-md6 layui-col-sm10">
     <div class="layui-form-item">
         <label class="layui-form-label required">用户名</label>
         <div class="layui-input-block">
@@ -27,14 +27,14 @@
     <div class="layui-form-item">
         <label class="layui-form-label required">密码</label>
         <div class="layui-input-block">
-            <input type="password" name="password" lay-verify="required|verifyPass" lay-reqtext="密码不能为空" placeholder="请输入密码" value="123456" class="layui-input" onfocus="this.select();">
+            <input type="password" name="password" lay-verify="required|verifyPassword" lay-reqtext="密码不能为空" placeholder="请输入密码" value="123456" class="layui-input" onfocus="this.select();">
             <tip>默认为123456，最少6位，只能由 字母，数字，下划线，减号，特殊符号 组成</tip>
         </div>
     </div>
     <div class="layui-form-item">
 	    <label class="layui-form-label required">确认密码</label>
 	    <div class="layui-input-block">
-	        <input type="password" lay-verify="required|confirmPass" lay-reqtext="确认密码不能为空" placeholder="请重新输入密码" value="123456" class="layui-input" onfocus="this.select();">
+	        <input type="password" lay-verify="required|confirmPassword" lay-reqtext="确认密码不能为空" placeholder="请重新输入密码" value="123456" class="layui-input" onfocus="this.select();">
 	    </div>
     </div>
     <div class="layui-form-item">
@@ -62,7 +62,7 @@
         <label class="layui-form-label">身份</label>
         <div class="layui-input-block">
             <input type="radio" name="status" value="普通用户" title="普通用户" checked="">
-            <input type="radio" name="status" value="管理员" title="管理员">
+            <input type="radio" name="status" value="管理员" title="管理员" {{.Disabled}}>
         </div>
     </div>
     <div class="layui-form-item layui-form-text">

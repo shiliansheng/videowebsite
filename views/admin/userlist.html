@@ -19,27 +19,38 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户姓名</label>
+                            <label class="layui-form-label">用户名</label>
                             <div class="layui-input-inline">
                                 <input type="text" name="username" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
+                            <label class="layui-form-label">用户昵称</label>
+                            <div class="layui-input-inline">
+                                <input type="text" name="nickname" autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-inline">
                             <label class="layui-form-label">用户性别</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="sex" autocomplete="off" class="layui-input">
+                                <!-- <input type="text" name="sex" autocomplete="off" class="layui-input"> -->
+                                <select name="sex" id="sexSelect">
+                                    <option value="" selected>选择用户性别</option>
+                                    <option value="保密">保密</option>
+                                    <option value="男">男</option>
+                                    <option value="女">女</option>
+                                </select>
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户城市</label>
+                            <label class="layui-form-label">用户身份</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="city" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户职业</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="classify" autocomplete="off" class="layui-input">
+                                <!-- <input type="text" name="status" autocomplete="off" class="layui-input"> -->
+                                <select name="status" id="statusSelect">
+                                    <option value="" selected>选择用户身份</option>
+                                    <option value="普通用户">普通用户</option>
+                                    <option value="管理员">管理员</option>
+                                </select>
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -67,187 +78,7 @@
     </div>
 </div>
 <script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
-<script>
-layui.use(["form", "table"], function () {
-    var $ = layui.jquery,
-        form = layui.form,
-        table = layui.table;
-    table.render({
-        elem: "#currentTableId",
-        url: "http://localhost:{{.Httpport}}/admin/getuserlist.json",
-        toolbar: "#toolbarDemo",
-        defaultToolbar: [
-            "filter",
-            "exports",
-            "print",
-            {
-                title: "提示",
-                layEvent: "LAYTABLE_TIPS",
-                icon: "layui-icon-tips",
-            },
-        ],
-        cols: [
-            [
-                { type: "checkbox", width: 50 },
-                { field: "id", width: 60, title: "ID", sort: true },
-                { field: "username", width: 120, title: "用户名", sort: true },
-                { field: "password", width: 120, title: "密码" },
-                { field: "nickname", width: 120, title: "昵称" },
-                { field: "sex", width: 75, title: "性别", sort: true },
-                { field: "email", width: 200, title: "电子邮箱" },
-                { field: "status", width: 90, title: "身份" },
-                { field: "createat", width: 200, title: "添加时间", sort: true},
-                { field: "remark", minWidth: 200, title: "备注" },
-                { title: "操作", width: 120, toolbar: "#currentTableBar", fixed: 'right'},
-            ],
-        ],
-        limits: [10, 15, 20, 25, 50, 100],
-        limit: 10,
-        page: true,
-        request: {
-            page: 'page' //页码的参数名称，默认：page
-            ,limit: 'limit' //每页数据量的参数名，默认：limit
-        }
-        /*,parseData: function(res){ //将原始数据解析成 table 组件所规定的数据
-            return {
-            "code": res.code, //解析接口状态
-            "msg": res.msg, //解析提示文本
-            "count": res.datasize, //解析数据长度
-            "data": res.rows.item //解析数据列表
-            };
-        }
-        */
-        //skin: "line",
-    });
-
-    // 监听搜索操作
-    form.on("submit(data-search-btn)", function (data) {
-        var result = JSON.stringify(data.field);
-        layer.alert(result, {
-            title: "最终的搜索信息",
-        });
-
-        //执行搜索重载
-        table.reload(
-            "currentTableId",
-            {
-                page: {
-                    curr: 1,
-                },
-                where: {
-                    searchParams: result,
-                },
-            },
-            "data"
-        );
-
-        return false;
-    });
-
-    /**
-        * toolbar监听事件
-        */
-    table.on("toolbar(currentTableFilter)", function (obj) {
-        if (obj.event === "add") {
-            // 监听添加操作
-            var index = layer.open({
-                title: "添加用户",
-                type: 2,
-                shade: 0.2,
-                maxmin: true,
-                shadeClose: true,
-                area: ["100%", "100%"],
-                content: "useradd.html",
-            });
-            $(window).on("resize", function () {
-                layer.full(index);
-            });
-        } else if (obj.event === "delete") {
-            // 监听删除操作
-            var checkStatus = table.checkStatus("currentTableId"),
-                data = checkStatus.data;
-            layer.alert(JSON.stringify(data));
-        }
-    });
-
-    //监听表格复选框选择
-    table.on("checkbox(currentTableFilter)", function (obj) {
-        console.log(obj);
-    });
-    /**
-        * param 将要转为URL参数字符串的对象
-        * key URL参数字符串的前缀
-        * encode true/false 是否进行URL编码,默认为true
-        * return URL参数字符串
-        */
-    var urlEncode = function (param, key, encode) {
-        if (param == null) return "";
-        var paramStr = "";
-        var t = typeof param;
-        if (t == "string" || t == "number" || t == "boolean") {
-            paramStr +=
-                "&" +
-                key +
-                "=" +
-                (encode == null || encode ? encodeURIComponent(param) : param);
-        } else {
-            for (var i in param) {
-                var k =
-                    key == null
-                        ? i
-                        : key +
-                        (param instanceof Array ? "[" + i + "]" : "." + i);
-                paramStr += urlEncode(param[i], k, encode);
-            }
-        }
-        return paramStr;
-    };
-    table.on("tool(currentTableFilter)", function (obj) {
-        var data = obj.data;
-        if (obj.event === "edit") {
-            var index = layer.open({
-                title: "编辑用户",
-                type: 2,
-                shade: 0.2,
-                maxmin: true,
-                shadeClose: true,
-                area: ["100%", "100%"],
-                content: "useredit.html?" + urlEncode(data),
-            });
-            $(window).on("resize", function () {
-                layer.full(index);
-            });
-            return false;
-        } else if (obj.event === "delete") {
-            layer.confirm("确定删除用户？", function (index) {
-                $.ajax({
-                    url: "userdel",
-                    type: "post",
-                    data: data,
-                    success: function (res) {
-                        if (res.code == 0) {
-                            layer.msg('删除用户成功');
-                            obj.del();
-                        } else {
-                            var index = layer.alert(
-                                res.msg,
-                                {
-                                    title: "删除用户失败",
-                                },
-                                function () {
-                                    // 关闭弹出层
-                                    layer.close(index);
-                                }
-                            );
-                        }
-                    },
-                });
-                layer.close(index);
-            });
-        }
-    });
-});
-</script>
-
+<script>var httpPort = "{{.Httpport}}"</script>
+<script src="../../static/js/admin/userlist.js" charset="utf-8"></script>
 </body>
 </html>

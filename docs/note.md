@@ -24,3 +24,15 @@
 /controller/simple.xml
 ```
 可以通过 `this.Ctx.Input.Param(":ext")` 获取后缀名。
+
+
+## layui中js操作
+
+### 弹出框
+
+#### 设置普通弹出框
+```javascript
+layer.alert(info, {
+    title: "titleName",
+});
+```

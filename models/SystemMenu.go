@@ -59,7 +59,7 @@ func (m *SystemMenu) GetSystemInit() SystemInit {
 	systemInit.HomeInfo.Href = "welcome.html"
 
 	// logo
-	systemInit.LogoInfo.Title = "LAYUI MINI"
+	systemInit.LogoInfo.Title = "VIDEO WEB"
 	systemInit.LogoInfo.Image = "../static/img/logo.png"
 	// fmt.Println("INIT END.........")
 	// 菜单

@@ -1,10 +1,12 @@
 package controllers
 
 import (
+	"encoding/json"
+	"fmt"
 	"strconv"
 	"strings"
-	"time"
 	"videowebsite/models"
+	mutils "videowebsite/utils"
 
 	"github.com/astaxie/beego"
 )
@@ -21,6 +23,16 @@ func (c *AdminController) Get() {
 	}
 }
 
+func (c *AdminController) Common() {
+	pageName := c.Ctx.Input.GetData("0")
+	fmt.Println(c.Ctx.Input, pageName)
+	if pageName == "userSetting.html" {
+		c.TplName = "../common/userSetting.html"
+	} else if pageName == "userPassword" {
+		c.TplName = "../common/userPassword.html"
+	}
+}
+
 func (c *AdminController) Login() {
 	if c.Ctx.Request.Method == "POST" {
 		username := c.GetString("username")
@@ -34,7 +46,7 @@ func (c *AdminController) Login() {
 			c.History("密码错误", "")
 		}
 		var aimUrl string
-		if user.Status == "管理员" {
+		if strings.HasSuffix(user.Status, "管理员") {
 			aimUrl = "index.html"
 		} else {
 			aimUrl = ""
@@ -64,10 +76,22 @@ func (c *AdminController) Userlist() {
 }
 
 func (c *AdminController) Getuserlist() {
-	// fmt.Println(c.Input())
+	var filterMap = make(map[string]interface{})
+	filterString := c.Input().Get("searchParams")
+	if filterString != "" {
+		json.Unmarshal([]byte(filterString), &filterMap)
+	}
+	getNil := false
+	if c.GetSession("user").(models.User).Status != "超级管理员" {
+		if filterMap["status"] == "管理员" {
+			getNil = true
+		} else {
+			filterMap["status"] = "普通用户"
+		}
+	}
 	page, _ := strconv.Atoi(c.Input().Get("page"))
 	limit, _ := strconv.Atoi(c.Input().Get("limit"))
-	userListJson, err := new(models.User).GetUserListJson(page, limit)
+	userListJson, err := new(models.User).GetUserListJson(page, limit, filterMap, getNil)
 	if err != nil {
 		c.Ctx.WriteString("<script>alert('获取用户列表失败');window.history.go(-1);</script>")
 		return
@@ -87,20 +111,23 @@ func (c *AdminController) Useradd() {
 			Email:    c.Input().Get("email"),
 			Status:   c.Input().Get("status"),
 			Remark:   c.Input().Get("remark"),
-			CreateAt: time.Now(),
-			UpdateAt: time.Now(),
+			CreateAt: mutils.GetNowTimeString(),
+			UpdateAt: mutils.GetNowTimeString(),
 		}
 		resp := make(map[string]interface{})
 		_, err := c.Orm.Insert(&user)
 		if err != nil {
 			resp["code"] = "201"
-			resp["msg"] = "add user failed\n" + err.Error()
+			resp["msg"] = "添加用户失败</br>" + err.Error()
 		} else {
 			resp["code"] = "0"
-			resp["msg"] = "add user success"
+			resp["msg"] = "添加用户成功"
 		}
 		c.Data["json"] = resp
 		c.ServeJSON()
+	}
+	if c.GetSession("user").(models.User).Status == "管理员" {
+		c.Data["Disabled"] = "disabled"
 	}
 	if ext == "html" {
 		c.TplName = "admin/useradd.html"
@@ -109,26 +136,22 @@ func (c *AdminController) Useradd() {
 
 func (c *AdminController) Useredit() {
 	if c.Ctx.Request.Method == "GET" {
-		c.Data["ID"] = c.Input().Get("id")
-		c.Data["Username"] = c.Input().Get("username")
-		c.Data["Password"] = c.Input().Get("password")
-		c.Data["Nickname"] = c.Input().Get("nickname")
-		checkmap := map[string]int{
-			"保密": 0, "男": 1, "女": 2, "普通用户": 0, "管理员": 1,
+		user := models.User{
+			Id:       func() int { res, _ := strconv.Atoi(c.Input().Get("id")); return res }(),
+			Username: c.Input().Get("username"),
+			Password: c.Input().Get("password"),
+			Nickname: c.Input().Get("nickname"),
+			Sex:      c.Input().Get("sex"),
+			Email:    c.Input().Get("email"),
+			Status:   c.Input().Get("status"),
+			Remark:   c.Input().Get("remark"),
 		}
-		checkarr := [3][]string{
-			{"checked", " ", " "}, {" ", "checked", " "}, {" ", " ", "checked"},
+		bytes, _ := json.Marshal(user)
+		c.Data["UserInfoJson"] = string(bytes)
+		if user.Status == "超级管理员" {
+			// c.Data["SuperAdminShow"] = "1"
+			c.Data["Disabled"] = "disabled"
 		}
-		index := checkmap[c.Input().Get("sex")]
-		c.Data["Sex_Secret"] = checkarr[index][0]
-		c.Data["Sex_Male"] = checkarr[index][1]
-		c.Data["Sex_Female"] = checkarr[index][2]
-		c.Data["Email"] = c.Input().Get("email")
-
-		index = checkmap[c.Input().Get("status")]
-		c.Data["Status_Common"] = checkarr[index][0]
-		c.Data["Status_Manager"] = checkarr[index][1]
-		c.Data["Remark"] = c.Input().Get("remark")
 	} else if c.Ctx.Request.Method == "POST" {
 		user := models.User{Id: func() int { ret, _ := strconv.Atoi(c.Input().Get("id")); return ret }()}
 		c.Orm.Read(&user)
@@ -139,41 +162,78 @@ func (c *AdminController) Useredit() {
 		user.Email = c.Input().Get("email")
 		user.Status = c.Input().Get("status")
 		user.Remark = c.Input().Get("remark")
-		user.UpdateAt = time.Now()
+		user.UpdateAt = mutils.GetNowTimeString()
 		resp := make(map[string]interface{})
 		_, err := c.Orm.Update(&user)
 		if err != nil {
 			resp["code"] = "202"
-			resp["msg"] = "update user failed\n" + err.Error()
+			resp["msg"] = "更新用户失败<br/>" + err.Error()
 		} else {
 			resp["code"] = "0"
-			resp["msg"] = "update user success"
+			resp["msg"] = "更新用户失败"
 		}
 		c.Data["json"] = resp
 		c.ServeJSON()
+	}
+	if c.GetSession("user").(models.User).Status == "管理员" {
+		c.Data["Disabled"] = "disabled"
 	}
 	c.TplName = "admin/useredit.html"
 }
 
 func (c *AdminController) Userdel() {
 	if c.Ctx.Request.Method == "POST" {
-		id, _ := strconv.Atoi(c.Input().Get("id"))
+		more := c.Input().Get("more")
 		resp := make(map[string]interface{})
-		if id == c.GetSession("user").(models.User).Id {
-			resp["code"] = "203"
-			resp["msg"] = "不能删除自己"
+		userlistString, userlist, successlist := "", []models.User{}, []int{}
+		endmsg, endcode := "", 0
+		for k := range c.Input() {
+			if k == "more" {
+				continue
+			}
+			userlistString = k
+		}
+		if more == "false" {
+			userlistString = "[" + userlistString + "]"
+		}
+		err := json.Unmarshal([]byte(userlistString), &userlist)
+		if err != nil {
+			endcode = 222
+			endmsg = "解析数据失败，传递数据有误"
 		} else {
-			user := models.User{Id: id}
-			_, err := c.Orm.Delete(&user)
-			if err != nil {
-				resp["code"] = "204"
-				resp["msg"] = "删除用户失败\n" + err.Error()
-			} else {
-				resp["code"] = "0"
-				resp["msg"] = "删除用户成功"
+			for _, user := range userlist {
+				msg, code := c.deleteUser(user)
+				if code == 0 {
+					successlist = append(successlist, user.Id)
+				}
+				endcode = code
+				endmsg += msg + "<br/>"
 			}
 		}
+		resp["code"] = endcode
+		resp["msg"] = endmsg
+		resp["successlist"] = successlist
 		c.Data["json"] = resp
 		c.ServeJSON()
 	}
+}
+
+func (c *AdminController) deleteUser(user models.User) (string, int) {
+	msg, code := "", models.U_DO_SUCCESS
+	if user.Id == c.GetSession("user").(models.User).Id {
+		code = models.U_DEL_SELF
+		msg = "删除用户 " + user.Username + " 失败<br/>禁止删除自己"
+	} else if user.Status == "管理员" {
+		code = models.U_DEL_MANAGER
+		msg = "删除用户 " + user.Username + " 失败<br/>禁止删除管理员"
+	} else {
+		_, err := c.Orm.Delete(&user)
+		if err != nil {
+			code = models.U_DEL_ERROR
+			msg = "删除用户 " + user.Username + " 失败<br/>" + err.Error()
+		} else {
+			msg = "删除用户 " + user.Username + " 成功"
+		}
+	}
+	return msg, code
 }

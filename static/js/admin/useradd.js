@@ -12,14 +12,14 @@ layui.use(["form"], function () {
 				return "用户名只能由 字母，数字，下划线，减号，@ 组成";
 			}
 		},
-		verifyPass: function (value) {
+		verifyPassword: function (value) {
 			//密码强度正则，最少6位，只能由 字母，数字，下划线，减号，特殊符号 组成
 			pPattern = /^[!@#$%^&*?a-zA-Z0-9_-]{6,}$/;
 			if (!pPattern.test(value)) {
 				return "密码最少6位最少6位，只能由 字母，数字，下划线，减号，特殊符号 组成";
 			}
 		},
-		confirmPass: function (value) {
+		confirmPassword: function (value) {
 			if ($("input[name=password]").val() !== value)
 				return "两次密码输入不一致！";
 		},

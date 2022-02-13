@@ -35,3 +35,11 @@ func TimePareStd(value string) (time.Time, error) {
 	ret, err := time.Parse("2006-01-02 15:03:04", value)
 	return ret, err
 }
+
+const (
+	TimeFormart = "2006-01-02 15:04:05"
+)
+
+func GetNowTimeString() string {
+	return time.Now().Format(TimeFormart)
+}

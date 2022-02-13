@@ -4,9 +4,6 @@ import (
 	"time"
 )
 
-// user const values
-const ()
-
 type User struct {
 	Id       int    `json:"id"`       // 用户ID
 	Username string `json:"username"` // 用户账户名
@@ -19,9 +16,9 @@ type User struct {
 	// LastIp   string
 	State    int8      `json:"state"`    // 用户状态
 	Remark   string    `json:"remark"`   // 备注
-	CreateAt time.Time `json:"createat"` // 创建时间
-	UpdateAt time.Time // 更新时间
-	DeleteAt time.Time // 删除时间
+	CreateAt string    `json:"createat"` // 创建时间
+	UpdateAt string    `json:"updateat"` // 更新时间
+	DeleteAt time.Time `json:"deleteat"` // 删除时间
 }
 
 type UserJson struct {
@@ -40,26 +37,44 @@ func (m *User) GetUserCount() int {
 	return int(userCount)
 }
 
-func (m *User) GetUserListJson(page, limit int) (UserJson, error) {
+func (m *User) GetUserListJson(page, limit int, mapper map[string]interface{}, getNil bool) (UserJson, error) {
 	userJson := UserJson{
-		Code: 0,
-		Msg:  "",
+		Code:  0,
+		Msg:   "",
+		Count: 0,
+		Data:  nil,
 	}
-	userlist, err := getUserList(page, limit)
+	if getNil {
+		return userJson, nil
+	}
+	userlist, count, err := getUserList(page, limit, mapper)
 	if err != nil {
 		userJson.Code = MSG_FAIL
 		userJson.Msg = "获取用户列表失败"
 		return userJson, err
 	}
-	userJson.Count = m.GetUserCount()
+	userJson.Count = count
 	userJson.Data = userlist
 	return userJson, nil
 
 }
 
-func getUserList(page, limit int) ([]User, error) {
+func getUserList(page, limit int, mapper map[string]interface{}) ([]User, int, error) {
 	var userList []User
 	//_, err := Orm.QueryTable(new(User).TableName()).All(&userList)
-	_, err := Orm.QueryTable(new(User).TableName()).Limit(limit, limit * (page - 1)).All(&userList)
-	return userList, err
+	seter := Orm.QueryTable(new(User).TableName())
+	for key, value := range mapper {
+		seter = seter.Filter(key+"__icontains", value)
+	}
+	count, _ := seter.Count()
+	_, err := seter.Limit(limit, limit*(page-1)).All(&userList)
+	return userList, int(count), err
+}
+
+func (m *User) UpdateUser(user User, cols ...string) (int, string) {
+	_, err := Orm.Update(&user, cols...)
+	if err != nil {
+		return U_PASS_UPERR, "更新密码失败<br/>" + err.Error()
+	}
+	return U_DO_SUCCESS, "更新密码成功"
 }
