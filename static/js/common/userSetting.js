@@ -1,9 +1,15 @@
-layui.use(["form", "miniTab"], function () {
+layui.use(["form", "miniTab", 'laydate'], function () {
 	var form = layui.form,
 		layer = layui.layer,
 		miniTab = layui.miniTab,
+		laydate = layui.laydate,
 		$ = layui.$;
-
+	// laydate实现
+	laydate.render ({
+		elem: '#dateselect',
+		//type: 'datetime',
+		//range: true
+	});
 	//监听提交
 	form.on("submit(saveBtn)", function (data) {
 		layer.confirm('确认修改?', function(){

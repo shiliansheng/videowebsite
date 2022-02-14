@@ -1,22 +1,25 @@
 package models
 
 const (
+	// message request code
+	MSG_OK   = 0
+	MSG_FAIL = 404
+
+	// base action info
+	DO_SUCCESS  = 0
+	DO_REMAIN   = 1
+	DO_UP_ERROR = 2
+
 	// user status
 	USER_NORMAL = 1
 	USER_ADMIN  = 2
 
 	// user action info
-	U_DO_SUCCESS = 0
-	U_DO_REMAIN  = 1
+	U_DEL_ERROR   = 200
+	U_DEL_SELF    = 201
+	U_DEL_MANAGER = 202
+	U_PASS_WRONG  = 300
 
-	U_DEL_ERROR   = 100
-	U_DEL_SELF    = 101
-	U_DEL_MANAGER = 102
+	// video action info
 
-	U_PASS_WRONG = 100
-	U_PASS_UPERR = 110
-
-	// message request code
-	MSG_OK   = 0
-	MSG_FAIL = 404
 )

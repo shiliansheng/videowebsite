@@ -103,7 +103,7 @@ publishedTime  String  发布时间
 ```
 表Users：用户表  
 ```sql
-userid            long    用户id
+id                int     用户id
 username          String  用户名(邮箱)
 password          String  密码
 nickname          String  昵称
@@ -136,3 +136,13 @@ roleid             int  角色id
 ```
 
 每个视频一级分类为一个操作对象，只有分配了该对象的管理员用户才可以添加、修改、删除、审核该分类下的视频。    
+
+# Record
+
+## 正则表达式
+```
+结构体GetDifCols()
+^(.*) (.*)\"(.*)\"(.*)$
+if m.$1 != v.$1 { dif = append\(dif, "$3"\)	}
+
+```

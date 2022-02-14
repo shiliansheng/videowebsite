@@ -37,6 +37,12 @@
 - [x] 修改用户信息展示方式，使用`form.val(lay-filter, object)`方式
 注意：需要引用：`/static/js/lay-config.js?v=1.0.4`文件
 - [x] 添加个人信息修改页面，后端还没写
+
+## 202.2.14
+- [x] 完成个人信息修改后端（并增加内容）
+- [x] 增加user表字段
+- [x] 创建video的model
+- [x] 完善更新内容
 # app tree
 ```
 root

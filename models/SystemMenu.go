@@ -18,7 +18,7 @@ type SystemMenu struct {
 	Target   string    `json:"target"`
 	Remark   string    `json:"remark"`
 	State    int       `json:"state"`
-	CreateAt time.Time `json:"create_at";orm:"auto_now;type(datetime)"`
+	CreateAt time.Time `json:"create_at"`
 }
 
 func (m *SystemMenu) TableName() string {

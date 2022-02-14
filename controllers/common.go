@@ -22,7 +22,7 @@ func (c *CommonController) User_password() {
 				resp.Msg = "旧密码输入不正确"
 			} else {
 				user.Password = newPass
-				code, msg := user.UpdateUser(user, "password")
+				code, msg := user.Update(user, "password")
 				resp.Code, resp.Msg = code, msg
 			}
 		}
@@ -43,21 +43,21 @@ func (c *CommonController) User_setting() {
 		user := c.GetSession("user").(models.User)
 		resp := Responser{}
 		if action == "changeSetting" {
-			email := c.Input().Get("email")
-			nickname := c.Input().Get("nickname")
-			sex := c.Input().Get("sex")
-			remark := c.Input().Get("remark")
-			if email == user.Email && nickname == user.Nickname && sex == user.Sex && remark == user.Remark {
-				resp.Code = models.U_DO_REMAIN
+			var newUser models.User = user
+			newUser.Email = c.Input().Get("email")
+			newUser.Nickname = c.Input().Get("nickname")
+			newUser.Sex = c.Input().Get("sex")
+			newUser.Remark = c.Input().Get("remark")
+			newUser.Birthday = c.Input().Get("birthday")
+			newUser.Introduction = c.Input().Get("introduction")
+			colarr := user.GetDifCols(user, newUser)
+			if len(colarr) == 0 {
+				resp.Code = models.DO_REMAIN
 				resp.Msg = "信息未改变，修改失败"
 			} else {
-				user.Email = email
-				user.Nickname = nickname
-				user.Remark = remark
-				user.Sex = sex
-				code, msg := user.UpdateUser(user, "email", "nickname", "sex", "remark")
+				code, msg := user.Update(newUser, colarr...)
 				if code == 0 {
-					c.SetSession("user", user)
+					c.SetSession("user", newUser)
 				}
 				resp.Code, resp.Msg = code, msg
 			}

@@ -12,7 +12,7 @@ type User struct {
 	Logoimage    string    `json:"logoimage"`    // 用户头像
 	Sex          string    `json:"sex"`          // 性别
 	Email        string    `json:"email"`        // e-mail
-	Birthday     time.Time `json:"birthday"`     // 用户生日
+	Birthday     string    `json:"birthday"`     // 用户生日
 	Introduction string    `json:"introduction"` // 用户简介
 	Status       string    `json:"status"`       // 用户身份
 	State        int8      `json:"state"`        // 用户状态
@@ -29,16 +29,16 @@ type UserJson struct {
 	Data  []User `json:"data"`
 }
 
-func (m *User) TableName() string {
+func (m User) TableName() string {
 	return TableName("user")
 }
 
-func (m *User) GetUserCount() int {
+func (m User) GetUserCount() int {
 	userCount, _ := Orm.QueryTable(new(User).TableName()).Count()
 	return int(userCount)
 }
 
-func (m *User) GetUserListJson(page, limit int, mapper map[string]interface{}, getNil bool) (UserJson, error) {
+func (m User) GetUserListJson(page, limit int, mapper map[string]interface{}, getNil bool) (UserJson, error) {
 	userJson := UserJson{
 		Code:  0,
 		Msg:   "",
@@ -72,10 +72,50 @@ func getUserList(page, limit int, mapper map[string]interface{}) ([]User, int, e
 	return userList, int(count), err
 }
 
-func (m *User) UpdateUser(user User, cols ...string) (int, string) {
+func (m User) Update(user User, cols ...string) (int, string) {
+	if len(cols) == 0 {
+		return DO_REMAIN, "信息未更改，更新失败"
+	}
 	_, err := Orm.Update(&user, cols...)
 	if err != nil {
-		return U_PASS_UPERR, "更新密码失败<br/>" + err.Error()
+		return DO_UP_ERROR, "更新信息失败<br/>" + err.Error()
 	}
-	return U_DO_SUCCESS, "更新密码成功"
+	return DO_SUCCESS, "更新信息成功"
+}
+
+// {"id", "username", "password", "nickname", "logoimage", "sex", "email", "birthday", "introduction", "status", "state", "remark"},
+
+func (m User) GetDifCols(base, new User) []string {
+	dif := []string{}
+	if base.Password != new.Password {
+		dif = append(dif, "password")
+	}
+	if base.Nickname != new.Nickname {
+		dif = append(dif, "nickname")
+	}
+	if base.Logoimage != new.Logoimage {
+		dif = append(dif, "logoimage")
+	}
+	if base.Sex != new.Sex {
+		dif = append(dif, "sex")
+	}
+	if base.Email != new.Email {
+		dif = append(dif, "email")
+	}
+	if base.Birthday != new.Birthday {
+		dif = append(dif, "birthday")
+	}
+	if base.Introduction != new.Introduction {
+		dif = append(dif, "introduction")
+	}
+	if base.Status != new.Status {
+		dif = append(dif, "status")
+	}
+	if base.State != new.State {
+		dif = append(dif, "state")
+	}
+	if base.Remark != new.Remark {
+		dif = append(dif, "remark")
+	}
+	return dif
 }

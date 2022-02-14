@@ -29,6 +29,18 @@
                 <tip>昵称可空，默认为stranger</tip>
             </div>
         </div>
+        <div class="layui-form-item layui-col-md6 layui-col-sm10">
+            <label class="layui-form-label">头像</label>
+            <div class="layui-input-block">
+                <input type="text" name="logoimage" placeholder="设置头像" disabled value="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item layui-col-md6 layui-col-sm10">
+            <label class="layui-form-label">出生日期</label>
+            <div class="layui-input-block">
+                <input type="text" name="birthday" class="layui-input" id="dateselect">
+            </div>
+        </div>
         <div class="layui-form-item">
             <label class="layui-form-label">性别</label>
             <div class="layui-input-block">
@@ -41,16 +53,13 @@
             <label class="layui-form-label">邮箱</label>
             <div class="layui-input-block">
                 <input type="email" name="email" lay-verify="verifyEmail" placeholder="请输入邮箱" value=""
-                    class="layui-input">
+                class="layui-input">
             </div>
         </div>
-        <div class="layui-form-item layui-form-text layui-col-md6 layui-col-sm10">
-            <label class="layui-form-label">备注信息</label>
+        <div class="layui-form-item layui-col-md6 layui-col-sm10">
+            <label class="layui-form-label">介绍</label>
             <div class="layui-input-block">
-                <textarea name="remark" class="layui-textarea" placeholder="请输入备注信息"></textarea>
-                <script>
-                    document.getElementsByName("remark")[0].value = ""
-                </script>
+                <textarea name="introduction" class="layui-textarea" rows="2" placeholder="请输入介绍信息"></textarea>
             </div>
         </div>
         <div class="layui-form-item">

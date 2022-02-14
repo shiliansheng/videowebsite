@@ -155,28 +155,18 @@ func (c *AdminController) Useredit() {
 	} else if c.Ctx.Request.Method == "POST" {
 		user := models.User{Id: func() int { ret, _ := strconv.Atoi(c.Input().Get("id")); return ret }()}
 		c.Orm.Read(&user)
-		password := c.Input().Get("password")
-		nickname := func() string { name := c.GetNickname(c.Input().Get("nickname")); return name }()
-		sex := c.Input().Get("sex")
-		email := c.Input().Get("email")
-		status := c.Input().Get("status")
-		remark := c.Input().Get("remark")
-		//updateAt = mutils.GetNowTimeString()
-		baseinfoKeys := []string{"password", "nickname", "sex", "email", "status", "remark"}
-		updateCols := []string{}
-		for _, key := range baseinfoKeys {
-			value := c.Input().Get(key)
-			
-		}
-		resp := make(map[string]interface{})
-		_, err := c.Orm.Update(&user)
-		if err != nil {
-			resp["code"] = "202"
-			resp["msg"] = "更新用户失败<br/>" + err.Error()
-		} else {
-			resp["code"] = "0"
-			resp["msg"] = "更新用户失败"
-		}
+		var newUser models.User = user
+		newUser.Password = c.Input().Get("password")
+		newUser.Nickname = func() string { nick := c.GetNickname(c.Input().Get("nickname")); return nick }()
+		newUser.Sex = c.Input().Get("sex")
+		newUser.Email = c.Input().Get("email")
+		newUser.Status = c.Input().Get("status")
+		newUser.Remark = c.Input().Get("remark")
+
+		resp := Responser{}
+		code, msg := user.Update(newUser, user.GetDifCols(user, newUser)...)
+		resp.Code = code
+		resp.Msg = msg
 		c.Data["json"] = resp
 		c.ServeJSON()
 	}
@@ -224,7 +214,7 @@ func (c *AdminController) Userdel() {
 }
 
 func (c *AdminController) deleteUser(user models.User) (string, int) {
-	msg, code := "", models.U_DO_SUCCESS
+	msg, code := "", models.DO_SUCCESS
 	if user.Id == c.GetSession("user").(models.User).Id {
 		code = models.U_DEL_SELF
 		msg = "删除用户 " + user.Username + " 失败<br/>禁止删除自己"

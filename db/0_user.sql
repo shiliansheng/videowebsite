@@ -8,7 +8,7 @@ CREATE TABLE `vw_user` (
   `logoimage`     varchar(200)      DEFAULT NULL                  COMMENT '用户头像',
   `sex`           varchar(20)       DEFAULT '保密'                COMMENT '性别',
   `email`         varchar(100)      DEFAULT NULL                  COMMENT '电子邮箱',
-  `birthday`      timestamp NULL    DEFAULT NULL                  COMMENT '用户生日',
+  `birthday`      varchar(20)       DEFAULT NULL                  COMMENT '用户生日',
   `introduction`  varchar(400)      DEFAULT NULL                  COMMENT '简介',
   `status`        varchar(20)       NOT NULL DEFAULT '普通用户'    COMMENT '用户身份(普通用户,管理员)',
   `state`         int(11) unsigned  DEFAULT NULL                  COMMENT '状态信息',
