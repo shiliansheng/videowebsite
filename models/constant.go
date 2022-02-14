@@ -6,7 +6,9 @@ const (
 	USER_ADMIN  = 2
 
 	// user action info
-	U_DO_SUCCESS  = 0
+	U_DO_SUCCESS = 0
+	U_DO_REMAIN  = 1
+
 	U_DEL_ERROR   = 100
 	U_DEL_SELF    = 101
 	U_DEL_MANAGER = 102

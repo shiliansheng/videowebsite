@@ -155,14 +155,19 @@ func (c *AdminController) Useredit() {
 	} else if c.Ctx.Request.Method == "POST" {
 		user := models.User{Id: func() int { ret, _ := strconv.Atoi(c.Input().Get("id")); return ret }()}
 		c.Orm.Read(&user)
-		user.Username = c.Input().Get("username")
-		user.Password = c.Input().Get("password")
-		user.Nickname = func() string { name := c.GetNickname(c.Input().Get("nickname")); return name }()
-		user.Sex = c.Input().Get("sex")
-		user.Email = c.Input().Get("email")
-		user.Status = c.Input().Get("status")
-		user.Remark = c.Input().Get("remark")
-		user.UpdateAt = mutils.GetNowTimeString()
+		password := c.Input().Get("password")
+		nickname := func() string { name := c.GetNickname(c.Input().Get("nickname")); return name }()
+		sex := c.Input().Get("sex")
+		email := c.Input().Get("email")
+		status := c.Input().Get("status")
+		remark := c.Input().Get("remark")
+		//updateAt = mutils.GetNowTimeString()
+		baseinfoKeys := []string{"password", "nickname", "sex", "email", "status", "remark"}
+		updateCols := []string{}
+		for _, key := range baseinfoKeys {
+			value := c.Input().Get(key)
+			
+		}
 		resp := make(map[string]interface{})
 		_, err := c.Orm.Update(&user)
 		if err != nil {

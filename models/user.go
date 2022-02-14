@@ -5,20 +5,21 @@ import (
 )
 
 type User struct {
-	Id       int    `json:"id"`       // 用户ID
-	Username string `json:"username"` // 用户账户名
-	Password string `json:"password"` // 用户密码
-	Nickname string `json:"nickname"` // 昵称
-	Sex      string `json:"sex"`      // 性别
-	Email    string `json:"email"`    // e-mail
-	Status   string `json:"status"`   // 用户身份
-	// LastTime time.Time
-	// LastIp   string
-	State    int8      `json:"state"`    // 用户状态
-	Remark   string    `json:"remark"`   // 备注
-	CreateAt string    `json:"createat"` // 创建时间
-	UpdateAt string    `json:"updateat"` // 更新时间
-	DeleteAt time.Time `json:"deleteat"` // 删除时间
+	Id           int       `json:"id"`           // 用户ID
+	Username     string    `json:"username"`     // 用户账户名
+	Password     string    `json:"password"`     // 用户密码
+	Nickname     string    `json:"nickname"`     // 昵称
+	Logoimage    string    `json:"logoimage"`    // 用户头像
+	Sex          string    `json:"sex"`          // 性别
+	Email        string    `json:"email"`        // e-mail
+	Birthday     time.Time `json:"birthday"`     // 用户生日
+	Introduction string    `json:"introduction"` // 用户简介
+	Status       string    `json:"status"`       // 用户身份
+	State        int8      `json:"state"`        // 用户状态
+	Remark       string    `json:"remark"`       // 备注
+	CreateAt     string    `json:"createat"`     // 创建时间
+	UpdateAt     string    `json:"updateat"`     // 更新时间
+	DeleteAt     time.Time `json:"deleteat"`     // 删除时间
 }
 
 type UserJson struct {
