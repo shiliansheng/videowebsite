@@ -14,32 +14,25 @@
             padding: 25px 0px;
             overflow: hidden;
         }
-
         .layui-form-item .layui-input-company {
             width: auto;
             padding-right: 10px;
             line-height: 38px;
         }
-
         .userLogoBox {
             position: absolute;
             right: 0;
             top: 0;
-            width: 100px;
-            height: 100px;
             display: inline-block;
             border: 1px solid #333;
             box-sizing: border-box;
-            overflow: hidden;
         }
 
         .img-left {
             width: calc(100% - 120px);
         }
-
         img {
-            width: 100%;
-            height: 100%;
+            width: 100px;
         }
     </style>
 </head>
@@ -54,13 +47,13 @@
                     <tip>昵称可空，默认为stranger</tip>
                 </div>
             </div>
-            <div class="userLogoBox"> <img src="/static/img/logo.png" id="logoimg" alt=""> </div>
+            <div class="userLogoBox"> <img src="/static/img/logo.png" id="userlogo" alt=""> </div>
             <div class="layui-form-item img-left">
                 <label class="layui-form-label">头像</label>
-                <!-- <div class="layui-input-block">
-                    <button class="layui-btn" name="userlogo" id="userlogo" lay-data="{url: '/static/store/img/user/'}">上传图片</button>
-                </div> -->
-                <button class="layui-btn" name="userlogo" id="userlogo">上传图片</button>
+                <div class="layui-input-block">
+                    <!-- <input type="text" name="logoimage" placeholder="设置头像" disabled value="" class="layui-input"> -->
+                    <button class="layui-btn" id="logoimage" lay-data="{url: '/static/store/img/user/'}">上传图片</button>
+                </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">出生日期</label>
@@ -99,11 +92,9 @@
     </div>
     <script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
     <script src="../../static/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
-    <script src="../../static/js/common/userSetting.js"></script>
-    <!-- <script src="../../static/lib/cropper/cropper.js" charset="utf-8"></script> -->
-    <!-- <script src="../../static/lib/cropper/croppers.js" charset="utf-8"></script> -->
+    <script src="../../static/js/common/userSetting.js" charset="utf-8"></script>
     <script>
-    var userInfo = JSON.parse('{{.UserInfoJson}}')
+    //var userInfo = JSON.parse('{{.UserInfoJson}}')
     //var logo = document.getElementById('userlogo')
     //logo.style.zoom = 150 / logo.width * 1.0
     </script>

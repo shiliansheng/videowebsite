@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"videowebsite/models"
 )
 
@@ -60,4 +61,13 @@ func (c *CommonController) User_setting() {
 		c.ServeJSON()
 	}
 	c.TplName = "common/userSetting.html"
+}
+
+func (c *CommonController) Upload_img() {
+	fmt.Println(c.Ctx.Request)
+	fmt.Println(c)
+	fmt.Println("------------")
+	fmt.Println(c.Input())
+	fmt.Println(c.Ctx.Input)
+	c.TplName = "upload_img.json"
 }

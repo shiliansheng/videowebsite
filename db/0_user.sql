@@ -5,7 +5,7 @@ CREATE TABLE `vw_user` (
   `username`      varchar(100)      NOT NULL UNIQUE DEFAULT ''    COMMENT '用户名',
   `password`      varchar(100)      NOT NULL DEFAULT ''           COMMENT '密码',
   `nickname`      varchar(100)      NOT NULL DEFAULT 'stranger'   COMMENT '昵称',
-  `logoimage`     varchar(200)      DEFAULT NULL                  COMMENT '用户头像',
+  `userlogo`      varchar(200)      DEFAULT NULL                  COMMENT '用户头像',
   `sex`           varchar(20)       DEFAULT '保密'                COMMENT '性别',
   `email`         varchar(100)      DEFAULT NULL                  COMMENT '电子邮箱',
   `birthday`      varchar(20)       DEFAULT NULL                  COMMENT '用户生日',

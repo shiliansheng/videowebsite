@@ -11,17 +11,17 @@ type User struct {
 	Username     string    `json:"username"`               // 用户账户名
 	Password     string    `json:"password"`               // 用户密码
 	Nickname     string    `json:"nickname"`               // 昵称
-	Logoimage    string    `json:"logoimage omitempty"`    // 用户头像
+	Userlogo     string    `json:"Userlogo,omitempty"`     // 用户头像
 	Sex          string    `json:"sex"`                    // 性别
-	Email        string    `json:"email omitempty"`        // e-mail
-	Birthday     string    `json:"birthday omitempty"`     // 用户生日
-	Introduction string    `json:"introduction omitempty"` // 用户简介
+	Email        string    `json:"email,omitempty"`        // e-mail
+	Birthday     string    `json:"birthday,omitempty"`     // 用户生日
+	Introduction string    `json:"introduction,omitempty"` // 用户简介
 	Status       string    `json:"status"`                 // 用户身份
 	State        int8      `json:"state"`                  // 用户状态
-	Remark       string    `json:"remark omitempty"`       // 备注
+	Remark       string    `json:"remark,omitempty"`       // 备注
 	CreateAt     string    `json:"createat"`               // 创建时间
 	UpdateAt     string    `json:"updateat"`               // 更新时间
-	DeleteAt     time.Time `json:"deleteat"`               // 删除时间
+	DeleteAt     time.Time `json:"deleteat,omitempty"`     // 删除时间
 }
 
 type UserJson struct {
@@ -108,8 +108,8 @@ func (m User) GetDifCols(base, new User) []string {
 	if base.Nickname != new.Nickname {
 		dif = append(dif, "nickname")
 	}
-	if base.Logoimage != new.Logoimage {
-		dif = append(dif, "logoimage")
+	if base.Userlogo != new.Userlogo {
+		dif = append(dif, "userlogo")
 	}
 	if base.Sex != new.Sex {
 		dif = append(dif, "sex")
@@ -149,8 +149,8 @@ func (m *User) GetUserInfo(source url.Values) error {
 	if m.Nickname == "" {
 		m.Nickname = "stranger"
 	}
-	if value := source.Get("logoimage"); value != "" {
-		m.Logoimage = value
+	if value := source.Get("userlogo"); value != "" {
+		m.Userlogo = value
 	}
 	if value := source.Get("sex"); value != "" {
 		m.Sex = value
