@@ -44,22 +44,16 @@ func (c *CommonController) User_setting() {
 		resp := Responser{}
 		if action == "changeSetting" {
 			var newUser models.User = user
-			newUser.Email = c.Input().Get("email")
-			newUser.Nickname = c.Input().Get("nickname")
-			newUser.Sex = c.Input().Get("sex")
-			newUser.Remark = c.Input().Get("remark")
-			newUser.Birthday = c.Input().Get("birthday")
-			newUser.Introduction = c.Input().Get("introduction")
+			newUser.GetUserInfo(c.Input())
 			colarr := user.GetDifCols(user, newUser)
 			if len(colarr) == 0 {
 				resp.Code = models.DO_REMAIN
 				resp.Msg = "信息未改变，修改失败"
 			} else {
-				code, msg := user.Update(newUser, colarr...)
-				if code == 0 {
+				resp.Code, resp.Msg = user.Update(newUser, colarr...)
+				if resp.Code == 0 {
 					c.SetSession("user", newUser)
 				}
-				resp.Code, resp.Msg = code, msg
 			}
 		}
 		c.Data["json"] = resp

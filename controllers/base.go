@@ -15,9 +15,9 @@ type BaseController struct {
 }
 
 type Responser struct {
-	Code int `json:"code"`
-	Msg string `json:"msg"`
-	
+	Code int         `json:"code"`
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
 }
 
 func (c *BaseController) Prepare() {

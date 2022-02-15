@@ -104,25 +104,12 @@ func (c *AdminController) Useradd() {
 	ext := c.Ctx.Input.Param(":ext")
 	if c.Ctx.Request.Method == "POST" {
 		user := models.User{
-			Username: c.Input().Get("username"),
-			Password: c.Input().Get("password"),
-			Nickname: func() string { name := c.GetNickname(c.Input().Get("nickname")); return name }(),
-			Sex:      c.Input().Get("sex"),
-			Email:    c.Input().Get("email"),
-			Status:   c.Input().Get("status"),
-			Remark:   c.Input().Get("remark"),
 			CreateAt: mutils.GetNowTimeString(),
 			UpdateAt: mutils.GetNowTimeString(),
 		}
-		resp := make(map[string]interface{})
-		_, err := c.Orm.Insert(&user)
-		if err != nil {
-			resp["code"] = "201"
-			resp["msg"] = "添加用户失败</br>" + err.Error()
-		} else {
-			resp["code"] = "0"
-			resp["msg"] = "添加用户成功"
-		}
+		user.GetUserInfo(c.Input())
+		resp := Responser{}
+		resp.Code, resp.Msg = user.Add(user)
 		c.Data["json"] = resp
 		c.ServeJSON()
 	}
@@ -136,16 +123,8 @@ func (c *AdminController) Useradd() {
 
 func (c *AdminController) Useredit() {
 	if c.Ctx.Request.Method == "GET" {
-		user := models.User{
-			Id:       func() int { res, _ := strconv.Atoi(c.Input().Get("id")); return res }(),
-			Username: c.Input().Get("username"),
-			Password: c.Input().Get("password"),
-			Nickname: c.Input().Get("nickname"),
-			Sex:      c.Input().Get("sex"),
-			Email:    c.Input().Get("email"),
-			Status:   c.Input().Get("status"),
-			Remark:   c.Input().Get("remark"),
-		}
+		user := models.User{}
+		user.GetUserInfo(c.Input())
 		bytes, _ := json.Marshal(user)
 		c.Data["UserInfoJson"] = string(bytes)
 		if user.Status == "超级管理员" {
@@ -156,17 +135,9 @@ func (c *AdminController) Useredit() {
 		user := models.User{Id: func() int { ret, _ := strconv.Atoi(c.Input().Get("id")); return ret }()}
 		c.Orm.Read(&user)
 		var newUser models.User = user
-		newUser.Password = c.Input().Get("password")
-		newUser.Nickname = func() string { nick := c.GetNickname(c.Input().Get("nickname")); return nick }()
-		newUser.Sex = c.Input().Get("sex")
-		newUser.Email = c.Input().Get("email")
-		newUser.Status = c.Input().Get("status")
-		newUser.Remark = c.Input().Get("remark")
-
+		newUser.GetUserInfo(c.Input())
 		resp := Responser{}
-		code, msg := user.Update(newUser, user.GetDifCols(user, newUser)...)
-		resp.Code = code
-		resp.Msg = msg
+		resp.Code, resp.Msg = user.Update(newUser, user.GetDifCols(user, newUser)...)
 		c.Data["json"] = resp
 		c.ServeJSON()
 	}
@@ -179,7 +150,7 @@ func (c *AdminController) Useredit() {
 func (c *AdminController) Userdel() {
 	if c.Ctx.Request.Method == "POST" {
 		more := c.Input().Get("more")
-		resp := make(map[string]interface{})
+		resp := Responser{}
 		userlistString, userlist, successlist := "", []models.User{}, []int{}
 		endmsg, endcode := "", 0
 		for k := range c.Input() {
@@ -193,7 +164,7 @@ func (c *AdminController) Userdel() {
 		}
 		err := json.Unmarshal([]byte(userlistString), &userlist)
 		if err != nil {
-			endcode = 222
+			endcode = models.DO_JSON_ERR
 			endmsg = "解析数据失败，传递数据有误"
 		} else {
 			for _, user := range userlist {
@@ -201,24 +172,22 @@ func (c *AdminController) Userdel() {
 				if code == 0 {
 					successlist = append(successlist, user.Id)
 				}
-				endcode = code
+				endcode += code
 				endmsg += msg + "<br/>"
 			}
 		}
-		resp["code"] = endcode
-		resp["msg"] = endmsg
-		resp["successlist"] = successlist
+		resp.Code, resp.Msg, resp.Data = endcode, endmsg, successlist
 		c.Data["json"] = resp
 		c.ServeJSON()
 	}
 }
 
 func (c *AdminController) deleteUser(user models.User) (string, int) {
-	msg, code := "", models.DO_SUCCESS
-	if user.Id == c.GetSession("user").(models.User).Id {
+	msg, code, loginUser := "", models.DO_SUCCESS, c.GetSession("user").(models.User)
+	if user.Id == loginUser.Id {
 		code = models.U_DEL_SELF
 		msg = "删除用户 " + user.Username + " 失败<br/>禁止删除自己"
-	} else if user.Status == "管理员" {
+	} else if user.Status == "管理员" && loginUser.Status != "超级管理员" {
 		code = models.U_DEL_MANAGER
 		msg = "删除用户 " + user.Username + " 失败<br/>禁止删除管理员"
 	} else {

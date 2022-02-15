@@ -7,8 +7,11 @@ const (
 
 	// base action info
 	DO_SUCCESS  = 0
-	DO_REMAIN   = 1
-	DO_UP_ERROR = 2
+	DO_ERROR    = 1
+	DO_REMAIN   = 2
+	DO_UP_ERROR = 4
+
+	DO_JSON_ERR = 100
 
 	// user status
 	USER_NORMAL = 1

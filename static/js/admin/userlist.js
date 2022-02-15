@@ -108,7 +108,7 @@ layui.use(["form", "table"], function () {
 								}
 							);
 						}
-                        var successlist = res.successlist;
+                        var successlist = res.data;
                         for (var i in successlist) {
                             mapper[successlist[i]].del();
                         }
