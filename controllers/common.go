@@ -1,9 +1,15 @@
 package controllers
 
 import (
+	"encoding/base64"
 	"encoding/json"
-	"fmt"
+	"io/ioutil"
+	"path/filepath"
+	"strings"
 	"videowebsite/models"
+
+	"github.com/astaxie/beego"
+	"github.com/google/uuid"
 )
 
 type CommonController struct {
@@ -39,6 +45,9 @@ func (c *CommonController) User_setting() {
 		user := c.GetSession("user").(models.User)
 		bytes, _ := json.Marshal(user)
 		c.Data["UserInfoJson"] = string(bytes)
+		if c.Data["LogoimgPath"] = "../" + user.Userlogo; user.Userlogo == "" {
+			c.Data["LogoimgPath"] = "../" + filepath.Join(beego.AppConfig.String("storepath"), beego.AppConfig.String("nopic_path"))
+		}
 	} else if ext == "json" {
 		action := c.Input().Get("action")
 		user := c.GetSession("user").(models.User)
@@ -63,11 +72,30 @@ func (c *CommonController) User_setting() {
 	c.TplName = "common/userSetting.html"
 }
 
-func (c *CommonController) Upload_img() {
-	fmt.Println(c.Ctx.Request)
-	fmt.Println(c)
-	fmt.Println("------------")
-	fmt.Println(c.Input())
-	fmt.Println(c.Ctx.Input)
-	c.TplName = "upload_img.json"
+func (c *CommonController) Uploader() {
+	info := strings.Split(c.Input().Get("type"), "-")
+	storepath := beego.AppConfig.String("storepath")
+	resp := Responser{}
+	if info[1] == "image" {
+		storepath = filepath.Join(storepath, info[1], info[0], uuid.NewString()+".jpg")
+		base64data := c.Input().Get(info[1])
+		base64data = base64data[strings.Index(base64data, ",")+1:]
+		source, err := base64.StdEncoding.DecodeString(base64data)
+		if err != nil {
+			resp.Code = models.DO_ERROR
+			resp.Msg = "图片解码失败<br/>" + err.Error()
+		} else {
+			err = ioutil.WriteFile(storepath, source, 0666)
+			if err != nil {
+				resp.Code = models.DO_ERROR
+				resp.Msg = "图片上传失败<br/>" + err.Error()
+			} else {
+				resp.Code = models.DO_SUCCESS
+				resp.Msg = "图片上传成功"
+				resp.Data = storepath
+			}
+		}
+	}
+	c.Data["json"] = resp
+	c.ServeJSON()
 }

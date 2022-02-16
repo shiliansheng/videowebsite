@@ -30,11 +30,14 @@
 
 ### 弹出框
 
-#### 设置普通弹出框
 ```javascript
+// 设置普通弹出框
 layer.alert(info, {
     title: "titleName",
 });
+
+// 设置确认框
+layer.confirm(info, function{})
 ```
 
 

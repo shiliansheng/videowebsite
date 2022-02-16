@@ -11,7 +11,7 @@ type User struct {
 	Username     string    `json:"username"`               // 用户账户名
 	Password     string    `json:"password"`               // 用户密码
 	Nickname     string    `json:"nickname"`               // 昵称
-	Userlogo     string    `json:"Userlogo,omitempty"`     // 用户头像
+	Userlogo     string    `json:"userlogo,omitempty"`     // 用户头像
 	Sex          string    `json:"sex"`                    // 性别
 	Email        string    `json:"email,omitempty"`        // e-mail
 	Birthday     string    `json:"birthday,omitempty"`     // 用户生日

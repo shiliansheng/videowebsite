@@ -40,21 +40,31 @@ layui.use(["form", "miniTab", 'laydate'], function () {
 });
 
 layui.config({
-	base: '../../static/lib/cropper/' //layui自定义layui组件目录
-}).use(['form', 'croppers'], function () {
+	base: '/static/lib/cropper/' //layui自定义layui组件目录
+}).use(['form', 'avatar'], function () {
 	var $ = layui.jquery
 		, form = layui.form
-		, croppers = layui.croppers
+		, avatar = layui.avatar
 		, layer = layui.layer;
-	croppers.render({
-		elem: '#userlogo'
-		, saveW: 120	//保存宽度
-		, saveH: 120	//保存高度
-		, mark: 1 / 1	//选取比例
-		, area: '800px'	//弹窗宽度
-		, method: 'post'
-		, url: "upload_img.json"  //图片上传接口返回和（layui 的upload 模块）返回的JOSN一样
-		, done: function (url) { //上传完毕回调
+	avatar.render({
+		elem: "#userlogo"
+		, success: function (base64, size) {
+			var data = new Object()
+			data.image = base64
+			$.ajax({
+				type: "post"
+				, url: "uploader?type=user-image"
+				, data: data
+				, success: function(res) {
+					if (res.code == 0) {
+						layer.msg('上传成功')
+						document.getElementById("userlogoInput").value = res.data
+						document.getElementById('logoimg').setAttribute("src", base64)
+					} else {
+						layer.msg(res.msg)
+					}
+				}
+			});
 		}
 	});
 });

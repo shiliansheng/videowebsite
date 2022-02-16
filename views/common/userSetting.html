@@ -9,6 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="../../static/lib/layui-v2.6.3/css/layui.css" media="all">
     <link rel="stylesheet" href="../../static/css/public.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/cropper/cropper.min.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/cropper/ImgCropping.css" media="all">
     <style>
         .layuimini-container {
             padding: 25px 0px;
@@ -21,10 +23,11 @@
             line-height: 38px;
         }
 
-        .userLogoBox {
+        #logoimg {
+            display: inline-block;
             position: absolute;
-            right: 0;
-            top: 0;
+            right: -130px;
+            top: -75px;
             width: 100px;
             height: 100px;
             display: inline-block;
@@ -34,12 +37,7 @@
         }
 
         .img-left {
-            width: calc(100% - 120px);
-        }
-
-        img {
-            width: 100%;
-            height: 100%;
+            width: calc(100% - 130px);
         }
     </style>
 </head>
@@ -54,13 +52,13 @@
                     <tip>昵称可空，默认为stranger</tip>
                 </div>
             </div>
-            <div class="userLogoBox"> <img src="/static/img/logo.png" id="logoimg" alt=""> </div>
             <div class="layui-form-item img-left">
                 <label class="layui-form-label">头像</label>
-                <!-- <div class="layui-input-block">
-                    <button class="layui-btn" name="userlogo" id="userlogo" lay-data="{url: '/static/store/img/user/'}">上传图片</button>
-                </div> -->
-                <button class="layui-btn" name="userlogo" id="userlogo">上传图片</button>
+                <div class="layui-input-block">
+                    <img src="" id="logoimg" alt="">
+                    <input type="text" name="userlogo" id="userlogoInput" style="display: none;">
+                    <button class="layui-btn" id="userlogo">上传图片</button>
+                </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">出生日期</label>
@@ -104,8 +102,11 @@
     <!-- <script src="../../static/lib/cropper/croppers.js" charset="utf-8"></script> -->
     <script>
     var userInfo = JSON.parse('{{.UserInfoJson}}')
-    //var logo = document.getElementById('userlogo')
-    //logo.style.zoom = 150 / logo.width * 1.0
+    window.onload = function() {
+        document.getElementById("logoimg").setAttribute("src", '{{.LogoimgPath }}')
+        console.log('{{.LogoimgPath }}')
+        console.log(document.getElementById("logoimg"))
+    }
     </script>
 </body>
 
