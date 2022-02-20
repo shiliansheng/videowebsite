@@ -73,8 +73,6 @@ func (m *SystemMenu) GetMenuList() []*MenuTreeList {
 	o := orm.NewOrm()
 	var menuList []SystemMenu
 	_, _ = o.QueryTable(m.TableName()).Filter("state", 1).OrderBy("-sort").All(&menuList)
-	// fmt.Println("QUERY END.........")
-	// fmt.Println(menuList)
 	return m.buildMenuChild(0, menuList)
 }
 

@@ -15,6 +15,8 @@ type AdminController struct {
 	BaseController
 }
 
+////////////////// 页面函数 //////////////////
+
 func (c *AdminController) Get() {
 	if c.GetSession("user") != nil {
 		c.Redirect("index.html", 302)
@@ -22,6 +24,8 @@ func (c *AdminController) Get() {
 		c.Redirect("login.html", 302)
 	}
 }
+
+////////////////// common //////////////////
 
 func (c *AdminController) Common() {
 	pageName := c.Ctx.Input.GetData("0")
@@ -31,6 +35,27 @@ func (c *AdminController) Common() {
 	} else if pageName == "userPassword" {
 		c.TplName = "../common/userPassword.html"
 	}
+}
+
+////////////////// 主页面 //////////////////
+
+func (c *AdminController) Index() {
+	user, _ := c.GetSession("user").(models.User)
+	c.Data["Nickname"] = user.Nickname
+	c.TplName = "admin/index.html"
+}
+
+func (c *AdminController) Getmenulist() {
+	systemInit := new(models.SystemMenu).GetSystemInit()
+	c.Data["json"] = systemInit
+	c.ServeJSON()
+}
+
+func (c *AdminController) Welcome() {
+	c.Data["UserCount"] = new(models.User).GetUserCount()
+	c.Data["VideoCount"] = 123
+	c.Data["VideoTypeCount"] = new(models.VideoType).GetVideoTypeCount()
+	c.TplName = "admin/welcome.html"
 }
 
 func (c *AdminController) Login() {
@@ -57,18 +82,7 @@ func (c *AdminController) Login() {
 	c.TplName = "login.html"
 }
 
-func (c *AdminController) Index() {
-	user, _ := c.GetSession("user").(models.User)
-	c.Data["Nickname"] = user.Nickname
-	c.TplName = "admin/index.html"
-}
-
-func (c *AdminController) Welcome() {
-	c.Data["UserCount"] = new(models.User).GetUserCount()
-	c.Data["VideoCount"] = 123
-	c.Data["ViewCount"] = 456
-	c.TplName = "admin/welcome.html"
-}
+////////////////// 用户管理界面  //////////////////
 
 func (c *AdminController) Userlist() {
 	c.Data["Httpport"] = beego.AppConfig.String("httpport")
@@ -107,7 +121,7 @@ func (c *AdminController) Useradd() {
 			CreateAt: mutils.GetNowTimeString(),
 			UpdateAt: mutils.GetNowTimeString(),
 		}
-		user.GetUserInfo(c.Input())
+		user.SetUser(c.Input())
 		resp := Responser{}
 		resp.Code, resp.Msg = user.Add(user)
 		c.Data["json"] = resp
@@ -124,7 +138,7 @@ func (c *AdminController) Useradd() {
 func (c *AdminController) Useredit() {
 	if c.Ctx.Request.Method == "GET" {
 		user := models.User{}
-		user.GetUserInfo(c.Input())
+		user.SetUser(c.Input())
 		bytes, _ := json.Marshal(user)
 		c.Data["UserInfoJson"] = string(bytes)
 		if user.Status == "超级管理员" {
@@ -135,9 +149,9 @@ func (c *AdminController) Useredit() {
 		user := models.User{Id: func() int { ret, _ := strconv.Atoi(c.Input().Get("id")); return ret }()}
 		c.Orm.Read(&user)
 		var newUser models.User = user
-		newUser.GetUserInfo(c.Input())
+		newUser.SetUser(c.Input())
 		resp := Responser{}
-		resp.Code, resp.Msg = user.Update(newUser, user.GetDifCols(user, newUser)...)
+		resp.Code, resp.Msg = user.Update(newUser, user.GetDifCols(newUser)...)
 		c.Data["json"] = resp
 		c.ServeJSON()
 	}
@@ -168,7 +182,8 @@ func (c *AdminController) Userdel() {
 			endmsg = "解析数据失败，传递数据有误"
 		} else {
 			for _, user := range userlist {
-				msg, code := c.deleteUser(user)
+				ulogin := c.GetSession("user").(models.User)
+				msg, code := ulogin.Delete(user)
 				if code == 0 {
 					successlist = append(successlist, user.Id)
 				}
@@ -182,22 +197,108 @@ func (c *AdminController) Userdel() {
 	}
 }
 
-func (c *AdminController) deleteUser(user models.User) (string, int) {
-	msg, code, loginUser := "", models.DO_SUCCESS, c.GetSession("user").(models.User)
-	if user.Id == loginUser.Id {
-		code = models.U_DEL_SELF
-		msg = "删除用户 " + user.Username + " 失败<br/>禁止删除自己"
-	} else if user.Status == "管理员" && loginUser.Status != "超级管理员" {
-		code = models.U_DEL_MANAGER
-		msg = "删除用户 " + user.Username + " 失败<br/>禁止删除管理员"
-	} else {
-		_, err := c.Orm.Delete(&user)
-		if err != nil {
-			code = models.U_DEL_ERROR
-			msg = "删除用户 " + user.Username + " 失败<br/>" + err.Error()
+////////////////// 视频管理界面  //////////////////
+
+func (c *AdminController) Videotypelist() {
+	ext := c.Ctx.Input.Param(":ext")
+	action := c.Input().Get("action")
+	if ext == "html" {
+		c.Data["Httpport"] = beego.AppConfig.String("httpport")
+		c.TplName = "admin/videotypelist.html"
+	} else if ext == "json" {
+		if action == "getlist" {
+			filtermap := make(map[string]interface{})
+			filterString := c.Input().Get("searchParams")
+			if filterString != "" {
+				json.Unmarshal([]byte(filterString), &filtermap)
+			}
+			page, _ := strconv.Atoi(c.Input().Get("page"))
+			limit, _ := strconv.Atoi(c.Input().Get("limit"))
+			vtlistJson := new(models.VideoType).GetVideoTypeListJson(page, limit, filtermap)
+			c.Data["json"] = vtlistJson
+		} else if action == "gettree" {
+			vtTreeList := new(models.VideoType).GetVideoTreeList()
+			c.Data["json"] = vtTreeList
+		}
+		c.ServeJSON()
+	}
+}
+
+func (c *AdminController) Videotypeedit() {
+	action := c.Input().Get("action")
+	if action == "getinfo" {
+		id, _ := strconv.Atoi(c.Input().Get("id"))
+		vtype := models.VideoType{Id: id}
+		vtype, _ = vtype.GetVideoTypeInfo()
+		c.Data["Vtype"] = &vtype
+		if vtype.Id == 0 {
+			c.Data["Disabled"] = "disabled"
 		} else {
-			msg = "删除用户 " + user.Username + " 成功"
+			c.Data["Disabled"] = ""
+		}
+		c.Data["PidName"] = vtype.GetNameById(vtype.Pid)
+		c.Data["InitTypeLogoPath"] = c.getImageSrc(vtype.Vtypelogo)
+	} else if action == "update" {
+		vtype := models.VideoType{Id: mutils.Atoi(c.Input().Get("id"))}
+		c.Orm.Read(&vtype)
+		var newType models.VideoType = vtype
+		newType.SetVideoType(c.Input())
+		resp := Responser{}
+		resp.Code, resp.Msg = vtype.Update(newType, vtype.GetDifCols(newType)...)
+		c.Data["json"] = resp
+		c.ServeJSON()
+	}
+	c.TplName = "admin/videotypeedit.html"
+}
+
+func (c *AdminController) Videotypeadd() {
+	ext := c.Ctx.Input.Param(":ext")
+	if ext == "html" {
+		c.Data["InitTypeLogoPath"] = c.getImageSrc("")
+		c.TplName = "admin/videotypeadd.html"
+	} else if ext == "json" {
+		action := c.Input().Get("action")
+		resp := Responser{Code: 0, Msg: ""}
+		if action == "add" {
+			vtype := models.VideoType{}
+			vtype.SetVideoType(c.Input())
+			userSession := c.GetSession("user")
+			if userSession == nil {
+				resp.Code, resp.Msg = models.DO_ERROR, "当前未登录，请登录后添加"
+			} else {
+				vtype.Addid = userSession.(models.User).Id
+				resp.Code, resp.Msg = vtype.Add(vtype)
+			}
+		}
+		c.Data["json"] = resp
+		c.ServeJSON()
+	}
+}
+
+func (c *AdminController) Videotypedel() {
+	more := c.Input().Get("more")
+	resp := Responser{}
+	reqString, vtypelist, successlist := c.Input().Get("Data"), []models.VideoType{}, []int{}
+	finalmsg, finalcode := "", 0
+	if more == "false" {
+		reqString = "[" + reqString + "]"
+	}
+	err := json.Unmarshal([]byte(reqString), &vtypelist)
+	if err != nil {
+		finalcode = models.DO_JSON_ERR
+		finalmsg = "解析数据失败，传递数据有误"
+	} else {
+		var tmp = new(models.VideoType)
+		for _, vtype := range vtypelist {
+			msg, code := tmp.Delete(vtype)
+			if code == 0 {
+				successlist = append(successlist, vtype.Id)
+			}
+			finalcode += code
+			finalmsg += msg + "<br/>"
 		}
 	}
-	return msg, code
+	resp.Code, resp.Msg, resp.Data = finalcode, finalmsg, successlist
+	c.Data["json"] = resp
+	c.ServeJSON()
 }

@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -42,4 +43,9 @@ const (
 
 func GetNowTimeString() string {
 	return time.Now().Format(TimeFormart)
+}
+
+func Atoi(s string) int {
+	res, _ := strconv.Atoi(s)
+	return res
 }

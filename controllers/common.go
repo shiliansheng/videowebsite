@@ -54,8 +54,8 @@ func (c *CommonController) User_setting() {
 		resp := Responser{}
 		if action == "changeSetting" {
 			var newUser models.User = user
-			newUser.GetUserInfo(c.Input())
-			colarr := user.GetDifCols(user, newUser)
+			newUser.SetUser(c.Input())
+			colarr := user.GetDifCols(newUser)
 			if len(colarr) == 0 {
 				resp.Code = models.DO_REMAIN
 				resp.Msg = "信息未改变，修改失败"

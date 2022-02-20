@@ -8,6 +8,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="../../static/lib/layui-v2.6.3/css/layui.css" media="all">
     <link rel="stylesheet" href="../../static/css/public.css" media="all">
+    <style>
+        img {
+            width: 100px;
+            height: 100px;
+        }
+         .layui-table-cell{
+            height: auto!important;
+            white-space: normal;
+        }
+        .layui-form-pane .layui-form-label {
+            width: 100px !important;
+        }
+        .layui-form-item .layui-input-inline {
+            width: 160px !important;
+        }
+    </style>
 </head>
 <body>
 <div class="layuimini-container">
@@ -19,38 +35,15 @@
                 <form class="layui-form layui-form-pane" action="">
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户名</label>
+                            <label class="layui-form-label">类型名称</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="username" autocomplete="off" class="layui-input">
+                                <input type="text" name="typename" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
-                            <label class="layui-form-label">用户昵称</label>
+                            <label class="layui-form-label">父ID</label>
                             <div class="layui-input-inline">
-                                <input type="text" name="nickname" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户性别</label>
-                            <div class="layui-input-inline">
-                                <!-- <input type="text" name="sex" autocomplete="off" class="layui-input"> -->
-                                <select name="sex" id="sexSelect">
-                                    <option value="" selected>选择用户性别</option>
-                                    <option value="保密">保密</option>
-                                    <option value="男">男</option>
-                                    <option value="女">女</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户身份</label>
-                            <div class="layui-input-inline">
-                                <!-- <input type="text" name="status" autocomplete="off" class="layui-input"> -->
-                                <select name="status" id="statusSelect">
-                                    <option value="" selected>选择用户身份</option>
-                                    <option value="普通用户">普通用户</option>
-                                    <option value="管理员">管理员</option>
-                                </select>
+                                <input type="text" name="pid" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-inline">
@@ -74,11 +67,10 @@
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
-
     </div>
 </div>
 <script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
 <script>var httpPort = "{{.Httpport}}"</script>
-<script src="../../static/js/admin/userlist.js" charset="utf-8"></script>
+<script src="../../static/js/admin/videotypelist.js" charset="utf-8"></script>
 </body>
 </html>

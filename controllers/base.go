@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"path/filepath"
 	"strings"
 
 	"github.com/astaxie/beego"
@@ -45,4 +46,13 @@ func (c *BaseController) GetNickname(name string) string {
 		name = "stranger"
 	}
 	return name
+}
+
+func (c BaseController) getImageSrc(path string) string {
+	if path == "" {
+		path = "../" + filepath.Join(beego.AppConfig.String("storepath"), beego.AppConfig.String("nopic_path"))
+	} else {
+		path = "../" + path
+	}
+	return path
 }

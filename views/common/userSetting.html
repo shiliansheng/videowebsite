@@ -31,7 +31,7 @@
             width: 100px;
             height: 100px;
             display: inline-block;
-            border: 1px solid #333;
+            border: 1px solid #d3d3d3;
             box-sizing: border-box;
             overflow: hidden;
         }
@@ -104,8 +104,6 @@
     var userInfo = JSON.parse('{{.UserInfoJson}}')
     window.onload = function() {
         document.getElementById("logoimg").setAttribute("src", '{{.LogoimgPath }}')
-        console.log('{{.LogoimgPath }}')
-        console.log(document.getElementById("logoimg"))
     }
     </script>
 </body>

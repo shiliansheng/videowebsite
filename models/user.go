@@ -4,6 +4,7 @@ import (
 	"net/url"
 	"strconv"
 	"time"
+	mutils "videowebsite/utils"
 )
 
 type User struct {
@@ -24,24 +25,17 @@ type User struct {
 	DeleteAt     time.Time `json:"deleteat,omitempty"`     // 删除时间
 }
 
-type UserJson struct {
-	Code  int    `json:"code"`
-	Msg   string `json:"msg"`
-	Count int    `json:"count"`
-	Data  []User `json:"data"`
-}
-
 func (m User) TableName() string {
 	return TableName("user")
 }
 
 func (m User) GetUserCount() int {
-	userCount, _ := Orm.QueryTable(new(User).TableName()).Count()
+	userCount, _ := Orm.QueryTable(m.TableName()).Count()
 	return int(userCount)
 }
 
-func (m User) GetUserListJson(page, limit int, mapper map[string]interface{}, getNil bool) (UserJson, error) {
-	userJson := UserJson{
+func (m User) GetUserListJson(page, limit int, mapper map[string]interface{}, getNil bool) (ResposeJson, error) {
+	userJson := ResposeJson{
 		Code:  0,
 		Msg:   "",
 		Count: 0,
@@ -85,6 +79,30 @@ func (m User) Update(user User, cols ...string) (int, string) {
 	return DO_SUCCESS, "更新信息成功"
 }
 
+// 删除用户，调用者必须是登录的用户
+//  @param  user [User]
+//  @return [string] 返回操作信息
+//  @return [int] 返回操作结果，成功为0，失败为非零
+func (m *User) Delete(user User) (string, int) {
+	msg, code := "", DO_SUCCESS
+	if user.Id == m.Id {
+		code = U_DEL_SELF
+		msg = "删除用户 " + user.Username + " 失败<br/>禁止删除自己"
+	} else if user.Status == "管理员" && m.Status != "超级管理员" {
+		code = U_DEL_MANAGER
+		msg = "删除用户 " + user.Username + " 失败<br/>禁止删除管理员"
+	} else {
+		_, err := Orm.Delete(&user)
+		if err != nil {
+			code = U_DEL_ERROR
+			msg = "删除用户 " + user.Username + " 失败<br/>" + err.Error()
+		} else {
+			msg = "删除用户 " + user.Username + " 成功"
+		}
+	}
+	return msg, code
+}
+
 // {"id", "username", "password", "nickname", "logoimage", "sex", "email", "birthday", "introduction", "status", "state", "remark"},
 
 func (m User) Add(u User) (int, string) {
@@ -100,44 +118,44 @@ func (m User) Add(u User) (int, string) {
 	return code, msg
 }
 
-func (m User) GetDifCols(base, new User) []string {
+func (m User) GetDifCols(new User) []string {
 	dif := []string{}
-	if base.Password != new.Password {
+	if m.Password != new.Password {
 		dif = append(dif, "password")
 	}
-	if base.Nickname != new.Nickname {
+	if m.Nickname != new.Nickname {
 		dif = append(dif, "nickname")
 	}
-	if base.Userlogo != new.Userlogo {
+	if m.Userlogo != new.Userlogo {
 		dif = append(dif, "userlogo")
 	}
-	if base.Sex != new.Sex {
+	if m.Sex != new.Sex {
 		dif = append(dif, "sex")
 	}
-	if base.Email != new.Email {
+	if m.Email != new.Email {
 		dif = append(dif, "email")
 	}
-	if base.Birthday != new.Birthday {
+	if m.Birthday != new.Birthday {
 		dif = append(dif, "birthday")
 	}
-	if base.Introduction != new.Introduction {
+	if m.Introduction != new.Introduction {
 		dif = append(dif, "introduction")
 	}
-	if base.Status != new.Status {
+	if m.Status != new.Status {
 		dif = append(dif, "status")
 	}
-	if base.State != new.State {
+	if m.State != new.State {
 		dif = append(dif, "state")
 	}
-	if base.Remark != new.Remark {
+	if m.Remark != new.Remark {
 		dif = append(dif, "remark")
 	}
 	return dif
 }
 
-func (m *User) GetUserInfo(source url.Values) error {
+func (m *User) SetUser(source url.Values) error {
 	if value := source.Get("id"); value != "" {
-		m.Id = func() int { res, _ := strconv.Atoi(value); return res }()
+		m.Id = mutils.Atoi(value)
 	}
 	if value := source.Get("username"); value != "" {
 		m.Username = value

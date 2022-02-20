@@ -5,7 +5,7 @@ layui.use(["form", "table"], function () {
         mapper = new Map();
 	table.render({
 		elem: "#currentTableId",
-		url: "http://localhost:" + httpPort + "/admin/getuserlist.json",
+		url: "getuserlist.json",
 		toolbar: "#toolbarDemo",
 		defaultToolbar: [
 			"filter",
