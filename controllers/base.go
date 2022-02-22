@@ -50,9 +50,9 @@ func (c *BaseController) GetNickname(name string) string {
 
 func (c BaseController) getImageSrc(path string) string {
 	if path == "" {
-		path = "../" + filepath.Join(beego.AppConfig.String("storepath"), beego.AppConfig.String("nopic_path"))
+		path = "..\\" + filepath.Join(beego.AppConfig.String("storepath"), beego.AppConfig.String("nopic_path"))
 	} else {
-		path = "../" + path
+		path = "..\\" + path
 	}
 	return path
 }

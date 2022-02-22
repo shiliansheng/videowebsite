@@ -112,6 +112,7 @@ layui.use(["form", "table"], function () {
                         for (var i in successlist) {
                             mapper[successlist[i]].del();
                         }
+						table.reload("currentTableId");
 					},
 				});
 				layer.close(index);
@@ -177,6 +178,7 @@ layui.use(["form", "table"], function () {
 						if (res.code == 0) {
 							layer.msg("删除用户成功");
 							obj.del();
+							table.reload("currentTableId");
 						} else {
 							var index = layer.alert(
 								res.msg,

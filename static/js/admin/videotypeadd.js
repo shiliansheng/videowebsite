@@ -9,6 +9,7 @@ layui.use(["form", "tree"], function () {
 			layui.tree.render({
 				elem: '#treeUl',
 				data: res,
+				showLine: false,
 				click: function (node) { //点击节点回调
 					var othis = $($(this)[0].elem).parents(".layui-form-select");
 					othis.removeClass("layui-form-selected").find(".layui-select-title span").html(node.data.title).end().find("input:hidden[name='pid']").val(node.data.id);

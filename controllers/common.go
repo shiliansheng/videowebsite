@@ -1,9 +1,13 @@
 package controllers
 
 import (
+	"bufio"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
+	"io"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strings"
 	"videowebsite/models"
@@ -76,6 +80,8 @@ func (c *CommonController) Uploader() {
 	info := strings.Split(c.Input().Get("type"), "-")
 	storepath := beego.AppConfig.String("storepath")
 	resp := Responser{}
+	file, _ := os.OpenFile("./out.txt", os.O_CREATE|os.O_RDWR, 0666)
+	file.WriteString(fmt.Sprint(c.GetFile("upfile")))
 	if info[1] == "image" {
 		storepath = filepath.Join(storepath, info[1], info[0], uuid.NewString()+".jpg")
 		base64data := c.Input().Get(info[1])
@@ -92,8 +98,59 @@ func (c *CommonController) Uploader() {
 			} else {
 				resp.Code = models.DO_SUCCESS
 				resp.Msg = "图片上传成功"
-				resp.Data = storepath
+				resp.Data = c.getImageSrc(storepath)
 			}
+		}
+	}
+	c.Data["json"] = resp
+	c.ServeJSON()
+}
+
+// 上传图片，接口格式：filetype-belong
+func (c *CommonController) Uploadfile() {
+	reqinfo := strings.Split(c.Input().Get("type"), "-")
+	storepath := beego.AppConfig.String("storepath")
+	resp := Responser{}
+	if len(reqinfo) == 0 {
+		resp.Msg = "请求出错"
+		resp.Code = models.DO_REQUST_ERR
+	} else {
+		ftype, fbelong := reqinfo[0], ""
+		if len(reqinfo) > 1 {
+			fbelong = reqinfo[1]
+		}
+		file, handler, err := c.GetFile("upfile")
+		if err != nil {
+			resp.Msg = "获取文件出错"
+			resp.Code = models.DO_OBTAIN_ERR
+		} else {
+			fext := filepath.Ext(handler.Filename)
+			storepath = filepath.Join(storepath, ftype, fbelong, uuid.NewString()+fext)
+			outfile, err := os.OpenFile(storepath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0666)
+			if err != nil {
+				resp.Code = models.DO_ERROR
+				resp.Msg = "创建文件失败，请重试!<br/>" + err.Error()
+			} else {
+				reader := bufio.NewReader(file)
+				writer := bufio.NewWriter(outfile)
+				buffer := make([]byte, 1024*1024) // 创建1K的缓冲区
+				for {
+					_, err := reader.Read(buffer)
+					if err != nil {
+						//读到文件末尾时退出读写循环
+						if err == io.EOF {
+							break
+						}
+						fmt.Println(err)
+					} else {
+						//将桶中的数据写出到目标文件
+						writer.Write(buffer)
+					}
+				}
+				writer.Flush()
+				resp.Data = "..\\" + storepath
+			}
+			defer outfile.Close()
 		}
 	}
 	c.Data["json"] = resp

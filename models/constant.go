@@ -12,7 +12,8 @@ const (
 	DO_UP_ERROR = 4
 
 	DO_JSON_ERR = 100
-
+	DO_REQUST_ERR = 1001
+	DO_OBTAIN_ERR = 1001
 	// user status
 	USER_NORMAL = 1
 	USER_ADMIN  = 2

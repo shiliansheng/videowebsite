@@ -25,7 +25,11 @@ layui.use(["form", "table"], function () {
                 { field: "typename", width: 120, title: "类型名称" },
                 { field: "addid", width: 90, title: "添加人ID" },
                 { field: "vtypelogo", width: 130, title: "类型logo", align: 'center', templet: function (d) {
-                    return '<img src="' + d.vtypelogo + '">'
+                    var path = d.vtypelogo
+                    if (path == "") {
+                        path = NoPicPath
+                    }
+                    return '<img src="' + path + '">'
                 }},
                 { field: "createat", width: 160, title: "添加时间" },
                 { field: "sequence", width: 110, title: "显示顺序", sort: true },
@@ -100,6 +104,7 @@ layui.use(["form", "table"], function () {
                     success: function (res) {
                         if (res.code == 0) {
                             layer.msg(res.msg);
+                            table.reload("currentTableId");
                         } else {
                             var index = layer.alert(
                                 res.msg,
@@ -117,6 +122,7 @@ layui.use(["form", "table"], function () {
                         for (var i in successlist) {
                             mapper[successlist[i]].del();
                         }
+                        table.reload("currentTableId");
                     },
                 });
                 layer.close(index);
@@ -128,34 +134,6 @@ layui.use(["form", "table"], function () {
     table.on("checkbox(currentTableFilter)", function (obj) {
         mapper[obj.data.id] = obj
     });
-    /**
-     * param 将要转为URL参数字符串的对象
-     * key URL参数字符串的前缀
-     * encode true/false 是否进行URL编码,默认为true
-     * return URL参数字符串
-     */
-    var urlEncode = function (param, key, encode) {
-        if (param == null) return "";
-        var paramStr = "";
-        var t = typeof param;
-        if (t == "string" || t == "number" || t == "boolean") {
-            paramStr +=
-                "&" +
-                key +
-                "=" +
-                (encode == null || encode ? encodeURIComponent(param) : param);
-        } else {
-            for (var i in param) {
-                var k =
-                    key == null
-                        ? i
-                        : key +
-                        (param instanceof Array ? "[" + i + "]" : "." + i);
-                paramStr += urlEncode(param[i], k, encode);
-            }
-        }
-        return paramStr;
-    };
     table.on("tool(currentTableFilter)", function (obj) {
         var data = obj.data;
         if (obj.event === "edit") {
@@ -187,6 +165,7 @@ layui.use(["form", "table"], function () {
                                 content: res.msg
                             });
                             obj.del();
+                            table.reload("currentTableId");
                         } else {
                             var index = layer.alert(
                                 res.msg,

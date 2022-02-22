@@ -3,11 +3,11 @@ DROP TABLE IF EXISTS `vw_videotype`;
 CREATE TABLE `vw_videotype` (
     `id`            int(11) unsigned    NOT NULL AUTO_INCREMENT COMMENT '视频类型ID',
     `pid`           int(11) unsigned    NOT NULL DEFAULT '0'    COMMENT '视频分类父ID',
-    `typename`      varchar(20)         NOT NULL UNIQUE         COMMENT '视频类型名称',
-    `discription`   varchar(200)                 DEFAULT NULL   COMMENT '视频类型描述',
+    `typename`      varchar(32)         NOT NULL UNIQUE         COMMENT '视频类型名称',
+    `discription`   varchar(512)                 DEFAULT NULL   COMMENT '视频类型描述',
     `addid`         int(11) unsigned    NOT NULL                COMMENT '添加人ID',
     `createat`      timestamp NULL               DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `vtypelogo`     varchar(200)                 DEFAULT NULL   COMMENT '视频类型LOGO',
+    `vtypelogo`     varchar(256)                 DEFAULT NULL   COMMENT '视频类型LOGO',
     `sequence`      int(11)                      DEFAULT '0'    COMMENT '显示顺序',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='视频类型表';

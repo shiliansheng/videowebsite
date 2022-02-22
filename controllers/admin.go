@@ -7,8 +7,6 @@ import (
 	"strings"
 	"videowebsite/models"
 	mutils "videowebsite/utils"
-
-	"github.com/astaxie/beego"
 )
 
 type AdminController struct {
@@ -53,7 +51,7 @@ func (c *AdminController) Getmenulist() {
 
 func (c *AdminController) Welcome() {
 	c.Data["UserCount"] = new(models.User).GetUserCount()
-	c.Data["VideoCount"] = 123
+	c.Data["VideoCount"] = new(models.Video).GetVideoCount()
 	c.Data["VideoTypeCount"] = new(models.VideoType).GetVideoTypeCount()
 	c.TplName = "admin/welcome.html"
 }
@@ -85,7 +83,6 @@ func (c *AdminController) Login() {
 ////////////////// 用户管理界面  //////////////////
 
 func (c *AdminController) Userlist() {
-	c.Data["Httpport"] = beego.AppConfig.String("httpport")
 	c.TplName = "admin/userlist.html"
 }
 
@@ -197,13 +194,13 @@ func (c *AdminController) Userdel() {
 	}
 }
 
-////////////////// 视频管理界面  //////////////////
+////////////////// 视频类型管理界面  //////////////////
 
 func (c *AdminController) Videotypelist() {
 	ext := c.Ctx.Input.Param(":ext")
 	action := c.Input().Get("action")
 	if ext == "html" {
-		c.Data["Httpport"] = beego.AppConfig.String("httpport")
+		c.Data["NoPicPath"] = c.getImageSrc("")
 		c.TplName = "admin/videotypelist.html"
 	} else if ext == "json" {
 		if action == "getlist" {
@@ -293,6 +290,104 @@ func (c *AdminController) Videotypedel() {
 			msg, code := tmp.Delete(vtype)
 			if code == 0 {
 				successlist = append(successlist, vtype.Id)
+			}
+			finalcode += code
+			finalmsg += msg + "<br/>"
+		}
+	}
+	resp.Code, resp.Msg, resp.Data = finalcode, finalmsg, successlist
+	c.Data["json"] = resp
+	c.ServeJSON()
+}
+
+////////////////// 视频管理界面 //////////////////
+
+func (c *AdminController) Videolist() {
+	ext := c.Ctx.Input.Param(":ext")
+	if ext == "html" {
+		c.Data["NoPicPath"] = c.getImageSrc("")
+		c.TplName = "admin/videolist.html"
+	} else if ext == "json" {
+		action := c.Input().Get("action")
+		if action == "getlist" {
+			filtermap := make(map[string]interface{})
+			filterString := c.Input().Get("searchParams")
+			if filterString != "" {
+				json.Unmarshal([]byte(filterString), &filtermap)
+			}
+			page, _ := strconv.Atoi(c.Input().Get("page"))
+			limit, _ := strconv.Atoi(c.Input().Get("limit"))
+			vlistJson := new(models.Video).GetVideoListJson(page, limit, filtermap)
+			c.Data["json"] = vlistJson
+		}
+		c.ServeJSON()
+	}
+}
+
+func (c *AdminController) Videoadd() {
+	ext := c.Ctx.Input.Param(":ext")
+	if ext == "html" {
+		c.TplName = "admin/videoadd.html"
+	} else if ext == "json" {
+		action := c.Input().Get("action")
+		resp := Responser{}
+		if action == "add" {
+			userSession := c.GetSession("user")
+			if userSession == nil {
+				resp.Code, resp.Msg = models.DO_ERROR, "当前未登录，请登录后添加"
+			} else {
+				video := models.Video{Username: userSession.(models.User).Username}
+				video.SetVideo(c.Input())
+				resp.Msg, resp.Code = video.Add(video)
+			}
+		}
+		c.Data["json"] = resp
+		c.ServeJSON()
+	}
+}
+
+func (c *AdminController) Videoedit() {
+	ext := c.Ctx.Input.Param(":ext")
+	if ext == "html" {
+		vid := mutils.Atoi(c.Input().Get("id"))
+		video := models.Video{Id: vid}
+		c.Orm.Read(&video)
+		c.Data["Video"] = video
+		c.Data["NoPicPath"] = c.getImageSrc("")
+		c.TplName = "admin/videoedit.html"
+	} else if ext == "json" {
+		action := c.Input().Get("action")
+		resp := Responser{}
+		if action == "update" {
+			video := models.Video{Id: mutils.Atoi(c.Input().Get("id"))}
+			c.Orm.Read(&video)
+			var newV models.Video = video
+			newV.SetVideo(c.Input())
+			resp.Msg, resp.Code = video.Update(newV, video.GetDifCols(newV)...)
+			c.Data["json"] = resp
+		}
+		c.ServeJSON()
+	}
+}
+
+func (c *AdminController) Videodel() {
+	more := c.Input().Get("more")
+	resp := Responser{}
+	reqString, vlist, successlist := c.Input().Get("Data"), []models.Video{}, []int{}
+	finalmsg, finalcode := "", 0
+	if more == "false" {
+		reqString = "[" + reqString + "]"
+	}
+	err := json.Unmarshal([]byte(reqString), &vlist)
+	if err != nil {
+		finalcode = models.DO_JSON_ERR
+		finalmsg = "解析数据失败，传递数据有误"
+	} else {
+		var tmp = new(models.Video)
+		for _, video := range vlist {
+			msg, code := tmp.Delete(video)
+			if code == 0 {
+				successlist = append(successlist, video.Id)
 			}
 			finalcode += code
 			finalmsg += msg + "<br/>"
