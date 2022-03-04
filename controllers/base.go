@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"path/filepath"
-	"strings"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -21,15 +20,23 @@ type Responser struct {
 	Data interface{} `json:"data"`
 }
 
+type FileResponser struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+	Data struct {
+		Src string `json:"src"`
+	} `json:"data"`
+}
+
 func (c *BaseController) Prepare() {
 	controllerName, actionName := c.GetControllerAndAction()
 	c.ControllerName, c.ActionName = controllerName, actionName
 	c.Orm = orm.NewOrm()
-	if strings.ToLower(c.ControllerName) == "admincontroller" && strings.ToLower(c.ActionName) != "login" {
-		if c.GetSession("user") == nil {
-			c.History("未登录", "login.html")
-		}
-	}
+	// if strings.ToLower(c.ControllerName) == "admincontroller" && strings.ToLower(c.ActionName) != "login" {
+	// 	if c.GetSession("user") == nil {
+	// 		c.History("未登录", "login.html")
+	// 	}
+	// }
 }
 
 func (c *BaseController) History(msg string, url string) {

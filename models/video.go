@@ -267,6 +267,19 @@ func (m Video) Delete(v Video) (string, int) {
 	return msg, code
 }
 
+
+////////////////// VIDEO信息获取 //////////////////
+
+func (m Video) GetHotVideos(num int) []Video {
+	videos := []Video{}
+	_, err := Orm.QueryTable(m.TableName()).OrderBy("viewnum").Limit(num).All(&videos)
+	if err != nil {
+		fmt.Println("[ERROR]Get hot video list failed:", err)
+	}
+	return videos
+}
+
+
 ////////////////// 辅助函数 //////////////////
 
 // #### video type ####

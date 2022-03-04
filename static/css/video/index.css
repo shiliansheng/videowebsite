@@ -1,0 +1,121 @@
+body {
+	margin: 0;
+	padding: 0;
+	background-color: #fff;
+	counter-reset: section;
+}
+.layui-container {
+	min-width: 1200px;
+	background-color: #fff;
+	padding: 0;
+}
+
+.layui-body {
+	left: 0;
+	overflow: hidden;
+}
+
+.layui-header {
+	background-color: rgb(248, 248, 248);
+	margin-bottom: 10px;
+	border-bottom: 1px solid #e7e7e7;
+}
+
+.layui-footer {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 30px;
+	z-index: 990;
+	line-height: 30px;
+	padding: 5px 15px;
+	box-shadow: -1px 0 3px rgba(0, 0, 0, 0.12);
+	background-color: #fafafa;
+}
+
+.layui-header * {
+	color: rgb(82, 82, 82);
+	font-size: 15px;
+}
+
+.layui-header,
+.layui-header .layui-nav,
+.layui-header .layui-nav .layui-nav-item * {
+	color: rgb(82, 82, 82);
+}
+.layui-nav .layui-nav-item a:hover {
+	color: #5fb878;
+}
+
+.user-box a:hover {
+	color: #5fb878;
+}
+
+.layui-nav .layui-this::after,
+.layui-nav-bar {
+	height: 2px;
+}
+
+.website-logo {
+	float: left;
+	width: 140px;
+	height: 60px;
+	line-height: 60px;
+	background-color: transparent;
+
+	font-size: 17px;
+	font-weight: bold;
+	font-family: consolas;
+	text-align: center;
+}
+
+.layui-nav {
+	margin-left: 125px;
+	background-color: transparent;
+}
+
+.layui-nav .user-box {
+	padding-right: 10px;
+	width: 120px;
+	height: 60px;
+	line-height: 60px;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+}
+
+.login-box a {
+	padding: 0 10px;
+}
+
+.search-box {
+	margin-right: 160px;
+	width: 360px;
+	height: 60px;
+	line-height: 60px;
+}
+.search-box .layui-input {
+	display: inline-block;
+	width: calc(100% - 40px);
+}
+.search-box .layui-btn {
+	display: inline-block;
+	border: none;
+	padding: 0 !important;
+	margin-left: -5px;
+	margin-top: -2px;
+	width: 40px;
+	height: 38px;
+	background-color: transparent;
+	border: 1px solid #eee;
+	border-radius: 0 3px 3px 0;
+}
+
+.search-box .layui-input:focus + .search-btn {
+	border-color: rgb(210, 210, 210);
+}
+.search-box .layui-btn:hover,
+.search-box .layui-btn .fa:hover {
+	color: #5fb878;
+}

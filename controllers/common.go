@@ -110,7 +110,7 @@ func (c *CommonController) Uploader() {
 func (c *CommonController) Uploadfile() {
 	reqinfo := strings.Split(c.Input().Get("type"), "-")
 	storepath := beego.AppConfig.String("storepath")
-	resp := Responser{}
+	resp := FileResponser{}
 	if len(reqinfo) == 0 {
 		resp.Msg = "请求出错"
 		resp.Code = models.DO_REQUST_ERR
@@ -119,7 +119,7 @@ func (c *CommonController) Uploadfile() {
 		if len(reqinfo) > 1 {
 			fbelong = reqinfo[1]
 		}
-		file, handler, err := c.GetFile("upfile")
+		file, handler, err := c.GetFile("file")
 		if err != nil {
 			resp.Msg = "获取文件出错"
 			resp.Code = models.DO_OBTAIN_ERR
@@ -148,7 +148,8 @@ func (c *CommonController) Uploadfile() {
 					}
 				}
 				writer.Flush()
-				resp.Data = "..\\" + storepath
+				resp.Data.Src = "..\\" + storepath
+				resp.Msg = "上传图片成功！"
 			}
 			defer outfile.Close()
 		}

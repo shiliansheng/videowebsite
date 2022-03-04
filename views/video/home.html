@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../static/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/css/public.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/css/video/home.css">
+</head>
+<body>
+    <div class="layui-carousel" id="test1">
+        <div carousel-item>
+            <img src="https://p5.toutiaoimg.com/origin/pgc-image/c07270dd9f4f46fea798cbb3721b661c" alt="">
+            <img src="https://p5.toutiaoimg.com/origin/pgc-image/2baf994824e546bb871190f2f33d4e7e" alt="">
+            <img src="https://p5.toutiaoimg.com/origin/pgc-image/826f451dfa9a4951bc3ff7b13a3522cb" alt="">
+            <img src="https://p26.toutiaoimg.com/origin/pgc-image/6166a749a58143c6993c59e3478567eb.jpg" alt="">
+        </div>
+    </div>
+    <div class="side-content">
+        <ul class="update-list">
+            {{range .TopVideo}}
+            <li class="update-item">
+                <a href="#" class="item-title">{{.Videoname}}</a>
+                <span class="item-type">电影</span>
+                <p class="item-introduction">{{.Introduction}}</p>
+            </li>
+            {{end}}
+        </ul>
+    </div>
+    <div class="module-box layui-row">
+        <div class="module-title">电影推荐</div>
+        <ul class="module-content">
+            <li class="module-item">
+                <a href="" target="_blank" class="item-img-box">
+                    <img src="..\..\static\store\image\video\3D13C467E86CD16E14EA142E90BF7620.jpg" alt="">
+                </a>
+                <div class="item-info">
+                    <a class="item-title">西区故事</a>
+                    <span class="item-score">8.8</span>
+                    <p class="item-tags">2021 / 美国 / 剧情 / 爱情 / 歌舞 / 犯罪</p>
+                </div>
+            </li>
+            <li class="module-item">2</li>
+            <li class="module-item">3</li>
+            <li class="module-item">4</li>
+            <li class="module-item">5</li>
+            <li class="module-item">6</li>
+            <li class="module-item">7</li>
+            <li class="module-item">8</li>
+            <li class="module-item">9</li>
+            <li class="module-item">10</li>
+            <li class="module-item">11</li>
+            <li class="module-item">12</li>
+            <li class="module-item">13</li>
+            <li class="module-item">14</li>
+        </ul>
+    </div>
+    <div class="module-box layui-row">
+        <div class="module-title">电影推荐</div>
+        <ul class="module-content">
+            <li class="module-item">
+                <a href="" target="_blank" class="item-img-box">
+                    <img src="..\..\static\store\image\video\3D13C467E86CD16E14EA142E90BF7620.jpg" alt="">
+                </a>
+                <div class="item-info">
+                    <a class="item-title">西区故事</a>
+                    <span class="item-score">8.8</span>
+                    <p class="item-tags">2021 / 美国 / 剧情 / 爱情 / 歌舞 / 犯罪</p>
+                </div>
+            </li>
+            <li class="module-item">2</li>
+            <li class="module-item">3</li>
+            <li class="module-item">4</li>
+            <li class="module-item">5</li>
+            <li class="module-item">6</li>
+            <li class="module-item">7</li>
+            <li class="module-item">8</li>
+            <li class="module-item">9</li>
+            <li class="module-item">10</li>
+            <li class="module-item">11</li>
+            <li class="module-item">12</li>
+            <li class="module-item">13</li>
+            <li class="module-item">14</li>
+        </ul>
+    </div>
+</body>
+</html>
+<script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+<script src="../../static/js/video/index.js"></script>

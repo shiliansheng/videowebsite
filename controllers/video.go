@@ -13,6 +13,22 @@ type VideoController struct {
 
 //////////////////////////////////// 页面函数 ////////////////////////////////////
 
+////////////////// video //////////////////
+
+// home page
+
+func (c *VideoController) Get() {
+	c.TplName = "video/index.html"
+}
+
+func (c *VideoController) Home() {
+	ext := c.Ctx.Input.Param(":ext")
+	if ext == "html" {
+		c.Data["TopVideo"] = new (models.Video).GetHotVideos(10)
+		c.TplName = "video/home.html"
+	}
+}
+
 ////////////////// video type //////////////////
 
 func (c *VideoController) Videotypelist() {

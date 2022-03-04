@@ -59,30 +59,19 @@ layui.use(["form", "tree"], function () {
 });
 layui.config({
 	base: '/static/lib/cropper/' //layui自定义layui组件目录
-}).use(['form', 'avatar'], function () {
+}).use(['form', 'croppers'], function () {
 	var $ = layui.jquery
-		, form = layui.form
-		, avatar = layui.avatar
-		, layer = layui.layer;
-	avatar.render({
-		elem: "#vtypelogo"
-		, success: function (base64, size) {
-			var data = new Object()
-			data.image = base64
-			$.ajax({
-				type: "post"
-				, url: "../common/uploader?type=type-image"
-				, data: data
-				, success: function (res) {
-					if (res.code == 0) {
-						layer.msg('上传成功')
-						document.getElementById("vtypelogoPath").value = res.data
-						document.getElementById('logoimg').setAttribute("src", base64)
-					} else {
-						layer.msg(res.msg)
-					}
-				}
-			});
+		, croppers = layui.croppers;
+	croppers.render({
+		elem: '#vtypelogo'
+		, saveW: 150     //保存宽度
+		, saveH: 150
+		, mark: 1 / 1    //选取比例
+		, area: '900px'  //弹窗宽度
+		, url: "../common/uploadfile?type=image-type"  //图片上传接口返回和（layui 的upload 模块）返回的JOSN一样
+		, done: function (url) { //上传完毕回调
+			$("#vtypelogoPath").val(url);
+			$("#logoimg").attr('src', url);
 		}
 	});
 });
