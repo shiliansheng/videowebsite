@@ -1,0 +1,53 @@
+/************ image upload *************/
+.uploadImgBox {
+    position: relative;;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+}
+.uploadImg {
+	display: inline-block;
+	width: 100%;
+	height: 100%;
+	display: inline-block;
+	box-sizing: border-box;
+	overflow: hidden;
+	z-index: 1;
+}
+
+.uploadImgBtn {
+	position: absolute;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: transparent;
+	border: 1px dashed #dbdbdb;
+	z-index: 99999;
+}
+
+.uploadImgBtn:hover {
+	background: rgba(0, 0, 0, 0.3);
+}
+
+.uploadImgBtn::before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: calc(50% - 30px);
+	width: 60px;
+	height: 2px;
+}
+
+.uploadImgBtn::after {
+	content: "";
+	position: absolute;
+	top: calc(50% - 30px);
+	left: 50%;
+	width: 2px;
+	height: 60px;
+}
+
+.uploadImgBtn:hover::before,
+.uploadImgBtn:hover::after {
+	background-color: #dbdbdb;
+}

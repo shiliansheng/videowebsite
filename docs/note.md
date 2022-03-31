@@ -25,6 +25,16 @@
 ```
 可以通过 `this.Ctx.Input.Param(":ext")` 获取后缀名。
 
+## view
+
+### 模板函数
+```go
+// 获取config
+{{config "String" "httpport" "8088"}}
+
+```
+
+
 # layui note
 
 ## 模板操作

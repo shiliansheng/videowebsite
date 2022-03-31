@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>layui</title>
@@ -12,81 +13,85 @@
         .layui-form-pane .layui-form-label {
             width: 100px !important;
         }
+
         .layui-form-item .layui-input-inline {
             width: 160px !important;
         }
     </style>
 </head>
+
 <body>
-<div class="layuimini-container">
-    <div class="layuimini-main">
+    <div class="layuimini-container" style="padding-bottom: 20px;">
+        <div class="layuimini-main">
 
-        <fieldset class="table-search-fieldset">
-            <legend>搜索信息</legend>
-            <div style="margin: 10px 10px 10px 10px">
-                <form class="layui-form layui-form-pane" action="">
-                    <div class="layui-form-item">
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户名</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="username" autocomplete="off" class="layui-input">
+            <fieldset class="table-search-fieldset">
+                <legend>搜索信息</legend>
+                <div style="margin: 10px 10px 10px 10px">
+                    <form class="layui-form layui-form-pane" action="">
+                        <div class="layui-form-item">
+                            <div class="layui-inline">
+                                <label class="layui-form-label">用户名</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="username" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">用户昵称</label>
+                                <div class="layui-input-inline">
+                                    <input type="text" name="nickname" autocomplete="off" class="layui-input">
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">用户性别</label>
+                                <div class="layui-input-inline">
+                                    <select name="sex" id="sexSelect">
+                                        <option value="" selected>选择用户性别</option>
+                                        <option value="保密">保密</option>
+                                        <option value="男">男</option>
+                                        <option value="女">女</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <label class="layui-form-label">用户身份</label>
+                                <div class="layui-input-inline">
+                                    <select name="status" id="statusSelect">
+                                        <option value="" selected>选择用户身份</option>
+                                        <option value="普通用户">普通用户</option>
+                                        <option value="管理员">管理员</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="layui-inline">
+                                <div class="layui-btn-group">
+                                    <button type="submit" class="layui-btn layui-btn-primary" lay-submit
+                                    lay-filter="data-search-btn"><i class="layui-icon"></i> 搜索</button>
+                                    <button type="reset" class="layui-btn layui-btn-primary"><i class="layui-icon layui-icon-refresh"></i> 重置</button>
+                                </div>
                             </div>
                         </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户昵称</label>
-                            <div class="layui-input-inline">
-                                <input type="text" name="nickname" autocomplete="off" class="layui-input">
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户性别</label>
-                            <div class="layui-input-inline">
-                                <!-- <input type="text" name="sex" autocomplete="off" class="layui-input"> -->
-                                <select name="sex" id="sexSelect">
-                                    <option value="" selected>选择用户性别</option>
-                                    <option value="保密">保密</option>
-                                    <option value="男">男</option>
-                                    <option value="女">女</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <label class="layui-form-label">用户身份</label>
-                            <div class="layui-input-inline">
-                                <!-- <input type="text" name="status" autocomplete="off" class="layui-input"> -->
-                                <select name="status" id="statusSelect">
-                                    <option value="" selected>选择用户身份</option>
-                                    <option value="普通用户">普通用户</option>
-                                    <option value="管理员">管理员</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="layui-inline">
-                            <button type="submit" class="layui-btn layui-btn-primary"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 搜 索</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </fieldset>
+                    </form>
+                </div>
+            </fieldset>
 
-        <script type="text/html" id="toolbarDemo">
-            <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
-                <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
-            </div>
-        </script>
+            <script type="text/html" id="tableToolBar">
+                <div class="layui-btn-container">
+                    <button class="layui-btn layui-btn-normal layui-btn-sm data-add-btn" lay-event="add"> 添加 </button>
+                    <button class="layui-btn layui-btn-sm layui-btn-danger data-delete-btn" lay-event="delete"> 删除 </button>
+                </div>
+            </script>
 
-        <table class="layui-hide" id="currentTableId" lay-filter="currentTableFilter"></table>
+            <table class="layui-hide" id="userlist-table" lay-filter="currentTableFilter"></table>
 
-        <script type="text/html" id="currentTableBar">
+            <script type="text/html" id="itemToolBar">
             <a class="layui-btn layui-btn-normal layui-btn-xs data-count-edit" lay-event="edit">编辑</a>
             <a class="layui-btn layui-btn-xs layui-btn-danger data-count-delete" lay-event="delete">删除</a>
         </script>
 
+        </div>
     </div>
-</div>
-<script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
-<script>var httpPort = "{{.Httpport}}"</script>
-<script src="../../static/js/admin/userlist.js" charset="utf-8"></script>
+    <script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script src="../../static/js/admin/userlist.js" charset="utf-8"></script>
 </body>
+
 </html>

@@ -9,55 +9,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="../../static/lib/layui-v2.6.3/css/layui.css" media="all">
     <link rel="stylesheet" href="../../static/css/public.css" media="all">
-    <link rel="stylesheet" href="../../static/lib/cropper/cropper.min.css" media="all">
-    <link rel="stylesheet" href="../../static/lib/cropper/ImgCropping.css" media="all">
+    <link rel="stylesheet" href="../../static/css/custom.css">
     <style>
         .layuimini-container {
             padding: 25px 0px;
             overflow: hidden;
-        }
-
-        .layui-form-item .layui-input-company {
-            width: auto;
-            padding-right: 10px;
-            line-height: 38px;
-        }
-
-        #logoimg {
-            display: inline-block;
-            position: absolute;
-            right: -130px;
-            top: -75px;
-            width: 100px;
-            height: 100px;
-            display: inline-block;
-            border: 1px solid #d3d3d3;
-            box-sizing: border-box;
-            overflow: hidden;
-        }
-
-        .img-left {
-            width: calc(100% - 130px);
         }
     </style>
 </head>
 
 <body>
     <div class="layuimini-container">
-        <div class="layui-form layui-row layuimini-form layui-col-md6 layui-col-sm9" lay-filter="baseinfo">
-            <div class="layui-form-item img-left">
+        <div class="layui-form layui-row layuimini-form layui-col-md6 layui-col-sm9" lay-filter="userinfo">
+            <div class="layui-form-item">
                 <label class="layui-form-label">昵称</label>
                 <div class="layui-input-block">
                     <input type="text" name="nickname" placeholder="请输入昵称" value="" class="layui-input">
                     <tip>昵称可空，默认为stranger</tip>
                 </div>
             </div>
-            <div class="layui-form-item img-left">
+            <div class="layui-form-item">
                 <label class="layui-form-label">头像</label>
                 <div class="layui-input-block">
-                    <img src="" id="logoimg" alt="">
-                    <input type="text" name="userlogo" id="userlogoInput" style="display: none;">
-                    <button class="layui-btn" id="userlogo">上传图片</button>
+                    <div class="uploadImgBox">
+                        <img src="{{.Userlogo}}" class="uploadImg" id="uploadImg" alt="">
+                        <button class="layui-btn uploadImgBtn" id="uploadBtn"></button>
+                        <input type="text" name="userlogo" id="userlogoInput" style="display: none;">
+                    </div>
                 </div>
             </div>
             <div class="layui-form-item">
@@ -98,14 +76,6 @@
     <script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
     <script src="../../static/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
     <script src="../../static/js/common/userSetting.js"></script>
-    <!-- <script src="../../static/lib/cropper/cropper.js" charset="utf-8"></script> -->
-    <!-- <script src="../../static/lib/cropper/croppers.js" charset="utf-8"></script> -->
-    <script>
-    var userInfo = JSON.parse('{{.UserInfoJson}}')
-    window.onload = function() {
-        document.getElementById("logoimg").setAttribute("src", '{{.LogoimgPath }}')
-    }
-    </script>
 </body>
 
 </html>

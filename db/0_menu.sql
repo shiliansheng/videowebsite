@@ -19,8 +19,8 @@ CREATE TABLE `vw_system_menu` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统菜单表';
 
 INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES(1, "0", "常规管理", "fa fa-address-book", "");
-INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES(110, "1", "主页", "fa fa-home", "welcome.html");
-INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES(120, "1", "系统设置", "fa fa-gears", "setting.html");
+INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES(110, "1", "主页", "fa fa-home", "homepage.html");
+-- INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES(120, "1", "系统设置", "fa fa-gears", "setting.html");
 INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES(130, "1", "用户管理", "fa fa-users", "");
 INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES(140, "1", "视频管理", "fa fa-file-video-o", "");
 INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES(131, "130", "用户列表", "fa fa-user", "userlist.html");

@@ -3,8 +3,9 @@ package models
 import (
 	"net/url"
 	"strconv"
+	"strings"
 	"time"
-	mutils "videowebsite/utils"
+	"videowebsite/utils"
 )
 
 type User struct {
@@ -25,42 +26,70 @@ type User struct {
 	DeleteAt     time.Time `json:"deleteat,omitempty"`     // 删除时间
 }
 
+func (c User) GetNickname(name string) string {
+	if name == "" {
+		name = "stranger"
+	}
+	return name
+}
+
 func (m User) TableName() string {
 	return TableName("user")
 }
 
-func (m User) GetUserCount() int {
-	userCount, _ := Orm.QueryTable(m.TableName()).Count()
-	return int(userCount)
-}
+// ### 功能操作
 
-func (m User) GetUserListJson(page, limit int, mapper map[string]interface{}, getNil bool) (ResposeJson, error) {
-	userJson := ResposeJson{
-		Code:  0,
-		Msg:   "",
-		Count: 0,
-		Data:  nil,
-	}
-	if getNil {
-		return userJson, nil
-	}
-	userlist, count, err := getUserList(page, limit, mapper)
+// 用户名、密码进行登录，返回登录结果，登录用户结构体放在RespJson.Data中
+//  @param  username [string]
+//  @param  password [string]
+//  @return [RespJson]
+func (m User) Login(username, password string) RespJson {
+	resp := RespJson{Code: DO_ERROR}
+	user := User{Username: username}
+	err := Orm.Read(&user, "username")
 	if err != nil {
-		userJson.Code = MSG_FAIL
-		userJson.Msg = "获取用户列表失败"
-		return userJson, err
+		resp.Msg = "登录失败，用户名或密码错误</br>" + err.Error()
+	} else if user.Password == "" {
+		resp.Msg = "登录失败，用户名不存在"
+	} else if user.Password != strings.TrimSpace(password) {
+		resp.Msg = "登录失败，密码错误"
+	} else {
+		resp.Code = DO_SUCCESS
+		resp.Data = user
+		resp.Msg = "登录成功"
 	}
-	userJson.Count = count
-	userJson.Data = userlist
-	return userJson, nil
-
+	return resp
 }
 
-func getUserList(page, limit int, mapper map[string]interface{}) ([]User, int, error) {
+// ### 获取INFO操作
+
+func (m User) GetUserCount() int {
+	count, _ := Orm.QueryTable(m.TableName()).Count()
+	return int(count)
+}
+
+func (m User) GetUserList(page, limit int, filterMap map[string]interface{}) RespJson {
+	resp := RespJson{
+		Code:  DO_SUCCESS,
+		Count: 0,
+	}
+
+	userlist, count, err := m.getUserList(page, limit, filterMap)
+	if err != nil {
+		resp.Code = DO_ERROR
+		resp.Msg = "获取用户列表失败: " + err.Error()
+		return resp
+	}
+	resp.Msg = "获取用户列表成功!"
+	resp.Count = count
+	resp.Data = userlist
+	return resp
+}
+
+func (m User) getUserList(page, limit int, filterMap map[string]interface{}) ([]User, int, error) {
 	var userList []User
-	//_, err := Orm.QueryTable(new(User).TableName()).All(&userList)
-	seter := Orm.QueryTable(new(User).TableName())
-	for key, value := range mapper {
+	seter := Orm.QueryTable(new(User).TableName()).Exclude("status__exact", "超级管理员")
+	for key, value := range filterMap {
 		seter = seter.Filter(key+"__icontains", value)
 	}
 	count, _ := seter.Count()
@@ -68,56 +97,74 @@ func getUserList(page, limit int, mapper map[string]interface{}) ([]User, int, e
 	return userList, int(count), err
 }
 
-func (m User) Update(user User, cols ...string) (int, string) {
-	if len(cols) == 0 {
-		return DO_REMAIN, "信息未更改，更新失败"
-	}
-	_, err := Orm.Update(&user, cols...)
+// ### CRUD操作
+
+// 添加内容为参数
+//  @param  u [User] 待添加User
+//  @return [RespJson]
+func (m User) Add(u User) RespJson {
+	u.setNickname()
+	resp := RespJson{Code: DO_SUCCESS}
+	timeStr := utils.GetNowTimeString()
+	u.CreateAt, u.UpdateAt = timeStr , timeStr
+	_, err := Orm.Insert(&u)
 	if err != nil {
-		return DO_UP_ERROR, "更新信息失败<br/>" + err.Error()
+		resp.Code = DO_ERROR
+		resp.Msg = "添加用户失败</br>" + err.Error()
+	} else {
+		resp.Msg = "添加用户成功"
 	}
-	return DO_SUCCESS, "更新信息成功"
+	return resp
 }
 
-// 删除用户，调用者必须是登录的用户
-//  @param  user [User]
-//  @return [string] 返回操作信息
-//  @return [int] 返回操作结果，成功为0，失败为非零
-func (m *User) Delete(user User) (string, int) {
-	msg, code := "", DO_SUCCESS
+// oldUser调用Update方法，参数为newUser
+//  @param  newUser [User] 更改信息的User
+//  @return [RespJson]
+func (m User) Update(newUser User) RespJson {
+	resp := RespJson{Code: DO_ERROR}
+	newUser.setNickname()
+	cols := m.GetDifCols(newUser)
+	if len(cols) == 0 {
+		resp.Msg = "信息未更改，更新失败"
+		return resp
+	}
+	_, err := Orm.Update(&newUser, cols...)
+	if err != nil {
+		resp.Msg = "更新信息失败<br/>" + err.Error()
+	} else {
+		resp.Code = DO_SUCCESS
+		resp.Msg = "更新成功"
+	}
+	return resp
+}
+
+// 操作用户调用Delte方法删除参数User
+//  @param  user [User] 待删除User，仅包含id
+//  @return [RespJson]
+func (m User) Delete(user User) RespJson {
+	resp := RespJson{Code: DO_ERROR}
+	Orm.Read(&user)
 	if user.Id == m.Id {
-		code = U_DEL_SELF
-		msg = "删除用户 " + user.Username + " 失败<br/>禁止删除自己"
+		resp.Msg = "删除用户 " + user.Username + " 失败<br/>禁止删除自己"
 	} else if user.Status == "管理员" && m.Status != "超级管理员" {
-		code = U_DEL_MANAGER
-		msg = "删除用户 " + user.Username + " 失败<br/>禁止删除管理员"
+		resp.Msg = "删除用户 " + user.Username + " 失败<br/>禁止删除管理员"
 	} else {
 		_, err := Orm.Delete(&user)
 		if err != nil {
-			code = U_DEL_ERROR
-			msg = "删除用户 " + user.Username + " 失败<br/>" + err.Error()
+			resp.Msg = "删除用户 " + user.Username + " 失败<br/>" + err.Error()
 		} else {
-			msg = "删除用户 " + user.Username + " 成功"
+			resp.Code = DO_SUCCESS
+			resp.Msg = "删除用户 " + user.Username + " 成功"
 		}
 	}
-	return msg, code
+	return resp
 }
 
-// {"id", "username", "password", "nickname", "logoimage", "sex", "email", "birthday", "introduction", "status", "state", "remark"},
+// ### 填充INFO操作
 
-func (m User) Add(u User) (int, string) {
-	code, msg := 0, ""
-	_, err := Orm.Insert(&u)
-	if err != nil {
-		code = DO_ERROR
-		msg = "添加用户失败</br>" + err.Error()
-	} else {
-		code = DO_SUCCESS
-		msg = "添加用户成功"
-	}
-	return code, msg
-}
-
+// oldUser调用Update方法，与参数newUser进行比对，返回不同的字段名数组
+//  @param  new [User] 待更新的新User
+//  @return [[]string] 不同的字段名数组
 func (m User) GetDifCols(new User) []string {
 	dif := []string{}
 	if m.Password != new.Password {
@@ -155,7 +202,7 @@ func (m User) GetDifCols(new User) []string {
 
 func (m *User) SetUser(source url.Values) error {
 	if value := source.Get("id"); value != "" {
-		m.Id = mutils.Atoi(value)
+		m.Id = utils.Atoi(value)
 	}
 	if value := source.Get("username"); value != "" {
 		m.Username = value
@@ -164,9 +211,7 @@ func (m *User) SetUser(source url.Values) error {
 		m.Password = value
 	}
 	m.Nickname = source.Get("nickname")
-	if m.Nickname == "" {
-		m.Nickname = "stranger"
-	}
+	m.setNickname()
 	if value := source.Get("userlogo"); value != "" {
 		m.Userlogo = value
 	}
@@ -195,4 +240,11 @@ func (m *User) SetUser(source url.Values) error {
 		m.Remark = value
 	}
 	return nil
+}
+
+// 设置user的昵称，如果昵称为空，默认为stranger
+func (m *User) setNickname() {
+	if m.Nickname == "" {
+		m.Nickname = "stranger"
+	}
 }

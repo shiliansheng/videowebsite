@@ -16,7 +16,7 @@ layui.config({
         "            </label>\n" +
         "            <input class=\"layui-upload-file\" id=\"cropper_avatarImgUpload\" type=\"file\" value=\"选择图片\" name=\"file\">\n" +
         "        </div>\n" +
-        "        <div class=\"layui-form-mid layui-word-aux\">头像的尺寸限定150x150px,大小在50kb以内</div>\n" +
+        // "        <div class=\"layui-form-mid layui-word-aux\">头像的尺寸限定150x150px,大小在50kb以内</div>\n" +
         "    </div>\n" +
         "    <div class=\"layui-row layui-col-space15\">\n" +
         "        <div class=\"layui-col-xs9\">\n" +
@@ -25,22 +25,25 @@ layui.config({
         "            </div>\n" +
         "        </div>\n" +
         "        <div class=\"layui-col-xs3\">\n" +
-        "            <div class=\"img-preview\" style=\"width:200px;height:200px;overflow:hidden\">\n" +
+        "            <div class=\"img-preview\" style=\"width:200px;height:200px;overflow:hidden; border: 1px solid #eee;margin:0 auto;\">\n" +
+        "            </div>\n" +
+        "            <div class=\"img-preview\" style=\"margin: 45px auto 0;width:200px;height:200px;overflow:hidden;border-radius:50%;border: 1px solid #eee;\">\n" +
         "            </div>\n" +
         "        </div>\n" +
         "    </div>\n" +
         "    <div class=\"layui-row layui-col-space15\">\n" +
         "        <div class=\"layui-col-xs9\">\n" +
         "            <div class=\"layui-row\">\n" +
-        "                <div class=\"layui-col-xs6\">\n" +
+        "                <div class=\"layui-col-xs12\">\n" +
         "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-left\" cropper-event=\"rotate\" data-option=\"-15\" title=\"Rotate -90 degrees\"> 向左旋转</button>\n" +
         "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-right\" cropper-event=\"rotate\" data-option=\"15\" title=\"Rotate 90 degrees\"> 向右旋转</button>\n" +
+        "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-refresh\" cropper-event=\"reset\" title=\"重置图片\"> 重置图片</button>\n" +
         "                </div>\n" +
         "                <div class=\"layui-col-xs5\" style=\"text-align: right;\">\n" +
         // "                    <button type=\"button\" class=\"layui-btn\" title=\"移动\"></button>\n" +
         // "                    <button type=\"button\" class=\"layui-btn\" title=\"放大图片\"></button>\n" +
         // "                    <button type=\"button\" class=\"layui-btn\" title=\"缩小图片\"></button>\n" +
-        "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-refresh\" cropper-event=\"reset\" title=\"重置图片\"></button>\n" +
+        // "                    <button type=\"button\" class=\"layui-btn layui-icon layui-icon-refresh\" cropper-event=\"reset\" title=\"重置图片\"></button>\n" +
         "                </div>\n" +
         "            </div>\n" +
         "        </div>\n" +

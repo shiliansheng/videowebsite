@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>layui</title>
@@ -8,13 +9,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="../../static/lib/layui-v2.6.3/css/layui.css" media="all">
     <link rel="stylesheet" href="../../static/css/public.css" media="all">
+    <link rel="stylesheet" href="../../static/css/custom.css" media="all">
     <style>
         body {
             background-color: #ffffff;
         }
+
         .video-statistics {
             display: inline-block;
-            width: 120px; 
+            width: 120px;
             height: 36px;
             padding: 0 10px;
             line-height: 36px;
@@ -22,155 +25,140 @@
             background-color: #fff;
             border: 1px solid #ddd;
         }
+
         .align-left {
             text-align: left;
         }
-        .imgBox {
-            display: inline-block;
-            width: calc(100% - 120px);
-            background-color: rgba(146, 146, 146, 0.226);
-            height: 240px;
-            padding: 10px 0;
-            margin-right: 20px;
-            text-align: center;
-        }
-        #logoimg {
-            max-width: 100%;
-            max-height: 240px;
-        }
-        .uploadImgBox {
-            text-align: center;
-        }
+
         .layui-select-title span {
-		    line-height: 38px;
+            line-height: 38px;
         }
-        .layui-form-select dl{
+
+        .layui-form-select dl {
             padding: 0;
         }
-        .layuimini-form{
-            max-width: 720px;
+
+        .layui-form {
+            max-width: 840px;
         }
     </style>
 </head>
-<body>
-<div class="layui-form layuimini-form" lay-filter="videoinfo">
-    <div class="layui-form-item" style="display:none;">
-        <label class="layui-form-label">ID</label>
-        <div class="layui-input-block">
-            <input type="text" name="id"  value="{{.Video.Id}}" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">视频名称</label>
-        <div class="layui-input-block">
-            <input type="text" name="videoname"  value="{{.Video.Videoname}}" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">视频地址</label>
-        <div class="layui-input-block">
-            <input type="text" name="videoresource"  value="{{.Video.Videoresource}}" class="layui-input" disabled>
-        </div>
-    </div>
-    <div class="layui-form-item img-left">
-        <label class="layui-form-label">封面</label>
-        <div class="layui-input-block uploadImgBox">
-            <div class="imgBox">
-                <img src="{{.Video.Videologo}}" id="logoimg" alt="">
-                <script>
-                    if ("{{.Video.Videologo}}" == "") {
-                        document.getElementById("logoimg").setAttribute("src", "{{.NoPicPath}}")
-                    }
-                </script>
-            </div>
-            <input type="text" name="videologo" id="videologoPath" value="{{.Video.Videologo}}" style="display: none;">
-            <button class="layui-btn" id="videologobtn">上传图片</button>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">类型</label>
-        <div class="layui-input-block">
-            <div class="layui-unselect layui-form-select treeSelect" id="pid-selector">
-                <div class="layui-select-title">
-                    <span class="layui-input layui-unselect" id="treeTest">{{.Video.Typename}}</span>
-                    <input type="hidden" name="typename" value="{{.Video.Typename}}">
-                    <i class="layui-edge"></i>
-                </div>
-                <dl class="layui-anim layui-anim-upbit">
-                    <dd>
-                        <ul id="treeUl"></ul>
-                    </dd>
-                </dl>
-            </div>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">版权</label>
-        <div class="layui-input-block">
-            <input type="radio" name="copyright" id="" title="转载" value="转载">
-            <input type="radio" name="copyright" id="" title="原创" value="原创">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">发布者</label>
-        <div class="layui-input-block">
-            <span class="video-statistics align-left">{{.Video.Username}}</span>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">观看次数</label>
-        <div class="layui-input-inline">
-            <span class="video-statistics">{{.Video.Viewnum}}</span>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">评论次数</label>
-        <div class="layui-input-inline">
-            <span class="video-statistics">{{.Video.Remarknum}}</span>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">评分</label>
-        <div class="layui-input-block">
-            <span class="video-statistics">{{.Video.Averscore}}</span>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">视频推荐</label>
-        <div class="layui-input-block">
-            <input type="radio" name="recommand" id="" title="推荐" value="1">
-            <input type="radio" name="recommand" id="" title="不推荐" value="0">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">审核状态</label>
-        <div class="layui-input-block">
-            <span class="video-statistics align-left">{{.Video.Passed}}</span>
-        </div>
-    </div>
-    <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">介绍</label>
-        <div class="layui-input-block">
-            <textarea name="introduction" class="layui-textarea" placeholder="请输入介绍信息"></textarea>
-            <script>
-                document.getElementsByName("introduction")[0].innerText = "{{.Video.Introduction}}"
-            </script>
-        </div>
-    </div>
 
-    <div class="layui-form-item">
-        <div class="layui-input-block">
-            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+<body>
+    <div class="layui-form layui-form-pane" lay-filter="videoinfo">
+        <div class="layui-form-item" style="display:none;">
+            <label class="layui-form-label">ID</label>
+            <div class="layui-input-block">
+                <input type="text" name="id" value="{{.Videoid}}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">视频名称</label>
+            <div class="layui-input-block">
+                <input type="text" name="videoname" value="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">视频地址</label>
+            <div class="layui-input-block">
+                <input type="text" name="videoresource" value="" class="layui-input" disabled>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">封面</label>
+            <div class="layui-input-block video-image-box">
+                <div class="uploadImgBox" style="width: 194px; height: 289px;">
+                    <img src="" alt="" class="uploadImg" id="img-image">
+                    <button class="layui-btn uploadImgBtn" id="img-button"></button>
+                </div>
+                <input type="text" name="videologo" id="img-input" lay-verify="required" lay-reqtext="封面不能为空"
+                    style="display: none;">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">分类</label>
+            <div class="layui-input-block" style="width: 200px;">
+                <select name="classifiction" id="classifiction">
+                    <option value="">请选择分类</option>
+                    <option value="movie">电影</option>
+                    <option value="seriees">剧集</option>
+                    <option value="cartoon">动画</option>
+                    <option value="others">其他</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">类型</label>
+            <div class="layui-input-block">
+                {{range $elem := .Typenames}}
+                <input type="checkbox" name="typename[{{$elem}}]" title="{{$elem}}" value="{{$elem}}">
+                {{end}}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">版权</label>
+            <div class="layui-input-block">
+                <input type="radio" name="copyright" id="" title="转载" value="转载">
+                <input type="radio" name="copyright" id="" title="原创" value="原创">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">发布者</label>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="username" class="layui-input" disabled>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">观看次数</label>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="viewnum" class="layui-input" disabled>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">评论次数</label>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="remarknum" class="layui-input" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">评分</label>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="averscore" class="layui-input" disabled>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">审核状态</label>
+                <div class="layui-input-inline" style="width: 100px;">
+                    <input type="text" name="passed" class="layui-input" disabled>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">视频推荐</label>
+            <div class="layui-input-block">
+                <input type="radio" name="recommand" id="" title="推荐" value="1">
+                <input type="radio" name="recommand" id="" title="不推荐" value="0">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">介绍</label>
+            <div class="layui-input-block">
+                <textarea name="introduction" class="layui-textarea" placeholder="请输入介绍信息"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+            </div>
         </div>
     </div>
-</div>
-</div>
-<script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
-<script src="../../static/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
-<script src="../../static/js/admin/videoedit.js" charset="utf-8"></script>
-<script>
-    var VideoCopyright = "{{.Video.Copyright}}"
-    var VideoRecommand = "{{.Video.Recommand}}"
-</script>
+    </div>
+    <script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script src="../../static/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+    <script src="../../static/js/admin/videoedit.js" charset="utf-8"></script>
 </body>
 </html>

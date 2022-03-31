@@ -2,11 +2,25 @@ package models
 
 import (
 	"fmt"
-	"path/filepath"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 )
+
+type RespJson struct {
+	Code  int         `json:"code"`
+	Msg   string      `json:"msg"`
+	Count int         `json:"count,omitempty"`
+	Data  interface{} `json:"data,omitempty"`
+}
+
+type FileRespJson struct {
+	Code int    `json:"code"`
+	Msg  string `json:"msg"`
+	Data struct {
+		Src string `json:"src"`
+	} `json:"data"`
+}
 
 var Orm orm.Ormer
 
@@ -25,22 +39,14 @@ func init() {
 		fmt.Println("register database(", dbConnStr, ") failed:", err)
 	}
 	orm.RegisterModel(new(SystemMenu), new(User), new(Video), new(VideoType))
-	// orm.RunSyncdb("default", false, true)
 
 	Orm = orm.NewOrm()
 }
 
-//返回带前缀的表名
+// 返回带前缀的表名
+//  @param  str [string]
+//  @return [string] 前缀-str
 func TableName(str string) string {
 	prefix := beego.AppConfig.String("dbprefix")
 	return prefix + "_" + str
-}
-
-func getImageSrc(path string) string {
-	if path == "" {
-		path = "../" + filepath.Join(beego.AppConfig.String("storepath"), beego.AppConfig.String("nopic_path"))
-	} else {
-		path = "../" + path
-	}
-	return path
 }

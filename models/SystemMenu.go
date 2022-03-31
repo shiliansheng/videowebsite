@@ -56,12 +56,11 @@ func (m *SystemMenu) GetSystemInit() SystemInit {
 
 	// 首页
 	systemInit.HomeInfo.Title = "首页"
-	systemInit.HomeInfo.Href = "welcome.html"
+	systemInit.HomeInfo.Href = "homepage.html"
 
 	// logo
 	systemInit.LogoInfo.Title = "VIDEO WEB"
 	systemInit.LogoInfo.Image = "../static/img/logo.png"
-	// fmt.Println("INIT END.........")
 	// 菜单
 	systemInit.MenuInfo = m.GetMenuList()
 
@@ -82,12 +81,10 @@ func (m *SystemMenu) buildMenuChild(pid int, menuList []SystemMenu) []*MenuTreeL
 	for _, v := range menuList {
 		if pid == v.Pid {
 			node := &MenuTreeList{
-				//Id:     v.Id,
 				Title:  v.Title,
 				Icon:   v.Icon,
 				Href:   v.Href,
 				Target: v.Target,
-				//Pid:    v.Pid,
 			}
 			child := v.buildMenuChild(v.Id, menuList)
 			if len(child) != 0 {

@@ -12,17 +12,13 @@ import (
 	"time"
 )
 
-func Md5(str string) string {
-	hash := md5.New()
-	hash.Write([]byte(str) )
-	return fmt.Sprintf("%x", hash.Sum(nil))
-}
-
 func Rawurlencode(str string) string {
 	return strings.Replace(url.QueryEscape(str), "+", "%20", -1)
 }
 
-//生成Guid字串
+// ### 生成唯一ID
+
+// 生成唯一ID
 func UniqueId() string {
 	b := make([]byte, 48)
 
@@ -31,6 +27,15 @@ func UniqueId() string {
 	}
 	return Md5(base64.URLEncoding.EncodeToString(b))
 }
+
+func Md5(str string) string {
+	hash := md5.New()
+	hash.Write([]byte(str) )
+	return fmt.Sprintf("%x", hash.Sum(nil))
+}
+
+
+
 
 func TimePareStd(value string) (time.Time, error) {
 	ret, err := time.Parse("2006-01-02 15:03:04", value)

@@ -9,95 +9,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="../../static/lib/layui-v2.6.3/css/layui.css" media="all">
     <link rel="stylesheet" href="../../static/css/public.css" media="all">
-    <style>
-        body {
-            background-color: #ffffff;
-        }
-
-        .imgBox {
-            display: inline-block;
-            width: calc(100% - 120px);
-            background-color: rgba(146, 146, 146, 0.226);
-            height: 240px;
-            padding: 10px 0;
-            margin-right: 20px;
-            text-align: center;
-        }
-
-        #logoimg {
-            max-width: 100%;
-            max-height: 240px;
-        }
-
-        .uploadImgBox {
-            text-align: center;
-        }
-
-        .layui-select-title span {
-            line-height: 38px;
-        }
-
-        .layui-form-select dl {
-            padding: 0;
-        }
-
-        .layuimini-form {
-            max-width: 720px;
-        }
-
-        .video-input {
-            display: inline-block;
-            width: calc(100% - 120px);
-            margin-right: 20px;
-        }
-        .layui-progress {
-            position: relative;
-            top: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="../../static/css/custom.css">
+    <link rel="stylesheet" href="../../static/css/admin/videoadd.css">
 </head>
 
-<body>
+<body style="background-color: #ffffff;">
+    <div class="layui-panel video-upload-box">
+        <div class="layui-upload-drag" id="video-upload-btn">
+            <i class="layui-icon"></i>
+            <p>点击上传视频，或将视频拖拽到此处</p>
+        </div>
+        <div class="upload-content">
+            <h3>视频上传</h2>
+            <button class="layui-btn" id="video-reupload-btn">重新上传</button>
+            <div>
+                <span>上传状态：</span>
+                <span id="upload-state">待上传视频</span>
+            </div>
+            <div>
+                <span>上传进度：</span>
+                <span id="upload-progress">0%</span>
+            </div>
+            <div class="layui-progress" lay-filter="video-upload-progress">
+                <div class="layui-progress-bar layui-bg-blue" lay-percent="0%" ></div>
+            </div>
+        </div>
+    </div>
     <div class="layui-form layuimini-form" lay-filter="videoinfo">
         <div class="layui-form-item">
             <label class="layui-form-label required">视频名称</label>
             <div class="layui-input-block">
-                <input type="text" name="videoname" value="" lay-verify="required" class="layui-input" lay-reqtext="视频名称不能为空" placeholder="请输入视频名称">
+                <input type="text" name="videoname" value="" lay-verify="required" class="layui-input"
+                    lay-reqtext="视频名称不能为空" placeholder="请输入视频名称">
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label required">视频地址</label>
             <div class="layui-input-block">
-                <input type="text" name="videoresource" id="videoresource" lay-verify="required" value="" class="layui-input video-input" disabled lay-reqtext="视频地址不能为空，请上传视频" placeholder="请上传视频">
-                <button class="layui-btn" id="videoupBtn">上传视频</button>
+                <input type="text" name="videoresource" id="videoresource" lay-verify="required" value=""
+                    class="layui-input video-input" disabled lay-reqtext="视频地址不能为空，请上传视频" placeholder="请上传视频">
             </div>
         </div>
-        <div class="layui-form-item img-left">
-            <label class="layui-form-label">封面</label>
-            <div class="layui-input-block uploadImgBox">
-                <div class="imgBox">
-                    <img src="" id="logoimg" alt="">
+        <div class="layui-form-item">
+            <label class="layui-form-label required">封面</label>
+            <div class="layui-input-block video-image-box">
+                <div class="uploadImgBox" style="width: 194px; height: 289px;">
+                    <img src="" alt="" class="uploadImg" id="img-image">
+                    <button class="layui-btn uploadImgBtn" id="img-button"></button>
                 </div>
-                <input type="text" name="videologo" id="videologoPath" lay-verify="required" value=""
+                <input type="text" name="videologo" id="img-input" lay-verify="required" lay-reqtext="封面不能为空"
                     style="display: none;">
-                <button class="layui-btn" id="videologobtn">上传图片</button>
+                <div id="img-preview-box"></div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">分类</label>
+            <div class="layui-input-block" style="width: 195px;">
+                <select name="classifiction" id="classifiction">
+                    <option value="">请选择分类</option>
+                    <option value="movie">电影</option>
+                    <option value="seriees">剧集</option>
+                    <option value="cartoon">动画</option>
+                    <option value="others">其他</option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item">
             <label class="layui-form-label required">类型</label>
             <div class="layui-input-block">
-                <div class="layui-unselect layui-form-select treeSelect" id="pid-selector">
-                    <div class="layui-select-title">
-                        <span class="layui-input layui-unselect" id="treeTest">请选择视频类型</span>
-                        <input type="hidden" name="typename" lay-verify="required" lay-reqtext="视频类型不能为空" value="">
-                        <i class="layui-edge"></i>
-                    </div>
-                    <dl class="layui-anim layui-anim-upbit">
-                        <dd>
-                            <ul id="treeUl"></ul>
-                        </dd>
-                    </dl>
-                </div>
+                {{range $elem := .Typenames}}
+                <input type="checkbox" name="typename[{{$elem}}]" title="{{$elem}}" value="{{$elem}}">
+                {{end}}
             </div>
         </div>
         <div class="layui-form-item">
@@ -110,7 +92,8 @@
         <div class="layui-form-item">
             <label class="layui-form-label">版权</label>
             <div class="layui-input-block">
-                <input type="text" name="keywords" value="" class="layui-input" lay-reqtext="请添加视频关键字" placeholder="请添加视频关键字">
+                <input type="text" name="keywords" value="" class="layui-input" lay-reqtext="请添加视频关键字"
+                    placeholder="请添加视频关键字">
                 <tip>请添加视频关键，视频关键字以 "逗号" 间隔</tip>
             </div>
         </div>
@@ -118,9 +101,6 @@
             <label class="layui-form-label">介绍</label>
             <div class="layui-input-block">
                 <textarea name="introduction" class="layui-textarea" placeholder="请输入介绍信息"></textarea>
-                <script>
-                    document.getElementsByName("introduction")[0].innerText = ""
-                </script>
             </div>
         </div>
         <div class="layui-form-item">

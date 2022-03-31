@@ -4,52 +4,45 @@ layui.use(["form", "table"], function () {
         table = layui.table,
         mapper = new Map();
     table.render({
-        elem: "#currentTableId",
-        url: "videolist.json?action=getlist",
-        toolbar: "#toolbarDemo",
+        elem: "#videolist-table",
+        url: "videolist.json",
+        toolbar: "#tableToolBar",
         defaultToolbar: [
             "filter",
             "exports",
             "print",
-            {
-                title: "提示",
-                layEvent: "LAYTABLE_TIPS",
-                icon: "layui-icon-tips",
-            },
         ],
         cols: [
             [
-                { type: "checkbox", width: 50 },
+                { type: "checkbox",},
                 { field: "id", width: 60, title: "ID", sort: true },
-                { field: "videoname", width: 130, title: "视频名称" },
-                { field: "typename", width: 90, title: "类型" },
-                { field: "introduction", width: 180, title: "视频介绍" },
-                { field: "keywords", width: 120, title: "关键字" },
-                { field: "copyright", width: 90, title: "版权类型" },
-                { field: "pubtime", width: 160, title: "上传时间" },
-                { field: "username", width: 90, title: "发布者"},
-                { field: "viewnum", minWidth: 87, title: "观看次数"},
-                { field: "remarknum", minWidth: 87, title: "评论次数"},
-                { field: "averscore", minWidth: 87, title: "用户评分"},
-                { field: "passed", minWidth: 87, title: "审核状态"},
-                { title: "操作", width: 120, toolbar: "#currentTableBar", align: 'center', fixed: "right", },
+                { field: "videoname",  title: "视频名称" },
+                { field: "classifiction", width: 87, title: "分类" },
+                { field: "typename", width: 130, title: "类型" },
+                // { field: "keywords",  title: "关键字" },
+                { field: "copyright", width: 60, title: "版权" },
+                { field: "introduction",  title: "视频介绍" },
+                { field: "pubtime",  width: 160, title: "上传时间" },
+                { field: "username", width: 100, title: "发布者" },
+                { field: "viewnum", width: 87, title: "观看次数" },
+                { field: "remarknum", width: 87, title: "评论次数" },
+                { field: "averscore", width: 87, title: "用户评分" },
+                { field: "passed", width: 87, title: "审核状态" },
+                { title: "操作", width: 120, toolbar: "#currentTableBar", align: "center", fixed: "right", },
             ],
         ],
         limits: [5, 10, 15, 20],
         limit: 10,
         page: true,
-        request: {
-            page: "page", //页码的参数名称，默认：page
-            limit: "limit", //每页数据量的参数名，默认：limit
-        }
+        even: true,
     });
-    
+
     // 监听搜索操作
     form.on("submit(data-search-btn)", function (data) {
         var result = JSON.stringify(data.field);
         //执行搜索重载
         table.reload(
-            "currentTableId",
+            "videolist-table",
             {
                 page: {
                     curr: 1,
@@ -84,19 +77,18 @@ layui.use(["form", "table"], function () {
             });
         } else if (obj.event === "delete") {
             // 监听删除操作
-            var checkStatus = table.checkStatus("currentTableId"),
+            var checkStatus = table.checkStatus("videolist-table"),
                 data = checkStatus.data;
-            var delUserInfo = ""
+            var delInfo = "", idlist = [];
             for (var idx in data) {
-                delUserInfo += "</br>类型" + (parseInt(idx) + 1) + " : " + data[idx].typename
+                delInfo += "</br>类型" + (parseInt(idx) + 1) + " : " + data[idx].typename
+                idlist.push(data[idx].id)
             }
-            var deldata = new Object()
-            deldata.Data = JSON.stringify(data) 
-            layer.confirm("确定删除？" + delUserInfo, function (index) {
+            layer.confirm("确定删除？" + delInfo, function (index) {
                 $.ajax({
-                    url: "videodel?more=true",
+                    url: "videodel",
                     type: "post",
-                    data: deldata,
+                    data: {idlist: JSON.stringify(idlist)},
                     success: function (res) {
                         if (res.code == 0) {
                             layer.msg(res.msg);
@@ -116,7 +108,7 @@ layui.use(["form", "table"], function () {
                         for (var i in successlist) {
                             mapper[successlist[i]].del();
                         }
-                        table.reload("currentTableId");
+                        table.reload("videolist-table");
                     },
                 });
                 layer.close(index);
@@ -138,7 +130,7 @@ layui.use(["form", "table"], function () {
                 maxmin: true,
                 shadeClose: true,
                 area: ["100%", "100%"],
-                content: "videoedit.html?action=getinfo&id=" + data.id,
+                content: "videoedit.html?id=" + data.id,
             });
             $(window).on("resize", function () {
                 layer.full(index);
@@ -146,22 +138,20 @@ layui.use(["form", "table"], function () {
             return false;
         } else if (obj.event === "delete") {
             layer.confirm("确定删除该类型？", function (index) {
-                var deldata = new Object()
-                deldata.Data = JSON.stringify(data) 
                 $.ajax({
-                    url: "videodel?more=false",
+                    url: "videodel",
                     type: "post",
-                    data: deldata,
+                    data: {idlist: JSON.stringify([data.id])},
                     success: function (res) {
                         if (res.code == 0) {
                             layer.msg(res.msg);
                             obj.del()
-                            table.reload("currentTableId");
+                            table.reload("videolist-table");
                         } else {
                             var index = layer.msg(
                                 res.msg,
                                 {
-                                    title: "信息",
+                                    title: "删除视频失败",
                                 },
                                 function () {
                                     // 关闭弹出层

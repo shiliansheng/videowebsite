@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <title>layui</title>
@@ -14,76 +15,76 @@
         }
     </style>
 </head>
-<body>
-<div class="layui-form layuimini-form layui-col-md6 layui-col-sm10" lay-filter="userInfo">
-    <div class="layui-form-item" style="display:none;">
-        <label class="layui-form-label">ID</label>
-        <div class="layui-input-block">
-            <input type="text" name="id"  value="" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">用户名</label>
-        <div class="layui-input-block">
-            <input type="text" name="username" disabled style="background-color: gainsboro;" value="" class="layui-input ">
-            <tip>用户名不支持修改</tip>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label required">密码</label>
-        <div class="layui-input-block">
-            <input type="text" name="password" lay-verify="required|verifyPassword" lay-reqtext="密码不能为空" placeholder="请输入密码" value="" class="layui-input" onfocus="this.select();">
-            <tip>默认为123456，最少6位，只能由 字母，数字，下划线，减号，特殊符号 组成</tip>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">昵称</label>
-        <div class="layui-input-block">
-            <input type="text" name="nickname" placeholder="请输入昵称" value="" class="layui-input">
-            <tip>昵称可空，默认为stranger</tip>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">性别</label>
-        <div class="layui-input-block">
-            <input type="radio" name="sex" value="保密" title="保密" >
-            <input type="radio" name="sex" value="男" title="男">
-            <input type="radio" name="sex" value="女" title="女">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">邮箱</label>
-        <div class="layui-input-block">
-            <input type="email" name="email" lay-verify="verifyEmail" placeholder="请输入邮箱" value="" class="layui-input">
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">身份</label>
-        <div class="layui-input-block">
-            <input type="radio" name="status" value="普通用户" title="普通用户"  {{.Disabled}}>
-            <input type="radio" name="status" value="管理员" title="管理员" {{.Disabled}}>
-            <input type="radio" name="status" value="超级管理员" title="超级管理员" disabled>
-        </div>
-    </div>
-    <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">备注信息</label>
-        <div class="layui-input-block">
-            <textarea name="remark" class="layui-textarea" placeholder="请输入备注信息"></textarea>
-        </div>
-    </div>
 
-    <div class="layui-form-item">
-        <div class="layui-input-block">
-            <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+<body>
+    <div class="layui-form layuimini-form layui-col-md6 layui-col-sm10" lay-filter="userinfo">
+        <div class="layui-form-item" style="display:none;">
+            <label class="layui-form-label">ID</label>
+            <div class="layui-input-block">
+                <input type="text" name="id" value="{{.Userid}}" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-block">
+                <input type="text" name="username" disabled style="background-color: gainsboro;" value=""
+                    class="layui-input ">
+                <tip>用户名不支持修改</tip>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label required">密码</label>
+            <div class="layui-input-block">
+                <input type="text" name="password" lay-verify="required|verifyPassword" lay-reqtext="密码不能为空"
+                    placeholder="请输入密码" value="" class="layui-input" onfocus="this.select();">
+                <tip>默认为123456，最少6位，只能由 字母，数字，下划线，减号，特殊符号 组成</tip>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">昵称</label>
+            <div class="layui-input-block">
+                <input type="text" name="nickname" placeholder="请输入昵称" value="" class="layui-input">
+                <tip>昵称可空，默认为stranger</tip>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">性别</label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" value="保密" title="保密">
+                <input type="radio" name="sex" value="男" title="男">
+                <input type="radio" name="sex" value="女" title="女">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-block">
+                <input type="email" name="email" lay-verify="verifyEmail" placeholder="请输入邮箱" value="" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">身份</label>
+            <div class="layui-input-block">
+                <input type="radio" name="status" value="普通用户" title="普通用户">
+                <input type="radio" name="status" value="管理员" title="管理员">
+            </div>
+        </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">备注信息</label>
+            <div class="layui-input-block">
+                <textarea name="remark" class="layui-textarea" placeholder="请输入备注信息"></textarea>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn layui-btn-normal" lay-submit lay-filter="saveBtn">确认保存</button>
+            </div>
         </div>
     </div>
-</div>
-</div>
-<script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
-<script src="../../static/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
-<script src="../../static/js/admin/useredit.js" charset="utf-8"></script>
-<script>
-    var UserInfo = JSON.parse('{{.UserInfoJson}}')
-</script>
+    </div>
+    <script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script src="../../static/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+    <script src="../../static/js/admin/useredit.js" charset="utf-8"></script>
 </body>
+
 </html>

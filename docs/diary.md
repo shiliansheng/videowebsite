@@ -96,6 +96,11 @@
 layui进行弹窗提示：`layer.msg(result.msg,{icon: 1});`
 
 
+## 2022.3.25
+
+- [ ] 用户列表中的重置，需要添加重置后下方数据表格也重置
+
+
 # app tree
 ```
 roo
