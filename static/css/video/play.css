@@ -1,0 +1,358 @@
+.layui-body {
+	/* border: 1px solid #eee; */
+	display: grid;
+	grid-template-columns: 915px auto;
+}
+
+.video-box {
+	width: 915px;
+	overflow: hidden;
+}
+
+.play-box {
+	width: 100%;
+}
+
+.video-box .play-box #play-video {
+	width: 100%;
+	min-height: 500px;
+}
+
+/******* side list *******/
+.side-list {
+	padding-left: 20px;
+}
+.side-list .list-title {
+	height: 32px;
+	font-size: 18px;
+	color: #000;
+}
+
+.side-list .list-item {
+	display: grid;
+	grid-template-columns: 84px auto;
+	height: 118px;
+	padding: 5px 0;
+	border-bottom: 1px solid #e8e8e8;
+	overflow: hidden;
+}
+
+.list-item .img-box {
+	display: block;
+	overflow: hidden;
+}
+
+.img-box img {
+	width: 100%;
+	height: 100%;
+}
+
+.list-item .item-info {
+	padding-left: 10px;
+	font-size: 12px;
+	line-height: 23px;
+}
+
+.list-item .item-info .item-title {
+	display: block;
+	height: 20px;
+	line-height: 14px;
+	font-size: 14px;
+	color: #0062cc;
+}
+
+.list-item .item-info .item-title:hover {
+	color: #e41749;
+}
+
+.list-item .item-info .info-piece {
+	position: relative;
+	text-indent: 3em;
+}
+.list-item .item-info .info-piece::before {
+	position: absolute;
+	left: -3em;
+	top: 0;
+	font-weight: bold;
+	color: #000;
+}
+
+.list-item .item-info .item-type::before {
+	content: "类型：";
+}
+
+.list-item .item-info .item-score::before {
+	content: "评分：";
+}
+
+.list-item .item-info .item-introduction::before {
+	content: "介绍：";
+}
+
+.list-item .item-info .item-introduction {
+	line-height: 17px;
+	display: -webkit-box !important;
+	text-overflow: ellipsis;
+	word-break: break-all;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 3;
+	overflow: hidden;
+}
+
+/* 处理文字超行 */
+.list-item .item-info .item-title,
+.list-item .item-info .item-type {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/********* video info box ***************/
+
+.video-box .info-box {
+	position: relative;
+	margin: 10px 0;
+}
+
+.info-box .info-title {
+	display: inline-block;
+	height: 40px;
+	letter-spacing: 2px;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.info-box .video-action-box {
+	position: absolute;
+	top: 5px;
+	right: 0;
+}
+.video-action-box .action-item {
+	display: inline-block;
+	padding: 5px 10px;
+	margin-right: 10px;
+	font-size: 20px;
+	font-weight: bold;
+	border-radius: 6px;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.05), 0 0 10px rgba(255, 255, 255, 0.5),
+		0 0 15px rgba(0, 0, 0, 0.15);
+}
+
+.video-action-box .action-active {
+	color: #e41749;
+}
+
+.video-action-box .action-item:hover {
+	color: #e41749;
+	transform: scale(1.1);
+	box-shadow: 0 0 10px rgba(149, 225, 211, 0.5);
+	transition: transform 0.3s;
+}
+.info-box .info-labels {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.info-labels .label-piece {
+	padding: 5px 10px;
+	font-size: 14px;
+	color: #f9fbba;
+	border-radius: 4px;
+	margin-left: 10px;
+}
+
+.info-labels .label-piece:nth-of-type(1) {
+	font-weight: bold;
+	background-color: #e42c64;
+}
+.info-labels .label-piece:nth-of-type(2) {
+	background-color: #39bae8;
+}
+.info-labels .label-piece:nth-of-type(3) {
+	background-color: #57d1c9;
+}
+.info-labels .label-piece:nth-of-type(4) {
+	background-color: #614ad3;
+}
+.info-labels .label-piece:nth-of-type(5) {
+	background-color: #a64942;
+}
+.info-labels .label-piece:nth-of-type(6) {
+	background-color: #c08497;
+}
+.info-labels .label-piece:nth-of-type(7) {
+	background-color: #2a93d4;
+}
+
+.info-box .info-intro {
+	margin: 10px 0;
+}
+
+.info-intro .intro-title {
+	font-size: 16px;
+	margin-bottom: 10px;
+}
+
+.info-intro .intro-content {
+	text-indent: 2em;
+	line-height: 24px;
+}
+
+/********* video operation box ***********/
+
+.video-box .operate-box {
+	margin: 10px 0;
+	padding-top: 10px;
+	border-top: 1px solid #e8e8e8;
+}
+
+.operate-box .operate-item {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 5px 0px;
+	font-size: 16px;
+}
+
+.operate-item .item-title {
+	margin-right: 10px;
+}
+
+.layui-rate {
+	padding: 0;
+}
+
+/********* review box *************/
+.video-box .review-box {
+	margin-top: 10px;
+	border-top: 1px solid #e8e8e8;
+	padding: 10px 0;
+}
+
+.review-box .box-title {
+	height: 40px;
+	line-height: 32px;
+	font-size: 16px;
+}
+
+.review-box .send-box {
+	position: relative;
+	height: 100px;
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+.send-box textarea {
+	width: 90%;
+	height: 100%;
+	border: 1px solid #c8c8c8;
+	resize: none;
+	padding: 10px;
+	font-family: "微软雅黑", "\5B8B\4F53", "\9ED1\4F53", arial, sans-serif;
+	box-sizing: border-box;
+	border-radius: 2px;
+}
+
+.send-box button {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	height: 32px;
+	padding: 0px 20px;
+	border-radius: 2px;
+	line-height: normal;
+}
+
+.review-list {
+	width: 100%;
+	margin: 20px 0;
+}
+
+.review-list .list-title {
+	height: 32px;
+	font-size: 16px;
+}
+
+.review-item {
+	display: grid;
+	grid-template-columns: 60px auto;
+
+	padding: 5px 0;
+}
+
+.review-user .review-userlogo {
+	width: 100%;
+	height: 100px;
+}
+
+.review-userlogo img {
+	display: block;
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+}
+
+.review-item .review-info {
+	position: relative;
+	width: 100%;
+	padding-left: 10px;
+}
+
+.review-info .review-username {
+	color: #9fb083;
+	display: inline-block;
+}
+
+.review-info .review-detail {
+	position: absolute;
+	top: 0;
+	right: 10px;
+	text-align: right;
+}
+
+.review-info .review-content {
+	padding: 10px;
+	padding-right: 100px;
+	min-height: 22px;
+	border-bottom: 1px solid #d8d8d8;
+}
+
+/************ set video player ***********/
+.video-js .vjs-big-play-button {
+	font-size: 2.5em;
+	line-height: 2.3em;
+	height: 2.5em;
+	width: 2.5em;
+	-webkit-border-radius: 2.5em;
+	-moz-border-radius: 2.5em;
+	border-radius: 2.5em;
+	background-color: #73859f;
+	background-color: rgba(115, 133, 159, 0.5);
+	border-width: 0.15em;
+	margin-top: -1.25em;
+	margin-left: -1.75em;
+}
+/* 中间的播放箭头 */
+.vjs-big-play-button .vjs-icon-placeholder {
+	font-size: 1.63em;
+}
+/* 加载圆圈 */
+.vjs-loading-spinner {
+	font-size: 2.5em;
+	width: 2em;
+	height: 2em;
+	border-radius: 1em;
+	margin-top: -1em;
+	margin-left: -1.5em;
+}
+
+/* 暂停时显示按钮 */
+.vjs-paused .vjs-big-play-button,
+.vjs-paused.vjs-has-started .vjs-big-play-button {
+	display: block;
+}
+
+/* 显示当前播放时间 */
+/* .video-js .vjs-time-control {
+	display: block;
+} */

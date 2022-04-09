@@ -4,10 +4,22 @@ body {
 	background-color: #fff;
 	counter-reset: section;
 }
+
+body::before {
+	content: "";
+	position: absolute;
+	width: 100%;
+	left: 0;
+	top: 0;
+	height: 60px;
+	background-color: #f8f8f8;
+	border-bottom: 1px solid #e7e7e7;
+}
 .layui-container {
 	min-width: 1200px;
 	background-color: #fff;
 	padding: 0;
+	padding-bottom: 35px;
 }
 
 .layui-body {
@@ -44,13 +56,6 @@ body {
 .layui-header .layui-nav .layui-nav-item * {
 	color: rgb(82, 82, 82);
 }
-.layui-nav .layui-nav-item a:hover {
-	color: #5fb878;
-}
-
-.user-box a:hover {
-	color: #5fb878;
-}
 
 .layui-nav .layui-this::after,
 .layui-nav-bar {
@@ -75,26 +80,121 @@ body {
 	background-color: transparent;
 }
 
-.layui-nav .user-box {
-	padding-right: 10px;
-	width: 120px;
+.layui-this a {
+	color: #5fb878!important;
+}
+
+.layui-nav .layui-nav-item a {
+	font-weight: bold;
+	font-size: 17px;
+}
+
+.layui-nav .layui-nav-item a:hover {
+	color: #5fb878;
+}
+
+.nav-right-box {
+	display: flex;
+	flex-direction: row;
+}
+
+.nav-right-box:hover ~ .layui-nav-bar {
+	opacity: 0 !important;
+}
+
+/*********************** user box ***********************/
+
+.nav-right-box .user-box {
+	margin: 0 0px 0 20px;
+	min-width: 120px;
 	height: 60px;
 	line-height: 60px;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-around;
+	z-index: 200;
 }
 
-.login-box a {
-	padding: 0 10px;
+.user-box .login-box {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
 }
 
-.search-box {
-	margin-right: 160px;
+.user-box a {
+	padding: 0 5px !important;
+	transition: all 0.3s;
+}
+
+.user-box a:hover {
+	color: #5fb878;
+}
+
+.user-box .layui-nav-img {
+	width: 45px;
+	height: 45px;
+	border-radius: 50%;
+	z-index: 300!important;
+	border: none;
+	transition: all 0.2s;
+}
+
+.user-box .layui-nav-img:hover {
+	transform: scale(1.2);
+	margin-top: 15px;
+}
+
+/***  登陆后菜单  ***/
+
+.layui-nav-child:hover ~ .layui-nav-img {
+	transform: scale(1.2);
+	margin-top: 15px;
+}
+
+.user-box .layui-nav-child {
+	width: 140px;
+	top: 70px;
+	font-size: 16px;
+	font-weight: normal;
+	margin-left: -12px;
+	padding: 5px 5px 10px;
+	backdrop-filter: blur(5px);
+	z-index: 10!important;
+}
+
+.user-box .layui-nav-child dd {
+	text-align: left;
+	border-radius: 4px;
+}
+
+.user-box .layui-nav-child dd:first-of-type {
+	text-align: center;
+	color: #293462;
+	border-bottom: 1px solid #ddd;
+}
+
+.user-box .layui-nav-child a {
+	margin-top: 5px;
+	height: 32px;
+	line-height: 32px;
+	text-indent: 5px;
+}
+
+.user-box .layui-nav-child dd a:hover,
+.user-box .layui-nav-child dd a:hover i {
+	color: #005995;
+	background-color: rgba(206, 239, 228, 0.5);
+}
+
+/************* search box *****************/
+
+.nav-right-box .search-box {
 	width: 360px;
 	height: 60px;
 	line-height: 60px;
 }
+
 .search-box .layui-input {
 	display: inline-block;
 	width: calc(100% - 40px);
@@ -118,4 +218,195 @@ body {
 .search-box .layui-btn:hover,
 .search-box .layui-btn .fa:hover {
 	color: #5fb878;
+}
+
+/************** home and item-box***************/
+#home-carousel {
+	width: 730px;
+	height: 320px;
+}
+
+.side-content {
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 450px;
+	height: 320px;
+}
+
+.side-content .update-list {
+	width: 100%;
+	height: 100%;
+	display: grid;
+	justify-content: space-between;
+	align-content: space-between;
+	grid-template-columns: 220px 220px;
+	overflow: hidden;
+}
+
+.side-content .update-list .update-item {
+	position: relative;
+	display: inline-block;
+	width: 220px;
+	height: 100px;
+	line-height: 24px;
+	border: 1px solid #eee;
+	box-sizing: border-box;
+}
+
+.update-item .img-box {
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	width: 70px;
+	height: 100%;
+	background-color: #888;
+	overflow: hidden;
+}
+.update-item .img-box img {
+	width: 100%;
+	height: 100%;
+}
+.update-item .item-info {
+	padding-left: 75px;
+}
+
+.update-item .item-title {
+	margin-top: 5px;
+	height: 26px;
+	line-height: 26px;
+	color: #000;
+	font-size: 14px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.update-item .item-type {
+	font-size: 12px;
+	color: #888;
+}
+
+.update-item .item-introduction {
+	line-height: 16px;
+	font-size: 12px;
+	color: #888;
+
+	display: -webkit-box !important;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	word-break: break-all;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+}
+
+.module-box {
+	width: 100%;
+}
+
+.module-box .module-title {
+	height: 40px;
+	line-height: 40px;
+	margin: 15px 0;
+	font-size: 20px;
+	text-indent: 0.5em;
+	border-left: 4px solid rgb(6, 126, 173);
+}
+
+.module-box .module-content {
+	display: grid;
+	justify-content: space-between;
+	grid-template-columns: repeat(auto-fill, 162.85px);
+	overflow: hidden;
+}
+
+.module-box .module-content .module-item {
+	border: 1px solid #eee;
+	height: 290px;
+	margin-bottom: 10px;
+	overflow: hidden;
+}
+.module-box .module-content .module-item .item-img-box {
+	position: relative;
+	display: block;
+	width: 100%;
+	height: 241px;
+	overflow: hidden;
+}
+.module-box .module-content .module-item img {
+	width: 100%;
+}
+
+.module-box .module-content .module-item .item-img-box .num-info {
+	position: absolute;
+	display: block;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 28px;
+	line-height: 28px;
+	color: #fff;
+	background-color: rgba(0, 0, 0, 0.5);
+	display: flex;
+	flex-direction: row;
+	justify-content: end;
+	font-weight: bold;
+}
+
+.num-info span {
+	display: inline-block;
+	margin: 0 10px;
+}
+
+.module-box .module-content .module-item .item-info {
+	position: relative;
+	padding-left: 5px;
+	padding-top: 5px;
+	color: rgb(60, 60, 60);
+}
+
+.module-item .item-info .item-title {
+	display: inline-block;
+	width: 130px;
+	line-height: 20px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	cursor: pointer;
+}
+
+.module-item .item-info .item-score {
+	font-size: 15px;
+	color: red;
+	font-weight: bold;
+	position: absolute;
+	right: 7px;
+	top: 5px;
+}
+
+.module-box .module-content .module-item .item-tags {
+	font-size: 12px;
+	color: #888;
+	white-space: nowrap;
+	text-indent: 0.1em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+
+/******* search ******/
+
+.search-title {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 60px;
+	margin-bottom: 10px;
+}
+
+.search-error-info {
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 24px;
+	color: red;
 }

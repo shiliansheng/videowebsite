@@ -12,24 +12,25 @@ CREATE TABLE `vw_videotype` (
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='视频类型表';
 
-INSERT INTO `vw_videotype`(typename, addid) VALUES('剧情', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('喜剧', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('动作', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('爱情', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('惊悚', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('犯罪', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('悬疑', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('战争', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('科幻', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('动画', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('恐怖', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('家庭', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('传记', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('冒险', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('奇幻', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('武侠', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('历史', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('运动', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('音乐', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('记录', 1);
-INSERT INTO `vw_videotype`(typename, addid) VALUES('伦理', 1);
+INSERT INTO `vw_videotype`(typename, addid) VALUES
+('剧情', 1),
+('喜剧', 1),
+('动作', 1),
+('爱情', 1),
+('惊悚', 1),
+('犯罪', 1),
+('悬疑', 1),
+('战争', 1),
+('科幻', 1),
+('动画', 1),
+('恐怖', 1),
+('家庭', 1),
+('传记', 1),
+('冒险', 1),
+('奇幻', 1),
+('武侠', 1),
+('历史', 1),
+('运动', 1),
+('音乐', 1),
+('记录', 1),
+('伦理', 1);

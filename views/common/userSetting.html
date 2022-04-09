@@ -12,26 +12,67 @@
     <link rel="stylesheet" href="../../static/css/custom.css">
     <style>
         .layuimini-container {
-            padding: 25px 0px;
-            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            margin: 30px auto;
+            min-height: 75vh;
+            width: 75vw;
+            min-width: 600px;
+            max-width: 800px;
+            padding: 60px;
+            padding-bottom: 10px;
+            border-radius: 15px;
+        }
+
+        .header {
+            font-size: 24px;
+            padding-bottom: 5px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #aaa;
+        }
+
+        .layui-form {
+            position: relative;
+            width: 80%;
+            max-width: 720px;
+        }
+
+        #user-sex-box {
+            margin-top: -16px;
+        }
+
+        #user-sex-span {
+            display: inline-block;
+            line-height: 36px;
+            text-indent: 0.6em;
+            color: #666;
         }
     </style>
 </head>
 
 <body>
     <div class="layuimini-container">
-        <div class="layui-form layui-row layuimini-form layui-col-md6 layui-col-sm9" lay-filter="userinfo">
-            <div class="layui-form-item">
-                <label class="layui-form-label">昵称</label>
-                <div class="layui-input-block">
-                    <input type="text" name="nickname" placeholder="请输入昵称" value="" class="layui-input">
-                    <tip>昵称可空，默认为stranger</tip>
+        <div class="header">
+            <i class="layui-icon" style="font-size: 24px; font-weight: bold;">&#xe62a;</i> 我的信息
+        </div>
+        <div class="layui-form layui-row layuimini-form" lay-filter="userinfo">
+            <div class="layui-form-item" style="position: absolute; top: 0px; right: 0px">
+                <div class="layui-input-block" style="text-align: right;">
+                    <button class="layui-btn layui-btn-radius" id="modifyBtn">修改信息</button>
+                    <button class="layui-btn layui-btn-radius" id="saveBtn" lay-submit
+                        lay-filter="saveBtn">确认保存</button>
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">头像</label>
+                <label class="layui-form-label">用户昵称</label>
+                <div class="layui-input-block" style="width: 240px">
+                    <input type="text" name="nickname" placeholder="空" value="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户头像</label>
                 <div class="layui-input-block">
-                    <div class="uploadImgBox">
+                    <div class="uploadImgBox" style="margin-left: 10px;">
                         <img src="{{.Userlogo}}" class="uploadImg" id="uploadImg" alt="">
                         <button class="layui-btn uploadImgBtn" id="uploadBtn"></button>
                         <input type="text" name="userlogo" id="userlogoInput" style="display: none;">
@@ -40,35 +81,33 @@
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">出生日期</label>
-                <div class="layui-input-block">
-                    <input type="text" name="birthday" class="layui-input" id="dateselect">
+                <div class="layui-input-block" style="width: 240px">
+                    <input type="text" name="birthday" class="layui-input" id="dateselect" placeholder="空">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">性别</label>
+                <label class="layui-form-label">性&emsp;&emsp;别</label>
                 <div class="layui-input-block">
-                    <input type="radio" name="sex" value="保密" title="保密">
-                    <input type="radio" name="sex" value="男" title="男">
-                    <input type="radio" name="sex" value="女" title="女">
+                    <span id="user-sex-span"></span>
+                    <div id="user-sex-box">
+                        <input type="radio" name="sex" value="保密" title="保密" checked>
+                        <input type="radio" name="sex" value="男" title="男">
+                        <input type="radio" name="sex" value="女" title="女">
+                    </div>
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">邮箱</label>
-                <div class="layui-input-block">
-                    <input type="email" name="email" lay-verify="verifyEmail" placeholder="请输入邮箱" value=""
+                <label class="layui-form-label">用户邮箱</label>
+                <div class="layui-input-block" style="width: 240px">
+                    <input type="email" name="email" lay-verify="verifyEmail" placeholder="无" value=""
                         class="layui-input">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">介绍</label>
-                <div class="layui-input-block">
-                    <textarea name="introduction" class="layui-textarea" rows="2" placeholder="请输入介绍信息"></textarea>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button class="layui-btn layui-btn-normal" id="saveBtn" lay-submit
-                        lay-filter="saveBtn">确认保存</button>
+                <label class="layui-form-label">个人简介</label>
+                <div class="layui-input-block" style="width: 320px">
+                    <textarea name="introduction" class="layui-textarea" rows="2" placeholder="无"
+                        style="resize: none;"></textarea>
                 </div>
             </div>
         </div>

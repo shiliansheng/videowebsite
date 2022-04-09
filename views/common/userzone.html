@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>基本资料</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/css/public.css" media="all">
+    <link rel="stylesheet" href="../../static/css/custom.css">
+    <link rel="stylesheet" href="../../static/css/userzone.css">
+    <script src="../../static/lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
+    <script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script src="../../static/js/lay-config.js?v=1.0.4" charset="utf-8"></script>
+    <script src="../../static/js/common/userzone.js" charset="utf-8"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="nav">
+                <div class="nav-item" data-a="">
+                    <a href="javascript:;"><i class="fa fa-home" aria-hidden="true"></i> 网站首页</a>
+                </div>
+                <div class="nav-item nav-this" data-a="user">
+                    <a href="javascript:;"><i class="fa fa-vcard" aria-hidden="true"></i> 我的信息</a>
+                </div>
+                <div class="nav-item " data-a="infoset">
+                    <a href="javascript:;"><i class="fa fa-cogs" aria-hidden="true"></i> 信息设置</a>
+                </div>
+                <div class="nav-item " data-a="collect">
+                    <a href="javascript:;"><i class="fa fa-star" aria-hidden="true"></i> 我的收藏</a>
+                </div>
+                <div class="nav-item" data-a="history">
+                    <a href="javascript:;"><i class="fa fa-history" aria-hidden="true"></i> 历史记录</a>
+                </div>
+                <div class="nav-item" data-a="password">
+                    <a href="javascript:;"><i class="fa fa-user-secret" aria-hidden="true"></i> 密码设置</a>
+                </div>
+            </div>
+        </header>
+        <div class="main">
+            <div class="main-content layui-anim-upbit layui-anim user-box" for="user">
+                <div class="user-logo-box">
+                    <div class="img-box">
+                        <img src="{{.User.Userlogo}}" alt="">
+                    </div>
+                    <h2>我的头像</h2>
+                </div>
+                <div class="user-info">
+                    <div class="info-piece">
+                        <div class="piece-title">用&ensp;户&ensp;ID</div>
+                        <div class="piece-content">{{.User.Id}}</div>
+                    </div>
+                    <div class="info-piece">
+                        <div class="piece-title">用户昵称</div>
+                        <div class="piece-content">{{.User.Nickname}}</div>
+                    </div>
+                    <div class="info-piece">
+                        <div class="piece-title">性&emsp;&emsp;别</div>
+                        <div class="piece-content">{{.User.Sex}}</div>
+                    </div>
+                    <div class="info-piece">
+                        <div class="piece-title">出生日期</div>
+                        <div class="piece-content">{{.User.Birthday}}</div>
+                    </div>
+                    <div class="info-piece">
+                        <div class="piece-title">个人简介</div>
+                        <div class="piece-content">{{.User.Introduction}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-content layui-anim-upbit layui-anim" for="infoset">
+                <div class="layui-form" lay-filter="userinfo">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block info-btn-box">
+                            <button class="layui-btn layui-btn-radius" lay-submit lay-filter="userinfo-saveBtn">确认修改</button>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用户昵称</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="nickname" placeholder="请输入用户昵称" value="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用户头像</label>
+                        <div class="layui-input-block">
+                            <div class="uploadImgBox">
+                                <img src="{{.User.Userlogo}}" class="uploadImg" id="uploadImg" alt="">
+                                <button class="layui-btn uploadImgBtn" id="uploadBtn"></button>
+                                <input type="text" name="userlogo" id="userlogoInput" style="display: none;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">出生日期</label>
+                        <div class="layui-input-block">
+                            <input type="text" name="birthday" class="layui-input" id="dateselect" placeholder="请设置出生日期">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">性&emsp;&emsp;别</label>
+                        <div class="layui-input-block">
+                            <span id="user-sex-span"></span>
+                            <div id="user-sex-box">
+                                <input type="radio" name="sex" value="保密" title="保密">
+                                <input type="radio" name="sex" value="男" title="男">
+                                <input type="radio" name="sex" value="女" title="女">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">用户邮箱</label>
+                        <div class="layui-input-block">
+                            <input type="email" name="email" lay-verify="verifyEmail" placeholder="请设置用户邮箱" value="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">个人简介</label>
+                        <div class="layui-input-block">
+                            <textarea name="introduction" class="layui-textarea" rows="2" placeholder="请输入用户简介"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="main-content layui-anim-upbit layui-anim collect-box list-box" for="collect">
+            </div>
+            <div class="main-content layui-anim-upbit layui-anim history-box list-box" for="history">
+            </div>
+            <div class="main-content layui-anim-upbit layui-anim" for="password">
+                <div class="layui-form layuimini-form">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block info-btn-box">
+                            <button class="layui-btn layui-btn-radius" lay-submit lay-filter="userpass-saveBtn">确认保存</button>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">旧的密码</label>
+                        <div class="layui-input-block">
+                            <input type="password" name="old_password" lay-verify="required" lay-reqtext="旧的密码不能为空"
+                                placeholder="请输入旧的密码" value="" class="layui-input">
+                            <tip>填写自己账号的旧的密码。</tip>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">新的密码</label>
+                        <div class="layui-input-block">
+                            <input type="password" name="new_password" lay-verify="required|verifyPassword"
+                                lay-reqtext="新的密码不能为空" placeholder="请输入新的密码" value="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label required">新的密码</label>
+                        <div class="layui-input-block">
+                            <input type="password" name="" lay-verify="required|confirmPassword" lay-reqtext="新的密码不能为空"
+                                placeholder="请输入新的密码" value="" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -24,7 +24,7 @@ INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES(110, "1", "主页"
 INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES(130, "1", "用户管理", "fa fa-users", "");
 INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES(140, "1", "视频管理", "fa fa-file-video-o", "");
 INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES(131, "130", "用户列表", "fa fa-user", "userlist.html");
-INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES(141, "140", "类型列表", "fa fa-list-alt", "videotypelist.html");
+-- INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES(141, "140", "类型列表", "fa fa-list-alt", "videotypelist.html");
 INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES(142, "140", "视频列表", "fa fa-list-alt", "videolist.html");
 -- INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES("1", "弹出层", "page/layer.html", "fa fa-shield");
 -- INSERT INTO vw_system_menu(id, pid, title, icon, href) VALUES();

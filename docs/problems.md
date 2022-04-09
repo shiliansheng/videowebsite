@@ -64,3 +64,63 @@ beego "github.com/beego/beego/v2/server/web"
 
 主要问题：获取canvas的内容失败了  
 可以借鉴的东西是使用是，croppers post数据到服务端是使用`FormData`的
+
+
+
+
+## 其他内容
+
+play.js加载内容问题  
+遗留代码：
+```js
+// 获取侧边视频列表
+$.ajax({
+    url: "gethotvideo.json"
+    , type: "GET"
+    , data: { "limit": 10 }
+    , success: function (res) {
+        var sideList = $("#side-video-list"),
+            data = res.data;
+        sideList.html('<div class="list-title">热门电影</div>');
+        for (var i = 0, len = data.size; i < len; i++) {
+            sideList.append(
+                '<li class="list-item">' +
+                '    <a href="/play?id=' + data.id[i] +'" class="img-box">' +
+                '        <img src="' + data.logo[i] +'" alt="">' +
+                '    </a>' +
+                '    <div class="item-info">' +
+                '        <a href="/play?id=' + data.id[i] + '" class="item-title">' + data.name[i] +'</a>' +
+                '        <p class="item-type info-piece">' + data.type[i] +'</p>' +
+                '        <p class="item-score info-piece">' + data.socre[i] +'</p>' +
+                '        <p class="item-introduction info-piece">' + data.introduction[i] +'</p>' +
+                '    </div>' +
+                '</li>'
+            );
+        }
+    }
+});
+// 获取评论列表
+$.ajax({
+    url: "getreview.json"
+    , type: "GET"
+    , data: {"id": id, "limit": "10"}
+    , success: function(res) {
+        var $remarkList = $("#remark-list");
+        $remarkList.html('<div class="list-title">评论列表</div>');
+        for (var i, len = res.Count; i < len; i++) {
+            $remarkList.append(
+                '<li class="remark-item">' +
+                '    <div class="remark-userlogo">' +
+                '        <img src="'+ logo +'" alt="">' +
+                '    </div>' +
+                '    <div class="remark-info">' +
+                '        <div class="remark-username">'+ username +'</div>' +
+                '        <div class="remark-detail">评论发布于 '+ pubtime +'</div>' +
+                '        <div class="remark-content">'+ content +'</div>' +
+                '    </div>' +
+                '</li>',
+            );
+        }
+    }
+});
+```

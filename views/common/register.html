@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../static/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/css/public.css" media="all">
+    <link rel="stylesheet" href="../../static/css/common/register.css">
+
+    <script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script src="../../static/lib/jquery-3.4.1/jquery-3.4.1.min.js" charset="utf-8"></script>
+    <script src="../../static/js/common/register.js" charset="utf-8"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            用户注册
+        </div>
+        <div class="layui-form" lay-filter="userinfo">
+            <div class="layui-form layuimini-form">
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">用&ensp;户&ensp;名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="username" lay-verify="required|verifyUsername" lay-reqtext="用户名不能为空"
+                            placeholder="请输入用户名" value="" class="layui-input">
+                        <div class="uname-unique">
+                            <i class="layui-icon" id="uname-unqiue-label"></i>
+                        </div>
+                        <tip>3到16位，只能由 字母，数字，下划线，减号，@ 组成</tip>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">昵&emsp;&emsp;称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="nickname" lay-verify="required" lay-reqtext="昵称不能为空"
+                            placeholder="请输入昵称" value="" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">密&emsp;&emsp;码</label>
+                    <div class="layui-input-block">
+                        <input type="password" name="password" lay-verify="required|verifyPassword" lay-reqtext="密码不能为空"
+                            placeholder="请输入密码" value="123456" class="layui-input" onfocus="this.select();">
+                        <tip>默认为123456，最少6位，只能由 字母，数字，下划线，减号，特殊符号 组成</tip>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label required">确认密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" lay-verify="required|confirmPassword" lay-reqtext="确认密码不能为空" placeholder="请重新输入密码"
+                            value="" class="layui-input" onfocus="this.select();">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">性&emsp;&emsp;别</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="sex" value="保密" title="保密" checked="">
+                        <input type="radio" name="sex" value="男" title="男">
+                        <input type="radio" name="sex" value="女" title="女">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮&emsp;&emsp;箱</label>
+                    <div class="layui-input-block">
+                        <input type="email" name="email" lay-verify="verifyEmail" placeholder="请输入邮箱" value="" class="layui-input">
+                    </div>
+                </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn layui-btn-radius" id="saveBtn" lay-submit lay-filter="saveBtn"> 注&emsp;册</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

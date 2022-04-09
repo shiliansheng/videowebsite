@@ -1,3 +1,39 @@
+$ = layui.jquery;
+var active = false;
+$(function(){
+    toggleForm()
+    $("#modifyBtn").on("click", function(){
+        toggleForm()
+    })
+});
+
+var toggleForm = function() {
+    if (active) {
+        $("#user-sex-span").text("");
+        $("input").css("border-color", "#eee");
+        $("textarea").css("border-color", "#eee");
+        $("input").removeAttr("disabled")
+        $("textarea").removeAttr("disabled");
+        $("#uploadBtn").removeAttr("disabled");
+        $("#saveBtn").removeClass("layui-btn-disabled");
+        $(".layui-form-radio").removeClass("layui-btn-disabled");
+        $(".layui-form-radio").removeClass("layui-disabled");
+        $(".layui-form-radio").removeClass("layui-radio-disbaled");
+        $("#user-sex-box").show();
+        $(".layui-form-radio").show();
+    } else {
+        $("#user-sex-span").text($(":radio").filter(":checked").attr("value"));
+        $("input").css("border-color", "transparent");
+        $("textarea").css("border-color", "transparent");
+        $("input").attr("disabled", "disabled")
+        $("#uploadBtn").attr("disabled", "disabled")
+        $("textarea").attr("disabled", "disabled");
+        $("#saveBtn").addClass("layui-btn-disabled");
+        $("#user-sex-box").hide();
+        
+    }
+    active = !active;
+}
 layui.use(["form", "miniTab", 'laydate'], function () {
     var form = layui.form,
         layer = layui.layer,
@@ -31,11 +67,12 @@ layui.use(["form", "miniTab", 'laydate'], function () {
         layer.confirm('确认修改?', function () {
             $.ajax({
                 type: "post",
-                url: "user_setting.json?action=update",
+                url: "userzone.json?action=update",
                 data: data.field,
                 success: function (res) {
                     if (res.code == 0) {
                         layer.msg(res.msg, { icon: 1 });
+                        toggleForm()
                     } else {
                         layer.msg(res.msg, { icon: 2 });
                     }

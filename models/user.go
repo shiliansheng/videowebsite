@@ -1,6 +1,7 @@
 package models
 
 import (
+	"log"
 	"net/url"
 	"strconv"
 	"strings"
@@ -26,6 +27,17 @@ type User struct {
 	DeleteAt     time.Time `json:"deleteat,omitempty"`     // 删除时间
 }
 
+type UserInfo struct {
+	Id           int    `json:"id"`
+	Nickname     string `json:"nickname"`
+	Userlogo     string `json:"userlogo,omitempty"`
+	Sex          string `json:"sex"`
+	Email        string `json:"email,omitempty"`
+	Birthday     string `json:"birthday,omitempty"`
+	Introduction string `json:"introduction,omitempty"`
+	Remark       string `json:"remark,omitempty"`
+}
+
 func (c User) GetNickname(name string) string {
 	if name == "" {
 		name = "stranger"
@@ -48,7 +60,7 @@ func (m User) Login(username, password string) RespJson {
 	user := User{Username: username}
 	err := Orm.Read(&user, "username")
 	if err != nil {
-		resp.Msg = "登录失败，用户名或密码错误</br>" + err.Error()
+		resp.Msg = "登录失败，用户名或密码错误</br>" // + err.Error()
 	} else if user.Password == "" {
 		resp.Msg = "登录失败，用户名不存在"
 	} else if user.Password != strings.TrimSpace(password) {
@@ -62,6 +74,19 @@ func (m User) Login(username, password string) RespJson {
 }
 
 // ### 获取INFO操作
+
+// 获取以当前日期为基准的一整周用户注册数量
+//  @return [[]string] 月-日 格式数组
+//  @return [[]int] 当天注册的数量数组
+func (m User) GetWeekRegistData() ([]string, []int) {
+	names, values := []string{}, []int{}
+	_, err := Orm.Raw("SELECT DATE_FORMAT(`create_at`,'%m-%d') AS DATA_TIME, COUNT(*) FROM `"+
+		m.TableName()+"` WHERE `create_at` > ADDDATE(CURDATE(),INTERVAL -6 DAY) GROUP BY DATA_TIME ORDER BY DATA_TIME;").QueryRows(&names, &values)
+	if err != nil {
+		log.Println("获取用户注册数量失败:", err)
+	}
+	return names, values
+}
 
 func (m User) GetUserCount() int {
 	count, _ := Orm.QueryTable(m.TableName()).Count()
@@ -99,15 +124,28 @@ func (m User) getUserList(page, limit int, filterMap map[string]interface{}) ([]
 
 // ### CRUD操作
 
+// 判断用户名是否是唯一的，返回结果true/false在RespJson.Code中
+//  @param  uname [string]
+//  @return [RespJson] true: DO_SUCCESS, false: DO_FALSE
+func (m User) UnameUnique(uname string) RespJson {
+	resp := RespJson{Code: DO_FALSE}
+	user := &User{Username: uname}
+	err := Orm.Read(user, "username")
+	if err != nil {
+		resp.Code = DO_SUCCESS
+	}
+	return resp
+}
+
 // 添加内容为参数
 //  @param  u [User] 待添加User
 //  @return [RespJson]
-func (m User) Add(u User) RespJson {
+func (m User) Add(u *User) RespJson {
 	u.setNickname()
 	resp := RespJson{Code: DO_SUCCESS}
 	timeStr := utils.GetNowTimeString()
-	u.CreateAt, u.UpdateAt = timeStr , timeStr
-	_, err := Orm.Insert(&u)
+	u.CreateAt, u.UpdateAt = timeStr, timeStr
+	_, err := Orm.Insert(u)
 	if err != nil {
 		resp.Code = DO_ERROR
 		resp.Msg = "添加用户失败</br>" + err.Error()
@@ -158,6 +196,23 @@ func (m User) Delete(user User) RespJson {
 		}
 	}
 	return resp
+}
+
+// 根据提供的id获取Userlogo地址
+//  @param  id [int]
+//  @return [string]
+func (m User) GetLogo(id int) string {
+	user := &User{Id: id}
+	err := Orm.Read(user)
+	if err == nil {
+		return user.Userlogo
+	}
+	return ""
+}
+
+func (m User) GetInfo(u *User) error {
+	err := Orm.Read(u)
+	return err
 }
 
 // ### 填充INFO操作

@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"log"
 	"net/url"
 	"strconv"
 	"strings"
@@ -9,24 +10,58 @@ import (
 )
 
 type Video struct {
-	Id            int     `json:"id" orm:"pk"`   // 视频编号
-	Videoname     string  `json:"videoname"`     // 视频名称
-	Classifiction string  `json:"classifiction"` // 视频分类
-	Typename      string  `json:"typename"`      // 视频类型名称
-	Introduction  string  `json:"introduction"`  // 视频介绍
-	Videologo     string  `json:"videologo"`     // 视频图片地址
-	Keywords      string  `json:"keywords"`      // 视频关键字
-	Videoresource string  `json:"videoresource"` // 视频资源地址
-	Copyright     string  `json:"copyright"`     // 版权所有(原创,转载)
-	Username      string  `json:"username"`      // 发布者用户名
-	Pubtime       string  `json:"pubtime"`       // 发布时间
-	Viewnum       int     `json:"viewnum"`       // 视频观看次数
-	Scorenum      int     `json:"scorenum"`      // 视频打分人数
-	Remarknum     int     `json:"remarknum"`     // 视频评论次数
-	Averscore     float64 `json:"averscore"`     // 用户评分平均分
-	Totalscore    int64   `json:"totalscore"`    // 用户评分总分
-	Passed        string  `json:"passed"`        // 审核状态(待审核;通过审核)
-	Recommand     int     `json:"recommand"`     // 视频推荐(0:不推荐,1:推荐)
+	Id             int    `json:"id" orm:"pk"`    // 视频编号
+	Videoname      string `json:"videoname"`      // 视频名称
+	Classification string `json:"classification"` // 视频分类
+	Typename       string `json:"typename"`       // 视频类型名称
+	Introduction   string `json:"introduction"`   // 视频介绍
+	Videologo      string `json:"videologo"`      // 视频图片地址
+	Keywords       string `json:"keywords"`       // 视频关键字
+	Videoresource  string `json:"videoresource"`  // 视频资源地址
+	Copyright      string `json:"copyright"`      // 版权所有(原创,转载)
+	Username       string `json:"username"`       // 发布者用户名
+	Pubtime        string `json:"pubtime"`        // 发布时间
+	Viewnum        int    `json:"viewnum"`        // 视频观看次数
+	Scorenum       int    `json:"scorenum"`       // 视频打分人数
+	Reviewnum      int    `json:"reviewnum"`      // 视频评论次数
+	Averscore      string `json:"averscore"`      // 用户评分平均分
+	Totalscore     int64  `json:"totalscore"`     // 用户评分总分
+	Passed         string `json:"passed"`         // 审核状态(待审核;通过审核)
+	Recommand      int    `json:"recommand"`      // 视频推荐(0:不推荐,1:推荐)
+	CreateAt       string `json:"createat"`       // 创建时间
+	UpdateAt       string `json:"updateat"`       // 更新时间
+}
+
+type VideoShowInfo struct {
+	Id             int    `json:"id" orm:"pk"`    // 视频编号
+	Videoname      string `json:"videoname"`      // 视频名称
+	Classification string `json:"classification"` // 视频分类
+	Typename       string `json:"typename"`       // 视频类型名称
+	Introduction   string `json:"introduction"`   // 视频介绍
+	Videologo      string `json:"videologo"`      // 视频图片地址
+	Viewnum        int    `json:"viewnum"`        // 视频观看次数
+	Keywords       string `json:"keywords"`       // 视频关键字
+	Averscore      string `json:"averscore"`      // 用户评分平均分
+}
+
+type VideoPlayInfo struct {
+	Id             int    `json:"id" orm:"pk"`    // 视频编号
+	Videoname      string `json:"videoname"`      // 视频名称
+	Classification string `json:"classification"` // 视频分类
+	Typename       string `json:"typename"`       // 视频类型名称
+	Introduction   string `json:"introduction"`   // 视频介绍
+	Keywords       string `json:"keywords"`       // 视频关键字
+	Videoresource  string `json:"videoresource"`  // 视频资源地址
+	Averscore      string `json:"averscore"`      // 用户评分平均分
+}
+
+// classification Map
+var ClassificationMap = map[string]string{
+	"movie":   "电影",
+	"cartoon": "卡通",
+	"episode": "剧集",
+	"others":  "其他",
+	"library": "片库",
 }
 
 // ### base function
@@ -37,27 +72,83 @@ func (m Video) TableName() string {
 
 // ### 获取INFO
 
+// 获取video info，video必须含有id
+//  @param  v [*Video] 含有含有id值
+//  @return [error]
+func (m Video) GetInfo(v *Video) error {
+	err := Orm.Read(v)
+	return err
+}
+
+// 获取基础类别视频数量
+//  @return [[]string] 基础类别数组
+//  @return [[]int] 对应的数量
+func (m Video) GetClassificationCount() ([]string, []int) {
+	classes := []string{}
+	counts := []int{}
+	_, err := Orm.Raw("SELECT COUNT(*), `classification` FROM `"+m.TableName()+"` GROUP BY `classification`").QueryRows(&counts, &classes)
+	if err != nil {
+		log.Println("获取基础类别视频数量失败：", err)
+	}
+	for i := range classes {
+		classes[i] = ClassificationMap[classes[i]]
+	}
+	return classes, counts
+}
+
+// 获取以当前日期为基准的一整周视频上传数量
+//  @return [[]string] 月-日 格式数组
+//  @return [[]int] 当天上传的数量数组
+func (m Video) GetWeekUploadData() ([]string, []int) {
+	names, values := []string{}, []int{}
+	_, err := Orm.Raw("SELECT DATE_FORMAT(`create_at`,'%m-%d') AS DATA_TIME, COUNT(*) FROM `"+
+		m.TableName()+"` WHERE `create_at` > ADDDATE(CURDATE(),INTERVAL -6 DAY) GROUP BY DATA_TIME ORDER BY DATA_TIME;").QueryRows(&names, &values)
+	if err != nil {
+		log.Println("获取用户注册数量失败:", err)
+	}
+	return names, values
+}
+
 // 根据观看次数排序，获取前指定数目(num)的视频
 //  @param  num [int] 指定数目
-//  @return [[]Video] video数组 
-func (m Video) GetHotVideos(num int) []Video {
+//  @param  classification [...string]
+//  @return [[]Video] video数组
+func (m Video) GetHotVideos(num int, classification ...string) []Video {
 	videos := []Video{}
-	_, err := Orm.QueryTable(m.TableName()).OrderBy("viewnum").Limit(num).All(&videos)
+	seter := Orm.QueryTable(m.TableName())
+	if len(classification) != 0 {
+		seter = seter.Filter("classification", classification[0])
+	}
+	_, err := seter.OrderBy("-viewnum").Limit(num).All(&videos)
 	if err != nil {
 		fmt.Println("[ERROR]Get hot video list failed:", err)
+	}
+	for i := range videos {
+		videos[i].Classification = ClassificationMap[videos[i].Classification]
 	}
 	return videos
 }
 
-
-func (m Video) GetVideoCount() int {
-	count, _ := Orm.QueryTable(m.TableName()).Count()
+// 获取视频数量，参数为classicition
+//  @param  classicition [...string] 为空则为全部
+//  @return [int]
+func (m Video) GetVideoCount(classicition ...string) int {
+	seter := Orm.QueryTable(m.TableName())
+	if len(classicition) != 0 {
+		seter = seter.Filter("classification", classicition[0])
+	}
+	count, _ := seter.Count()
 	return int(count)
 }
 
+// 获取视频列表
+//  需要提供如下参数，其mapper中如果含有typename键，则将会以+进行分割其值
+//  @param  page [int] 页
+//  @param  limit [int] 每页数量
+//  @param  mapper [map[string]interface{}] 筛选键值对
 func (m Video) GetVideoList(page, limit int, filterMap map[string]interface{}) RespJson {
-	resp := RespJson {
-		Code: DO_SUCCESS,
+	resp := RespJson{
+		Code:  DO_SUCCESS,
 		Count: 0,
 	}
 	list, count, err := m.getVideoList(page, limit, filterMap)
@@ -72,25 +163,234 @@ func (m Video) GetVideoList(page, limit int, filterMap map[string]interface{}) R
 	return resp
 }
 
-func (m Video) getVideoList(page, limit int, mapper map[string]interface{}) ([]Video, int, error) {
+// 获取视频信息列表
+//  需要提供如下参数，其mapper中如果含有typename键，则将会以+进行分割其值
+//  @param  page [int] 页
+//  @param  limit [int] 每页数量
+//  @param  mapper [map[string]interface{}] 筛选键值对
+//  @param  sorts [...string] 排序，其类型为枚举类型：add, rate, view, 默认为update
+//  @param  RespJson.Data=[]VideoShowInfo
+func (m Video) GetSortVideoShowInfoList(page, limit int, filterMap map[string]interface{}, sorts ...string) RespJson {
+	resp := NewRespJson()
+	vshowInfos := []VideoShowInfo{}
+	list, count, err := m.getVideoList(page, limit, filterMap, sorts...)
+	if err != nil {
+		resp.Code = DO_ERROR
+		resp.Msg = "获取视频列表失败<br/>" + err.Error()
+	} else {
+		resp.Code = DO_SUCCESS
+		resp.Msg = "获取视频列表成功"
+		resp.Count = len(list)
+		for _, pie := range list {
+			vshowInfos = append(vshowInfos, *pie.setVideoShowInfo())
+		}
+	}
+	resp.Count = count
+	resp.Data = vshowInfos
+	return *resp
+}
+
+// 获取视频列表
+//  需要提供如下参数，其mapper中如果含有typename键，则将会以+进行分割其值
+//  @param  page [int] 页
+//  @param  limit [int] 每页数量
+//  @param  mapper [map[string]interface{}] 筛选键值对
+//  @param  sorts [...string] 排序，其类型为枚举类型：add, rate, view, 默认为update
+func (m Video) GetSortVideoList(page, limit int, filterMap map[string]interface{}, sorts ...string) VideoRespJson {
+	resp := VideoRespJson{
+		Code:  DO_SUCCESS,
+		Count: 0,
+	}
+	list, count, err := m.getVideoList(page, limit, filterMap, sorts...)
+	if err != nil {
+		resp.Code = DO_ERROR
+		resp.Msg = "获取视频列表失败<br/>" + err.Error()
+	} else {
+		resp.Msg = "获取视频列表成功"
+		resp.Data.Size = len(list)
+		resp.Page = page
+		for _, pie := range list {
+			resp.Data.Id = append(resp.Data.Id, pie.Id)
+			resp.Data.Name = append(resp.Data.Name, pie.Videoname)
+			resp.Data.Type = append(resp.Data.Type, pie.Typename)
+			resp.Data.Logo = append(resp.Data.Logo, pie.Videologo)
+			resp.Data.Score = append(resp.Data.Score, pie.Averscore)
+		}
+	}
+	resp.Count = count
+	return resp
+}
+
+// 获取视频列表
+//  需要提供如下参数，其mapper中如果含有typename键，则将会以+进行分割其值
+//  @param  page [int] 页
+//  @param  limit [int] 每页数量
+//  @param  mapper [map[string]interface{}] 筛选键值对
+//  @param  sorts [...string] 排序，其类型为枚举类型：add, rate, view, 默认为update
+//  @return [[]Video]
+//  @return [int] 排除page和limit影响，返回查询到的数量
+//  @return [error]
+func (m Video) getVideoList(page, limit int, mapper map[string]interface{}, sorts ...string) ([]Video, int, error) {
 	list := []Video{}
 	seter := Orm.QueryTable(m.TableName())
 	for key, value := range mapper {
 		if value == "" {
 			continue
 		}
+		if key == "typename" {
+			pies := strings.Split(value.(string), "+")
+			for _, pie := range pies {
+				if pie == "" {
+					continue
+				}
+				seter = seter.Filter("typename__icontains", pie)
+			}
+		}
 		seter = seter.Filter(key+"__icontains", value)
 	}
 	count, _ := seter.Count()
-	_, err := seter.Limit(limit, limit*(page - 1)).All(&list)
+	if len(sorts) > 0 {
+		if sorts[0] == "add" {
+			seter = seter.OrderBy("-create_at")
+		} else if sorts[0] == "update" {
+			seter = seter.OrderBy("-update_at")
+		} else if sorts[0] == "rate" {
+			seter = seter.OrderBy("-averscore")
+		} else if sorts[0] == "view" {
+			seter = seter.OrderBy("-viewnum")
+		} else {
+			seter = seter.OrderBy("-update_at")
+
+		}
+	}
+	_, err := seter.Limit(limit, limit*(page-1)).All(&list)
 	return list, int(count), err
 }
 
-// ### CRUD
+// ############### CRUD
+
+// 获取视频展示信息，需要提供视频id
+//  @param  id [int]
+//  @return [*VideoShowInfo]
+func (m Video) GetVideoShowInfo(id int) *VideoShowInfo {
+	video := &Video{Id: id}
+	Orm.Read(video)
+	vinfo := video.setVideoShowInfo()
+	return vinfo
+}
+
+// 获取视频播放信息，需要提供视频id
+//  @param  id [int]
+//  @return [*VideoPlayInfo]
+func (m Video) GetVideoPlayInfo(id int) *VideoPlayInfo {
+	video := &Video{Id: id}
+	Orm.Read(video)
+	vinfo := video.setVideoPlayInfo()
+	return vinfo
+}
+
+// video调用，返回VideoShowInfo指针
+//  @return [*VideoShowInfo]
+func (m Video) setVideoShowInfo() *VideoShowInfo {
+	return &VideoShowInfo{
+		Id:             m.Id,
+		Videoname:      m.Videoname,
+		Classification: ClassificationMap[m.Classification],
+		Typename:       m.Typename,
+		Introduction:   m.Introduction,
+		Viewnum:        m.Viewnum,
+		Videologo:      m.Videologo,
+		Keywords:       m.Keywords,
+		Averscore:      m.Averscore,
+	}
+}
+
+// video调用，返回VideoPlayInfo指针
+//  @return [*VideoPlayInfo]
+func (m Video) setVideoPlayInfo() *VideoPlayInfo {
+	return &VideoPlayInfo{
+		Id:             m.Id,
+		Videoname:      m.Videoname,
+		Classification: ClassificationMap[m.Classification],
+		Typename:       m.Typename,
+		Introduction:   m.Introduction,
+		Videoresource:  m.Videoresource,
+		// Viewnum:       m.Viewnum,
+		// Videologo:     m.Videologo,
+		Keywords:  m.Keywords,
+		Averscore: m.Averscore,
+	}
+}
+
+// 增加视频播放量
+//  @param  id [int]
+//  @return [RespJson]
+func (m Video) AddViewnum(id int) RespJson {
+	resp := *NewRespJson()
+	video := &Video{Id: id}
+	if err := Orm.Read(video); err != nil {
+		resp.Msg = "读取视频数据失败"
+		log.Println(resp.Msg, err)
+	} else {
+		video.Viewnum++
+		if _, err := Orm.Update(video); err != nil {
+			resp.Msg = "更新视频数据失败"
+			log.Println(resp.Msg, err)
+		} else {
+			resp.Code = DO_SUCCESS
+		}
+	}
+	return resp
+}
+
+// 增加视频评论数
+//  @param  id [int]
+//  @return [RespJson]
+func (m Video) AddReviewnum(id int) RespJson {
+	resp := *NewRespJson()
+	video := &Video{Id: id}
+	if err := Orm.Read(video); err != nil {
+		resp.Msg = "读取视频数据失败"
+		log.Println(resp.Msg, err)
+	} else {
+		video.Reviewnum++
+		if _, err := Orm.Update(video); err != nil {
+			resp.Msg = "更新视频播放数失败"
+			log.Println(resp.Msg, err)
+		} else {
+			resp.Code = DO_SUCCESS
+		}
+	}
+	return resp
+}
+
+// 更新视频评分
+//  @param  id [int]
+//  @param  score [int]
+//  @return [RespJson]
+func (m Video) UpdateScore(id, score int) RespJson {
+	resp := *NewRespJson()
+	video := &Video{Id: id}
+	if err := Orm.Read(video); err != nil {
+		resp.Msg = "读取视频数据失败"
+		log.Println(resp.Msg, err)
+	} else {
+		video.Scorenum++
+		video.Totalscore = video.Totalscore + int64(score)
+		video.Averscore = fmt.Sprintf("%.01f", float64(video.Totalscore)/float64(video.Scorenum))
+		if _, err := Orm.Update(video); err != nil {
+			resp.Msg = "更新视频评分失败"
+			log.Println(resp.Msg, err)
+		} else {
+			resp.Code = DO_SUCCESS
+		}
+	}
+	return resp
+}
 
 // 添加参数中的视频
 //  @param  v [Video] 待添加的视频
-//  @return [RespJson] 
+//  @return [RespJson]
 func (m Video) Add(v Video) RespJson {
 	resp := RespJson{Code: DO_ERROR}
 	if v.Videoname == "" || v.Videoresource == "" || v.Typename == "" || v.Username == "" {
@@ -99,11 +399,13 @@ func (m Video) Add(v Video) RespJson {
 	}
 	// 设置初始化信息
 	v.Pubtime = utils.GetNowTimeString()
-	v.Passed = "待审核"
-
+	v.Passed = "审核通过"
+	timeStr := utils.GetNowTimeString()
+	v.CreateAt, v.UpdateAt = timeStr, timeStr
 	_, err := Orm.Insert(&v)
 	if err != nil {
 		resp.Msg = "添加视频失败<br/>" + err.Error()
+		log.Println(resp.Msg, err)
 	} else {
 		resp.Code = DO_SUCCESS
 		resp.Msg = "添加成功"
@@ -123,7 +425,8 @@ func (m Video) Update(v Video) RespJson {
 	}
 	_, err := Orm.Update(&v, cols...)
 	if err != nil {
-		resp.Msg =  "更新信息失败<br/>" + err.Error()
+		resp.Msg = "更新信息失败<br/>" + err.Error()
+		log.Println(resp.Msg, err)
 	} else {
 		resp.Msg = "更新信息成功"
 		resp.Code = DO_SUCCESS
@@ -132,13 +435,14 @@ func (m Video) Update(v Video) RespJson {
 }
 
 // 删除参数中的video，只需要提供id属性
-//  @param  v [Video] 
-//  @return [RespJson] 
+//  @param  v [Video]
+//  @return [RespJson]
 func (m Video) Delete(v Video) RespJson {
 	resp := RespJson{Code: DO_ERROR}
 	_, err := Orm.Delete(&v, "id")
 	if err != nil {
 		resp.Msg = "删除类型" + v.Videoname + "失败: " + err.Error()
+		log.Println(resp.Msg, err)
 	} else {
 		resp.Code = DO_SUCCESS
 		resp.Msg = "删除类型" + v.Videoname + "成功"
@@ -150,8 +454,8 @@ func (m Video) Delete(v Video) RespJson {
 
 func (m Video) GetDifCols(v Video) []string {
 	dif := []string{}
-	if m.Classifiction != v.Classifiction {
-		dif = append(dif, "classifiction")
+	if m.Classification != v.Classification {
+		dif = append(dif, "classification")
 	}
 	if m.Typename != v.Typename {
 		dif = append(dif, "typename")
@@ -186,8 +490,8 @@ func (m Video) GetDifCols(v Video) []string {
 	if m.Scorenum != v.Scorenum {
 		dif = append(dif, "scorenum")
 	}
-	if m.Remarknum != v.Remarknum {
-		dif = append(dif, "remarknum")
+	if m.Reviewnum != v.Reviewnum {
+		dif = append(dif, "reviewnum")
 	}
 	if m.Averscore != v.Averscore {
 		dif = append(dif, "averscore")
@@ -205,9 +509,10 @@ func (m Video) GetDifCols(v Video) []string {
 }
 
 func (m *Video) SetVideo(source url.Values) {
-	if value := source.Get("classifiction"); value != "" {
-		m.Classifiction = value
+	if value := source.Get("classification"); value != "" {
+		m.Classification = value
 	}
+	m.Typename = ""
 	for key, value := range source {
 		if strings.HasPrefix(key, "typename") {
 			m.Typename += value[0] + "/"
@@ -247,12 +552,11 @@ func (m *Video) SetVideo(source url.Values) {
 	if value := source.Get("scorenum"); value != "" {
 		m.Scorenum = utils.Atoi(value)
 	}
-	if value := source.Get("remarknum"); value != "" {
-		m.Remarknum = utils.Atoi(value)
+	if value := source.Get("reviewnum"); value != "" {
+		m.Reviewnum = utils.Atoi(value)
 	}
 	if value := source.Get("averscore"); value != "" {
-		aver, _ := strconv.ParseFloat(value, 32)
-		m.Averscore = aver
+		m.Averscore = value
 	}
 	if value := source.Get("totalscore"); value != "" {
 		total, _ := strconv.ParseInt(value, 10, 64)

@@ -4,7 +4,7 @@ CREATE TABLE `vw_video` (
     id              int(11) unsigned NOT NULL   AUTO_INCREMENT      COMMENT '视频编号',
     videoname       varchar(256) NOT NULL       DEFAULT 'untitled'  COMMENT '视频名称',
     typename        varchar(64) NOT NULL                            COMMENT '视频类型名称',
-    classifiction    varchar(32) NOT NULL                            COMMENT '视频分类',
+    classification  varchar(32) NOT NULL                            COMMENT '视频分类',
     introduction    varchar(512)                                    COMMENT '视频介绍',
     videologo       varchar(256)                                    COMMENT '视频图片地址',
     keywords        varchar(256)                                    COMMENT '视频关键字',
@@ -14,26 +14,75 @@ CREATE TABLE `vw_video` (
     pubtime         timestamp                   DEFAULT CURRENT_TIMESTAMP COMMENT '发布时间',
     viewnum         bigint(32)                  DEFAULT '0'         COMMENT '视频观看次数',
     scorenum        bigint(32)                  DEFAULT '0'         COMMENT '视频打分人数',
-    remarknum       bigint(32)                  DEFAULT '0'         COMMENT '视频评论次数',
-    averscore       decimal(32)                 DEFAULT '0'         COMMENT '用户评分平均分',
+    reviewnum       bigint(32)                  DEFAULT '0'         COMMENT '视频评论次数',
+    averscore       decimal(10, 1)              DEFAULT '0'         COMMENT '用户评分平均分',
     totalscore      bigint(64)                  DEFAULT '0'         COMMENT '用户评分总分',
     passed          varchar(8)                  DEFAULT '待审核'    COMMENT '审核状态(待审核;通过审核)',
     recommand       tinyint(1)                  DEFAULT '0'         COMMENT '视频推荐(0:不推荐,1:推荐)',
+    create_at       timestamp NULL              DEFAULT CURRENT_TIMESTAMP     COMMENT '创建时间',
+    update_at       timestamp NULL              DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY(id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='视频表';
-
-INSERT INTO `vw_video`(videoname, classifiction, typename, videoresource, username) VALUES('test video', 'others', '剧情', 'static/store/video/testvideo.mp4', 'admin');
-INSERT INTO `vw_video`(videoname, classifiction, typename, videoresource, username) VALUES('test video', 'others', '剧情', 'static/store/video/testvideo.mp4', 'admin');
-INSERT INTO `vw_video`(videoname, classifiction, typename, videoresource, username) VALUES('test video', 'others', '剧情', 'static/store/video/testvideo.mp4', 'admin');
-INSERT INTO `vw_video`(videoname, classifiction, typename, videoresource, username) VALUES('test video', 'others', '剧情', 'static/store/video/testvideo.mp4', 'admin');
-INSERT INTO `vw_video`(videoname, classifiction, typename, videoresource, username) VALUES('test video', 'others', '剧情', 'static/store/video/testvideo.mp4', 'admin');
-INSERT INTO `vw_video`(videoname, classifiction, typename, videoresource, username) VALUES('test video', 'others', '剧情', 'static/store/video/testvideo.mp4', 'admin');
-INSERT INTO `vw_video`(videoname, classifiction, typename, videoresource, username) VALUES('test video', 'others', '剧情', 'static/store/video/testvideo.mp4', 'admin');
-INSERT INTO `vw_video`(videoname, classifiction, typename, videoresource, username) VALUES('test video', 'others', '剧情', 'static/store/video/testvideo.mp4', 'admin');
-INSERT INTO `vw_video`(videoname, classifiction, typename, videoresource, username) VALUES('test video', 'others', '剧情', 'static/store/video/testvideo.mp4', 'admin');
-INSERT INTO `vw_video`(videoname, classifiction, typename, videoresource, username) VALUES('test video', 'others', '剧情', 'static/store/video/testvideo.mp4', 'admin');
-INSERT INTO `vw_video`(videoname, classifiction, typename, videoresource, username) VALUES('test video', 'others', '剧情', 'static/store/video/testvideo.mp4', 'admin');
-INSERT INTO `vw_video`(videoname, classifiction, typename, videoresource, username) VALUES('test video', 'others', '剧情', 'static/store/video/testvideo.mp4', 'admin');
-INSERT INTO `vw_video`(videoname, classifiction, typename, videoresource, username) VALUES('test video', 'others', '剧情', 'static/store/video/testvideo.mp4', 'admin');
-INSERT INTO `vw_video`(videoname, classifiction, typename, videoresource, username) VALUES('test video', 'others', '剧情', 'static/store/video/testvideo.mp4', 'admin');
-INSERT INTO `vw_video`(videoname, classifiction, typename, videoresource, username) VALUES('test video', 'others', '剧情', 'static/store/video/testvideo.mp4', 'admin');
+-- UPDATE `vw_video` SET viewnum=0, scorenum=0,reviewnum=0,averscore=0,totalscore=0;
+INSERT INTO `vw_video`(videoname, classification, typename, videoresource, videologo, username)VALUES
+('测试视频01', 'movie', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\0.jpg', 'admin'),
+('测试视频02', 'movie', '喜剧', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\1.jpg', 'admin'),
+('测试视频03', 'movie', '传记', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\2.jpg', 'admin'),
+('测试视频04', 'movie', '犯罪', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\3.jpg', 'admin'),
+('测试视频05', 'movie', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\0.jpg', 'admin'),
+('测试视频06', 'movie', '悬疑', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\1.jpg', 'admin'),
+('测试视频07', 'movie', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\2.jpg', 'admin'),
+('测试视频08', 'movie', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\3.jpg', 'admin'),
+('测试视频09', 'movie', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\0.jpg', 'admin'),
+('测试视频00', 'movie', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\1.jpg', 'admin'),
+('测试视频11', 'movie', '喜剧', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\2.jpg', 'admin'),
+('测试视频12', 'movie', '传记', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\3.jpg', 'admin'),
+('测试视频13', 'movie', '犯罪', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\0.jpg', 'admin'),
+('测试视频14', 'movie', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\1.jpg', 'admin'),
+('测试视频15', 'movie', '悬疑', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\2.jpg', 'admin'),
+('测试视频16', 'movie', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\3.jpg', 'admin'),
+('测试视频17', 'movie', '喜剧', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\0.jpg', 'admin'),
+('测试视频18', 'movie', '传记', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\1.jpg', 'admin'),
+('测试视频19', 'movie', '犯罪', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\2.jpg', 'admin'),
+('测试视频10', 'cartoon', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\3.jpg', 'admin'),
+('测试视频21', 'cartoon', '悬疑', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\3.jpg', 'admin'),
+('测试视频22', 'cartoon', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\0.jpg', 'admin'),
+('测试视频23', 'cartoon', '喜剧', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\0.jpg', 'admin'),
+('测试视频24', 'cartoon', '传记', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\1.jpg', 'admin'),
+('测试视频25', 'cartoon', '犯罪', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\1.jpg', 'admin'),
+('测试视频26', 'cartoon', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\2.jpg', 'admin'),
+('测试视频27', 'cartoon', '悬疑', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\2.jpg', 'admin'),
+('测试视频28', 'cartoon', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\3.jpg', 'admin'),
+('测试视频29', 'cartoon', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\3.jpg', 'admin'),
+('测试视频20', 'cartoon', '喜剧', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\0.jpg', 'admin'),
+('测试视频31', 'cartoon', '传记', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\0.jpg', 'admin'),
+('测试视频32', 'cartoon', '犯罪', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\1.jpg', 'admin'),
+('测试视频33', 'cartoon', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\1.jpg', 'admin'),
+('测试视频34', 'cartoon', '悬疑', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\2.jpg', 'admin'),
+('测试视频35', 'cartoon', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\2.jpg', 'admin'),
+('测试视频36', 'cartoon', '喜剧', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\3.jpg', 'admin'),
+('测试视频37', 'cartoon', '传记', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\3.jpg', 'admin'),
+('测试视频38', 'cartoon', '犯罪', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\0.jpg', 'admin'),
+('测试视频39', 'cartoon', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\0.jpg', 'admin'),
+('测试视频30', 'cartoon', '悬疑', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\1.jpg', 'admin'),
+('测试视频41', 'episode', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\1.jpg', 'admin'),
+('测试视频42', 'episode', '奇幻', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\2.jpg', 'admin'),
+('测试视频43', 'episode', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\2.jpg', 'admin'),
+('测试视频44', 'episode', '音乐', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\3.jpg', 'admin'),
+('测试视频45', 'episode', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\3.jpg', 'admin'),
+('测试视频46', 'episode', '奇幻', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\0.jpg', 'admin'),
+('测试视频47', 'episode', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\0.jpg', 'admin'),
+('测试视频48', 'episode', '音乐', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\1.jpg', 'admin'),
+('测试视频49', 'episode', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\1.jpg', 'admin'),
+('测试视频40', 'episode', '伦理', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\2.jpg', 'admin'),
+('测试视频51', 'episode', '奇幻', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\2.jpg', 'admin'),
+('测试视频52', 'episode', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\3.jpg', 'admin'),
+('测试视频53', 'episode', '音乐', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\3.jpg', 'admin'),
+('测试视频54', 'episode', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\0.jpg', 'admin'),
+('测试视频55', 'episode', '伦理', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\0.jpg', 'admin'),
+('测试视频56', 'episode', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\1.jpg', 'admin'),
+('测试视频57', 'episode', '奇幻', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\1.jpg', 'admin'),
+('测试视频58', 'episode', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\2.jpg', 'admin'),
+('测试视频59', 'episode', '音乐', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\2.jpg', 'admin'),
+('测试视频50', 'episode', '剧情', '..\\static\\store\\video\\testvideo.mp4', '..\\static\\store\\image\\video\\3.jpg', 'admin');
+UPDATE vw_video SET introduction = '这是测试介绍：若生命直到这里，从此没有我，我会找个天使替我去爱你';

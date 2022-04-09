@@ -10,20 +10,19 @@
     <link rel="stylesheet" href="../../static/lib/layui-v2.6.3/css/layui.css" media="all">
     <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
     <link rel="stylesheet" href="../../static/css/public.css" media="all">
+    <script src="https://cdn.staticfile.org/echarts/5.3.0/echarts.min.js"></script>
 </head>
 <style>
     .layui-top-box {
         padding: 40px 20px 20px 20px;
-        color: #fff
+        color: #fff;
     }
 
     .panel {
         margin-bottom: 17px;
         background-color: #fff;
         border: 1px solid transparent;
-        border-radius: 3px;
-        -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
-        box-shadow: 0 1px 1px rgba(0, 0, 0, .05)
+        border-radius: 5px;
     }
 
     .panel-body {
@@ -62,6 +61,41 @@
     .main_btn>p {
         height: 40px;
     }
+
+    .chart-box {
+        width: 100%;
+        
+        display: inline-grid;
+        grid-template-columns: auto auto auto;
+        justify-content: space-between;
+        
+        /*display: inline-flex;
+        flex-wrap: wrap;*/
+    }
+
+    .charts {
+        display: inline-block;
+        border-radius: 15px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+        padding: 10px;
+        width: var(33%);
+        min-width: 400px;
+        height: 400px;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    /*
+    #classification-total-chart {
+        width: 400px;
+        height: 400px;
+    }
+    #classification-week-chart
+    , #user-week-chart {
+        width: 800px;
+        height: 400px;
+    }
+    */
 </style>
 
 <body>
@@ -135,9 +169,115 @@
                     </div>
                 </div>
             </div>
+            <div class="chart-box">
+                <div id="classification-total-chart" class="charts"></div>
+                <div id="classification-week-chart" class="charts"></div>
+                <!-- <div id="user-total-chart" class="charts"></div> -->
+                <div id="user-week-chart" class="charts"></div>
+            </div>
         </div>
     </div>
     <script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        option = {
+            title: {
+                text: "视频类型分类统计"
+            },
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                bottom: '0%',
+                left: 'center',
+            },
+            series: [
+                {
+                    name: '数量',
+                    type: 'pie',
+                    radius: ['40%', '70%'],
+                    //top: '20%',
+                    avoidLabelOverlap: false,
+                    itemStyle: {
+                        borderRadius: 10,
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: '40',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: {{.classData }}
+                }
+            ]
+            };
+
+        // 基于准备好的dom，初始化echarts实例
+        var classTotoal = echarts.init(document.getElementById("classification-total-chart"));
+        // 使用刚指定的配置项和数据显示图表。
+        classTotoal.setOption(option);
+
+        var option2 = {
+            title: {
+                text: "视频一周内上传数量统计"
+            },
+            xAxis: {
+                type: 'category',
+                data: {{.weekName }}
+            },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: {{.classWeekValue }},
+            type: 'bar',
+            showBackground: true,
+            backgroundStyle: {
+                color: 'rgba(180, 180, 180, 0.2)'
+            }
+                }
+        ]
+        };
+        var classWeek = echarts.init(document.getElementById("classification-week-chart"));
+        // 使用刚指定的配置项和数据显示图表。
+        classWeek.setOption(option2);
+
+        var option3 = {
+            title: {
+                text: "用户一周内注册数量统计"
+            },
+            xAxis: {
+                type: 'category',
+                data: {{.weekName }}
+            },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                data: {{.userWeekValue }},
+            type: 'bar',
+            showBackground: true,
+            backgroundStyle: {
+                color: 'rgba(180, 180, 180, 0.2)'
+            }
+                }
+        ]
+        };
+        var classWeek = echarts.init(document.getElementById("user-week-chart"));
+        // 使用刚指定的配置项和数据显示图表。
+        classWeek.setOption(option3);
+    </script>
 </body>
 
 </html>

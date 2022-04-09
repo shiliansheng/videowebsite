@@ -1,6 +1,9 @@
 package models
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+)
 
 type VideoType struct {
 	Id          int    `json:"id" orm:"pk"` // video type id 视频类型编号
@@ -20,6 +23,17 @@ func (m VideoType) TableName() string {
 }
 
 // ### 获取INFO
+
+// 获取视频类型总数量
+//  @return [int] 
+//
+func ( m VideoType) GetVideoTypeCount() int {
+	count := 0
+	if err := Orm.Raw("SELECT COUNT(*) FROM `" + m.TableName() + "`;").QueryRow(&count); err != nil {
+		log.Println("获取视频类型失败:", err)
+	}
+	return count
+}
 
 // 获取全部视频类型名称
 //  @return [[]string] 视频类型名称数组

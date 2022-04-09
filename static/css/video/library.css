@@ -1,0 +1,62 @@
+.filter-box {
+	width: 100%;
+	border-bottom: 1px solid #eee;
+	font-size: 14px;
+    color: #333;
+}
+
+.filter-box .filter-row {
+	width: 100%;
+    overflow: hidden;
+    padding: 5px 5px;
+}
+
+.filter-row dt {
+	float: left;
+	width: 40px;
+	height: 27px;
+	line-height: 27px;
+}
+
+.filter-row dd {
+	cursor: pointer;
+	display: inline-block;
+	height: 22px;
+	line-height: 22px;
+	text-align: center;
+	padding: 0px 7px;
+	margin-top: 2px;
+}
+
+.on {
+    color: #fff;
+    background-color: #ff8f00;
+    border-radius: 4px;
+}
+
+.sort-box {
+    width: 100%;
+    padding: 5px;
+}
+
+.sort-box .radio {
+    position: relative;
+    display: inline-block;
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.radio input[type="radio"] {
+    position: relative;
+    top: 2px;
+}
+
+#library-page {
+	width: 100%;
+	text-align: center;
+}
+
+.layui-laypage-curr,
+.layui-laypage-em {
+	background-color: rgb(199, 189, 189);
+}

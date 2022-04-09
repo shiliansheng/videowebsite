@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../static/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/css/public.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/css/video/index.css">
+
+    <script src="../../static/lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
+    <script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script src="../../static/js/video/index.js"></script>
+    <script src="../../static/js/video/home.js"></script>
+</head>
+
+<body>
+    <div class="layui-container layui-layout">
+        {{ template "video/header.tpl" . }}
+        <div class="layui-body">
+            <div class="layui-carousel" id="home-carousel" lay-filter="home-carousel">
+                <div carousel-item="">
+                    <img src="https://p5.toutiaoimg.com/origin/pgc-image/c07270dd9f4f46fea798cbb3721b661c" alt="">
+                    <img src="https://p5.toutiaoimg.com/origin/pgc-image/2baf994824e546bb871190f2f33d4e7e" alt="">
+                    <img src="https://p5.toutiaoimg.com/origin/pgc-image/826f451dfa9a4951bc3ff7b13a3522cb" alt="">
+                    <img src="https://p26.toutiaoimg.com/origin/pgc-image/6166a749a58143c6993c59e3478567eb.jpg" alt="">
+                </div>
+            </div>
+            <div class="side-content">
+                <ul class="update-list">
+                    {{range .TopVideo}}
+                    <li class="update-item">
+                        <a href="/play.html?id={{.Id}}" target="_blank">
+                            <div class="img-box">
+                                <img src="{{.Videologo}}" alt="">
+                            </div>
+                            <div class="item-info">
+                                <p class="item-title">{{.Videoname}}</p>
+                                <p class="item-type">{{.Classification}}</p>
+                                <p class="item-introduction">{{.Introduction}}</p>
+                            </div>
+                        </a>
+                    </li>
+                    {{end}}
+                </ul>
+            </div>
+            <div class="module-box" id="movie-box">
+                <div class="module-title">电影推荐</div>
+                <ul class="module-content">
+                </ul>
+            </div>
+            <div class="module-box" id="episode-box">
+                <div class="module-title">剧集推荐</div>
+                <ul class="module-content">
+                </ul>
+            </div>
+            <div class="module-box" id="cartoon-box">
+                <div class="module-title">动画推荐</div>
+                <ul class="module-content">
+                </ul>
+            </div>
+        </div>
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+            底部固定区域
+        </div>
+    </div>
+</body>
+
+</html>

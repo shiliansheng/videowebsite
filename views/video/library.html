@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../static/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/css/public.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/css/video/library.css">
+    <link rel="stylesheet" href="../../static/css/video/index.css">
+    <script src="../../static/lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
+    <script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script src="../../static/js/video/index.js"></script>
+    <script src="../../static/js/video/library.js"></script>
+</head>
+
+<body>
+    <div class="layui-container layui-layout">
+        {{ template "video/header.tpl" . }}
+        <div class="layui-body">
+            <div class="filter-box">
+                <dl class="filter-row">
+                    <dt class="filter-title">标题:</dt>
+                    <dd data-a="" class="on">全部</dd>
+                    {{range .Typenames}}
+                    <dd data-a="{{.}}">{{.}}</dd>
+                    {{end}}
+                </dl>
+            </div>
+            <div class="sort-box">
+                <div class="radio">
+                    <input type="radio" name="sort" checked="checked" value="">
+                    <span data="">最近更新</span>
+                </div>
+                <div class="radio">
+                    <input type="radio" name="sort" value="add">
+                    <span>添加时间</span>
+                </div>
+                <div class="radio">
+                    <input type="radio" name="sort" value="rate">
+                    <span>评分最高</span>
+                </div>
+            </div>
+
+            <div class="module-box">
+                <ul class="module-content" id="video-module-box">
+                </ul>
+                <div class="pagesap">
+                    <div id="library-page"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+            底部固定区域
+        </div>
+    </div>
+</body>
+<script>
+</script>
+
+</html>

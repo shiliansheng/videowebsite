@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../static/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/css/public.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link href="../../static/lib/video.js-v7.10/video-js.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/video/index.css">
+    <link rel="stylesheet" href="../../static/css/video/play.css">
+
+    <script src="../../static/lib/video.js-v7.10/video.min.js"></script>
+    <script src="../../static/lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
+    <script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script src="../../static/js/video/index.js" charset="utf-8"></script>
+    <script src="../../static/js/video/play.js" charset="utf-8"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="layui-container">
+        <div class="layui-header">
+            <div class="website-logo">VIDEO WEBSITE</div>
+            <ul class="layui-nav" lay-filter="nav-items">
+                <li class="layui-nav-item" id="home"><a href="/">首页</a></li>
+                <li class="layui-nav-item" id="movie"><a href="/movie/">电影</a></li>
+                <li class="layui-nav-item" id="episode"><a href="/episode/">剧集</a></li>
+                <li class="layui-nav-item" id="cartoon"><a href="/cartoon/">动漫</a></li>
+                <li class="layui-nav-item" id="others"><a href="/others/">其他</a></li>
+                <li class="layui-nav-item" id="library"><a href="/library/">片库</a></li>
+                <div class="nav-right-box layui-layout-right">
+                    <li class="search-box ">
+                        <form action="/" method="post">
+                            <input type="text" name="title" placeholder="请输入搜索内容" autocomplete="off"
+                                class="layui-input">
+                            <button class="layui-btn search-btn" lay-submit lay-filter="search-btn"><i
+                                    class="fa fa-search"></i></button>
+                        </form>
+                    </li>
+                    <li class="user-box layui-nav-item">
+                    </li>
+                </div>
+            </ul>
+        </div>
+        <div class="layui-body">
+            <div class="video-box">
+                <div class="play-box">
+                    <video id="play-video" class="video-js vjs-matrix vjs-big-play-centered" controls preload="auto">
+                        <source src="{{.Video.Videoresource}}" type="video/mp4">
+                    </video>
+                </div>
+                <div class="info-box">
+                    <div class="info-title">
+                        {{.Video.Videoname}}
+                    </div>
+                    <div class="video-action-box">
+                        <a href="javascript:;" class="action-item" id="collect-btn"><i class="fa fa-star-half-full" aria-hidden="true"></i></a>
+                        <a href="javascript:;" class="action-item"><i class="fa fa-thumbs-up" aria-hidden="true"></i></a>
+                        <a href="javascript:;" class="action-item"><i class="fa fa-thumbs-down" aria-hidden="true"></i></a>
+                    </div>
+                    <div class="info-labels" id="video-label" data-i="{{.Video.Typename}}">
+                        <div class="label-piece">{{.Video.Averscore}}</div>
+                        <div class="label-piece">{{.Video.Classification}}</div>
+                    </div>
+                    <div class="info-intro">
+                        <div class="intro-title">视频简介</div>
+                        <div class="intro-content">
+                            {{.Video.Introduction}}
+                        </div>
+                    </div>
+                </div>
+                <div class="operate-box">
+                    <div class="operate-item">
+                        <div class="item-title">请给视频打分吧</div>
+                        <div class="item-content">
+                            <div id="video-rate"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-box">
+                    <div class="box-title">发布评论</div>
+                    <div class="send-box">
+                        <textarea name="" id="review-send-content" placeholder="发表你的评论吧。" cols="30"
+                            rows="10"></textarea>
+                        <button type="submit" class="layui-btn layui-btn-normal" id="submit-review-btn">发 布</button>
+                    </div>
+                    <ul class="review-list" id="review-list">
+                        <div class="list-title">评论列表</div>
+                        <div class="list-content" id="review-list-content">
+                            {{range .Reviewlist}}
+                            <li class="review-item">
+                                <div class="review-userlogo">
+                                    <img src="{{.Userlogo}}" alt="">
+                                </div>
+                                <div class="review-info">
+                                    <div class="review-username">{{.Nickname}}</div>
+                                    <div class="review-detail">评论发布于 {{.Pubtime}}</div>
+                                    <div class="review-content">{{.Content}}</div>
+                                </div>
+                            </li>
+                            {{end}}
+                        </div>
+                    </ul>
+                </div>
+            </div>
+            <ul class="side-list" id="side-video-list">
+                <div class="list-title">热门电影</div>
+                <div class="list-content" id="sidevideo-list-content">
+                    {{range .Hotlist}}
+                    <li class="list-item">
+                        <a href="/play?id={{.Id}}" class="img-box">
+                            <img src="{{.Videologo}}" alt="">
+                        </a>
+                        <div class="item-info">
+                            <a href="/play?id={{.Id}}" class="item-title">{{.Videoname}}</a>
+                            <p class="item-type info-piece">{{.Typename}}</p>
+                            <p class="item-score info-piece">{{.Averscore}}</p>
+                            <p class="item-introduction info-piece">{{.Introduction}}</p>
+                        </div>
+                    </li>
+                    {{end}}
+                </div>
+            </ul>
+        </div>
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+            底部固定区域
+        </div>
+    </div>
+</body>
+
+</html>

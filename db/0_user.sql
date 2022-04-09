@@ -19,33 +19,34 @@ CREATE TABLE `vw_user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='系统用户表';
 
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('admin', 'admin', 'superadmin', '超级管理员', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('admin01', '123456', '管理员01', '管理员', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('admin02', '123456', '管理员02', '管理员', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('admin03', '123456', '管理员03', '管理员', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('admin04', '123456', '管理员04', '管理员', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('admin05', '123456', '管理员05', '管理员', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('admin06', '123456', '管理员06', '管理员', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('admin07', '123456', '管理员07', '管理员', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('admin08', '123456', '管理员08', '管理员', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('admin09', '123456', '管理员09', '管理员', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test10', '123456', '普通用户01', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test11', '123456', '普通用户02', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test12', '123456', '普通用户03', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test13', '123456', '普通用户04', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test14', '123456', '普通用户05', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test15', '123456', '普通用户06', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test16', '123456', '普通用户07', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test17', '123456', '普通用户08', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test18', '123456', '普通用户09', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test19', '123456', '普通用户10', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test20', '123456', '普通用户11', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test21', '123456', '普通用户12', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test22', '123456', '普通用户13', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test23', '123456', '普通用户14', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test24', '123456', '普通用户15', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test25', '123456', '普通用户16', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test26', '123456', '普通用户17', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test27', '123456', '普通用户18', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test28', '123456', '普通用户19', '普通用户', '0');
-INSERT INTO vw_user(username, password, nickname, status, state) VALUES('test29', '123456', '普通用户20', '普通用户', '0');
+INSERT INTO vw_user(username, password, nickname, status, state) VALUES
+('admin', 'admin', 'superadmin', '超级管理员', '0'),
+('admin01', '123456', '管理员01', '管理员', '0'),
+('admin02', '123456', '管理员02', '管理员', '0'),
+('admin03', '123456', '管理员03', '管理员', '0'),
+('admin04', '123456', '管理员04', '管理员', '0'),
+('admin05', '123456', '管理员05', '管理员', '0'),
+('admin06', '123456', '管理员06', '管理员', '0'),
+('admin07', '123456', '管理员07', '管理员', '0'),
+('admin08', '123456', '管理员08', '管理员', '0'),
+('admin09', '123456', '管理员09', '管理员', '0'),
+('test10', '123456', '普通用户01', '普通用户', '0'),
+('test11', '123456', '普通用户02', '普通用户', '0'),
+('test12', '123456', '普通用户03', '普通用户', '0'),
+('test13', '123456', '普通用户04', '普通用户', '0'),
+('test14', '123456', '普通用户05', '普通用户', '0'),
+('test15', '123456', '普通用户06', '普通用户', '0'),
+('test16', '123456', '普通用户07', '普通用户', '0'),
+('test17', '123456', '普通用户08', '普通用户', '0'),
+('test18', '123456', '普通用户09', '普通用户', '0'),
+('test19', '123456', '普通用户10', '普通用户', '0'),
+('test20', '123456', '普通用户11', '普通用户', '0'),
+('test21', '123456', '普通用户12', '普通用户', '0'),
+('test22', '123456', '普通用户13', '普通用户', '0'),
+('test23', '123456', '普通用户14', '普通用户', '0'),
+('test24', '123456', '普通用户15', '普通用户', '0'),
+('test25', '123456', '普通用户16', '普通用户', '0'),
+('test26', '123456', '普通用户17', '普通用户', '0'),
+('test27', '123456', '普通用户18', '普通用户', '0'),
+('test28', '123456', '普通用户19', '普通用户', '0'),
+('test29', '123456', '普通用户20', '普通用户', '0');

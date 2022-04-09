@@ -3,8 +3,8 @@ package controllers
 import (
 	"encoding/json"
 	"strconv"
+	"strings"
 	"videowebsite/models"
-	_ "videowebsite/models"
 	"videowebsite/utils"
 )
 
@@ -36,11 +36,17 @@ func (c *AdminController) Login() {
 func (c *AdminController) Index() {
 	ext := c.Ctx.Input.Param(":ext")
 	if ext == "json" {
-
 		c.ServeJSON()
 	} else {
-		c.Data["Nickname"] = c.GetSession("user").(models.User).Nickname
-		c.TplName = "admin/index.html"
+		// video := new (models.Video)
+
+		user := c.GetSession("user").(models.User)
+		if !strings.HasSuffix(user.Status, "管理员") {
+			c.History("您的身份不是管理员", "admin/login.html")
+		} else {
+			c.Data["Nickname"] = user.Nickname
+			c.TplName = "admin/index.html"
+		}
 	}
 }
 
@@ -61,9 +67,23 @@ func (c *AdminController) Clear_api() {
 // homepage
 
 func (c *AdminController) Homepage() {
-	c.Data["UserCount"] = new(models.User).GetUserCount()
-	c.Data["VideoCount"] = new(models.Video).GetVideoCount()
-	c.Data["VideoTypeCount"] = 121
+	tmpVideo := new(models.Video)
+	tmpUser := new(models.User)
+	className, classValue := tmpVideo.GetClassificationCount()
+	pieData := []models.PieStruct{}
+	for i := range className {
+		pieData = append(pieData, models.PieStruct{Name: className[i], Value: classValue[i]})
+	}
+	weekName, classWeekValue := tmpVideo.GetWeekUploadData()
+	_, userWeekValue := tmpUser.GetWeekRegistData()
+	
+	c.Data["UserCount"] = tmpUser.GetUserCount()
+	c.Data["VideoCount"] = tmpVideo.GetVideoCount()
+	c.Data["VideoTypeCount"] = new (models.VideoType).GetVideoTypeCount()
+	c.Data["classData"] = pieData
+	c.Data["weekName"] = weekName
+	c.Data["classWeekValue"] = classWeekValue
+	c.Data["userWeekValue"] = userWeekValue
 	c.TplName = "admin/homepage.html"
 }
 
@@ -91,7 +111,7 @@ func (c *AdminController) Useradd() {
 	if ext == "json" {
 		user := models.User{}
 		user.SetUser(c.Input())
-		resp := user.Add(user)
+		resp := user.Add(&user)
 		c.Data["json"] = resp
 		c.ServeJSON()
 	} else {
@@ -190,7 +210,16 @@ func (c *AdminController) VideoAdd() {
 func (c *AdminController) Videoedit() {
 	ext := c.Ctx.Input.Param(":ext")
 	if ext == "json" {
-
+		action := c.Input().Get("action")
+		if action == "update" {
+			video := models.Video{Id: utils.Atoi(c.Input().Get("id"))}
+			video.GetInfo(&video)
+			var newV models.Video = video
+			newV.SetVideo(c.Input())
+			resp := video.Update(newV)
+			c.Data["json"] = resp
+		}
+		c.ServeJSON()
 	} else {
 		id := c.Input().Get("id")
 		c.Data["Videoid"] = id

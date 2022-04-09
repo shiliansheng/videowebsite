@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../static/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/css/public.css" media="all">
+    <link rel="stylesheet" href="../../static/lib/font-awesome-4.7.0/css/font-awesome.min.css" media="all">
+    <link rel="stylesheet" href="../../static/css/video/library.css">
+    <link rel="stylesheet" href="../../static/css/video/index.css">
+    <script src="../../static/lib/jquery-3.4.1/jquery-3.4.1.min.js"></script>
+    <script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script src="../../static/js/video/library.js"></script>
+    <script src="../../static/js/video/index.js"></script>
+</head>
+
+<body>
+    <div class="layui-container layui-layout">
+        <div class="layui-header">
+            <div class="website-logo">{{.Marker}}</div>
+            <ul class="layui-nav" lay-filter="nav-items">
+                <li class="layui-nav-item" id="home"><a href="/">首页</a></li>
+                <li class="layui-nav-item" id="movie"><a href="/movie/">电影</a></li>
+                <li class="layui-nav-item" id="episode"><a href="/episode/">剧集</a></li>
+                <li class="layui-nav-item" id="cartoon"><a href="/cartoon/">动漫</a></li>
+                <li class="layui-nav-item" id="others"><a href="/others/">其他</a></li>
+                <li class="layui-nav-item" id="library"><a href="/library/">片库</a></li>
+                <li class="search-box layui-layout-right">
+                    <form action="/" method="post">
+                        <input type="text" name="title" placeholder="请输入搜索内容" autocomplete="off" class="layui-input">
+                        <button class="layui-btn search-btn" lay-submit lay-filter="search-btn"><i
+                                class="fa fa-search"></i></button>
+                    </form>
+                </li>
+                <li class="user-box layui-layout-right">
+                    <div class="login-box">
+                        <a href="/login.html">登录</a>
+                        <a href="">注册</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="layui-body">
+            <div class="filter-box">
+                <dl class="filter-row">
+                    <dt class="filter-title">标题:</dt>
+                    <dd data="" class="on">全部</dd>
+                    {{range .Typenames}}
+                    <dd data="{{.}}">{{.}}</dd>
+                    {{end}}
+                </dl>
+            </div>
+            <div class="sort-box">
+                <div class="radio">
+                    <input type="radio" name="sort" checked value="">
+                    <span data="">最近更新</span>
+                </div>
+                <div class="radio">
+                    <input type="radio" name="sort" value="add">
+                    <span>添加时间</span>
+                </div>
+                <div class="radio">
+                    <input type="radio" name="sort" value="rate">
+                    <span>评分最高</span>
+                </div>
+            </div>
+
+            <div class="module-box">
+                <ul class="module-content" id="video-module-box">
+                    
+                </ul>
+                <div class="pagesap" id="library-page"></div>
+            </div>
+
+
+        </div>
+        <div class="layui-footer">
+            <!-- 底部固定区域 -->
+            底部固定区域
+        </div>
+    </div>
+</body>
+
+</html>

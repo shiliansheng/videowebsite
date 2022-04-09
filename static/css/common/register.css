@@ -1,0 +1,42 @@
+.container {
+    width: 640px;
+    margin: 0 auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 15px;
+}
+
+.header {
+    position: relative;
+    width: 100%;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 5px 0;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #888;
+
+    padding-left: 10px;
+}
+
+.layui-form {
+    padding-right: 20px;
+}
+
+
+.uname-unique {
+    display: inline;
+    vertical-align: middle;
+}
+
+#uname-unqiue-label {
+    font-size: 29px;
+}
+
+.layui-input {
+    display: inline-block;
+    width: 280px;
+}
+
+tip {
+    display: block;
+}

@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
@@ -22,6 +23,26 @@ type FileRespJson struct {
 	} `json:"data"`
 }
 
+type VideoRespJson struct {
+	Code  int    `json:"code"`
+	Msg   string `json:"msg"`
+	Count int    `json:"count"` // 总数
+	Page  int    `json:"page"`
+	Data  struct {
+		Size    int      `json:"size"` // 当前限制数目
+		Id      []int    `json:"id"`   // 视频id
+		Name    []string `json:"name"` // 视频名
+		Logo    []string `json:"logo"` // 视频图
+		Type    []string `json:"type"` // 视频类型
+		Score   []string `json:"score"` // 视频评分
+	} `json:"data"`
+}
+
+type PieStruct struct {
+	Name string `json:"name"`
+	Value int `json:"value"`
+}
+
 var Orm orm.Ormer
 
 func init() {
@@ -38,9 +59,10 @@ func init() {
 	if err != nil {
 		fmt.Println("register database(", dbConnStr, ") failed:", err)
 	}
-	orm.RegisterModel(new(SystemMenu), new(User), new(Video), new(VideoType))
+	orm.RegisterModel(new(SystemMenu), new(User), new(Video), new(VideoType), new(Review), new(Score), new(Collect), new(History))
 
 	Orm = orm.NewOrm()
+	log.SetFlags(log.LstdFlags | log.Llongfile)
 }
 
 // 返回带前缀的表名
@@ -49,4 +71,9 @@ func init() {
 func TableName(str string) string {
 	prefix := beego.AppConfig.String("dbprefix")
 	return prefix + "_" + str
+}
+
+// 创建一个Code为错误的指针
+func NewRespJson() *RespJson {
+	return &RespJson{Code: DO_ERROR}
 }

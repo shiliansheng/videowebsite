@@ -8,7 +8,7 @@ layui.use(["form", "miniTab"], function () {
         layer.confirm("是否修改密码?", function () {
             $.ajax({
                 type: "post",
-                url: "user_password.json?action=update",
+                url: "userpwd.json?action=update",
                 data: data.field,
                 success: function (res) {
                     if (res.code == 0) {

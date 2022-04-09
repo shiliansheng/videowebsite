@@ -46,7 +46,31 @@ func (c *CommonController) Userinfo() {
 	c.ServeJSON()
 }
 
-func (c *CommonController) User_setting() {
+
+// 获取登录信息
+//  @method  GET
+//  @return  RespJson{Id, Name, Logo}
+func (c *CommonController) Getlogininfo() {
+	resp := models.RespJson{Code: models.DO_ERROR}
+	userSession := c.GetSession("user")
+	if userSession != nil {
+		user := userSession.(models.User)
+		resp.Code = models.DO_SUCCESS
+		resp.Data = struct {
+			Id   int    `json:"id"`
+			Name string `json:"name"`
+			Logo string `json:"logo"`
+		}{
+			Id:   user.Id,
+			Name: user.Nickname,
+			Logo: user.Userlogo,
+		}
+	}
+	c.Data["json"] = resp
+	c.ServeJSON()
+}
+
+func (c *CommonController) Userzone() {
 	ext := c.Ctx.Input.Param(":ext")
 	if ext == "json" {
 		resp := models.RespJson{}
@@ -63,15 +87,49 @@ func (c *CommonController) User_setting() {
 		c.Data["json"] = resp
 		c.ServeJSON()
 	} else {
-		user := c.GetSession("user").(models.User)
-		bytes, _ := json.Marshal(user)
-		c.Data["UserInfoJson"] = string(bytes)
-		c.Data["Userlogo"] = user.Userlogo
-		c.TplName = "common/userSetting.html"
+		userSession := c.GetSession("user")
+		if userSession == nil {
+			c.History("", "/video/login.html")
+		} else {
+			user := userSession.(models.User)
+			c.Data["User"] = &user
+			collectInfo := new(models.Collect).GetUserCollectList(user.Id)
+			c.Data["CollectInfo"] = collectInfo
+			c.Data["CollectCount"] = len(*collectInfo)
+			c.TplName = "common/userzone.html"
+		}
 	}
 }
 
-func (c *CommonController) User_password() {
+func (c *CommonController) Userset() {
+	ext := c.Ctx.Input.Param(":ext")
+	if ext == "json" {
+		resp := models.RespJson{}
+		action := c.Input().Get("action")
+		if action == "update" {
+			user := c.GetSession("user").(models.User)
+			var newUser models.User = user
+			newUser.SetUser(c.Input())
+			resp = user.Update(newUser)
+			if resp.Code == models.DO_SUCCESS {
+				c.SetSession("user", newUser)
+			}
+		}
+		c.Data["json"] = resp
+		c.ServeJSON()
+	} else {
+		userSession := c.GetSession("user")
+		if userSession == nil {
+			c.History("", "/video/login.html")
+		} else {
+			user := userSession.(models.User)
+			c.Data["Userlogo"] = user.Userlogo
+			c.TplName = "common/userSetting.html"
+		}
+	}
+}
+
+func (c *CommonController) Userpwd() {
 	ext := c.Ctx.Input.Param(":ext")
 	if ext == "json" {
 		action := c.Input().Get("action")
@@ -83,8 +141,12 @@ func (c *CommonController) User_password() {
 			if old_pwd != user.Password {
 				resp.Msg = "旧密码输入不正确"
 			} else {
-				user.Password = new_pwd
-				resp = user.Update(user)
+				var newUser models.User = user
+				newUser.Password = new_pwd
+				resp = user.Update(newUser)
+				if resp.Code == models.DO_SUCCESS {
+					c.SetSession("user", newUser)
+				}
 			}
 		}
 		c.Data["json"] = resp
@@ -94,6 +156,33 @@ func (c *CommonController) User_password() {
 	}
 }
 
+func (c *CommonController) Logout() {
+	c.SetSession("user", nil)
+	c.Data["json"] = models.RespJson{Code: models.DO_SUCCESS}
+	c.ServeJSON()
+}
+
+func (c *CommonController) Register() {
+	ext := c.Ctx.Input.Param(":ext")
+	if ext == "json" {
+		user := models.User{}
+		user.SetUser(c.Input())
+		resp := user.Add(&user)
+		c.Data["json"] = resp
+		if resp.Code == models.DO_SUCCESS {
+			c.SetSession("user", user)
+		}
+		c.ServeJSON()
+	} else {
+		c.TplName = "common/register.html"
+	}
+}
+
+func (c *CommonController) Unameunique() {
+	username := c.Input().Get("username")
+	c.Data["json"] = new(models.User).UnameUnique(username)
+	c.ServeJSON()
+}
 
 // ### video
 
