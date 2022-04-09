@@ -237,7 +237,7 @@ func (c *CommonController) Uploader() {
 				// 使用bufio
 				reader := bufio.NewReader(file)
 				writer := bufio.NewWriter(outfile)
-				buffer := make([]byte, 1024*1024) // 创建1K的缓冲区
+				buffer := make([]byte, 1024) // 创建1K的缓冲区
 				for {
 					_, err := reader.Read(buffer)
 					if err != nil {
