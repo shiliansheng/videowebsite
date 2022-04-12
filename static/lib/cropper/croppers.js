@@ -9,7 +9,7 @@ layui.config({
         ,layer = layui.layer;
     var html = "<link rel=\"stylesheet\" href=\"/static/lib/cropper/cropper.css\">\n" +
         "<div class=\"layui-fluid showImgEdit\" style=\"display: none\">\n" +
-        "    <div class=\"layui-form-item\">\n" +
+        "    <div class=\"layui-form-item\" style=\"margin-top: 10px;\">\n" +
         "        <div class=\"layui-input-inline layui-btn-container\" style=\"width: auto;\">\n" +
         "            <label for=\"cropper_avatarImgUpload\" class=\"layui-btn layui-btn-primary\">\n" +
         "                <i class=\"layui-icon\">&#xe67c;</i>选择图片\n" +
@@ -20,15 +20,15 @@ layui.config({
         "    </div>\n" +
         "    <div class=\"layui-row layui-col-space15\">\n" +
         "        <div class=\"layui-col-xs9\">\n" +
-        "            <div class=\"readyimg\" style=\"height:450px;background-color: rgb(247, 247, 247);\">\n" +
+        "            <div class=\"readyimg\" style=\"height:450px;background-color: rgb(247, 247, 247); \">\n" +
         "                <img src=\"\" >\n" +
         "            </div>\n" +
         "        </div>\n" +
         "        <div class=\"layui-col-xs3\">\n" +
         "            <div class=\"img-preview\" style=\"width:200px;height:200px;overflow:hidden; border: 1px solid #eee;margin:0 auto;\">\n" +
         "            </div>\n" +
-        "            <div class=\"img-preview\" style=\"margin: 45px auto 0;width:200px;height:200px;overflow:hidden;border-radius:50%;border: 1px solid #eee;\">\n" +
-        "            </div>\n" +
+        //"            <div class=\"img-preview\" style=\"margin: 45px auto 0;width:200px;height:200px;overflow:hidden;border-radius:50%;border: 1px solid #eee;\">\n" +
+        //"            </div>\n" +
         "        </div>\n" +
         "    </div>\n" +
         "    <div class=\"layui-row layui-col-space15\">\n" +

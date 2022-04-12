@@ -216,7 +216,7 @@ func (c *AdminController) Videoedit() {
 			video.GetInfo(&video)
 			var newV models.Video = video
 			newV.SetVideo(c.Input())
-			resp := video.Update(newV)
+			resp := video.Update(&newV)
 			c.Data["json"] = resp
 		}
 		c.ServeJSON()
@@ -241,7 +241,7 @@ func (c *AdminController) Videodel() {
 	} else {
 		tmpVideo := models.Video{}
 		for _, id := range idArr {
-			tmpResp := tmpVideo.Delete(models.Video{Id: id})
+			tmpResp := tmpVideo.Delete(&models.Video{Id: id})
 			if tmpResp.Code != models.DO_ERROR {
 				successList = append(successList, id)
 			}
@@ -252,4 +252,11 @@ func (c *AdminController) Videodel() {
 	resp.Data = successList
 	c.Data["json"] = resp
 	c.ServeJSON()
+}
+
+
+// ### post
+
+func (c *AdminController) Postlist() {
+	c.TplName = "admin/postlist.html"
 }

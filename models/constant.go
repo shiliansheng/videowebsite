@@ -8,4 +8,8 @@ const (
 
 	// false
 	DO_FALSE = 1000
+
+	// standard code
+	STD_SUCCESS = 200
+	STD_ERROR   = 201
 )

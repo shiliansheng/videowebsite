@@ -28,6 +28,7 @@ type Video struct {
 	Totalscore     int64  `json:"totalscore"`     // 用户评分总分
 	Passed         string `json:"passed"`         // 审核状态(待审核;通过审核)
 	Recommand      int    `json:"recommand"`      // 视频推荐(0:不推荐,1:推荐)
+	State          int    `json:"state"`          // 视频状态(0: 有效,1:无效)
 	CreateAt       string `json:"createat"`       // 创建时间
 	UpdateAt       string `json:"updateat"`       // 更新时间
 }
@@ -76,7 +77,8 @@ func (m Video) TableName() string {
 //  @param  v [*Video] 含有含有id值
 //  @return [error]
 func (m Video) GetInfo(v *Video) error {
-	err := Orm.Read(v)
+	v.State = 0;
+	err := Orm.Read(v, []string{"id", "state"}...)
 	return err
 }
 
@@ -86,7 +88,7 @@ func (m Video) GetInfo(v *Video) error {
 func (m Video) GetClassificationCount() ([]string, []int) {
 	classes := []string{}
 	counts := []int{}
-	_, err := Orm.Raw("SELECT COUNT(*), `classification` FROM `"+m.TableName()+"` GROUP BY `classification`").QueryRows(&counts, &classes)
+	_, err := Orm.Raw("SELECT COUNT(*), `classification` FROM `"+m.TableName()+"` WHERE `state`=0 GROUP BY `classification`").QueryRows(&counts, &classes)
 	if err != nil {
 		log.Println("获取基础类别视频数量失败：", err)
 	}
@@ -102,7 +104,7 @@ func (m Video) GetClassificationCount() ([]string, []int) {
 func (m Video) GetWeekUploadData() ([]string, []int) {
 	names, values := []string{}, []int{}
 	_, err := Orm.Raw("SELECT DATE_FORMAT(`create_at`,'%m-%d') AS DATA_TIME, COUNT(*) FROM `"+
-		m.TableName()+"` WHERE `create_at` > ADDDATE(CURDATE(),INTERVAL -6 DAY) GROUP BY DATA_TIME ORDER BY DATA_TIME;").QueryRows(&names, &values)
+		m.TableName()+"` WHERE `state`=0 and `create_at` > ADDDATE(CURDATE(),INTERVAL -6 DAY) GROUP BY DATA_TIME ORDER BY DATA_TIME;").QueryRows(&names, &values)
 	if err != nil {
 		log.Println("获取用户注册数量失败:", err)
 	}
@@ -115,7 +117,7 @@ func (m Video) GetWeekUploadData() ([]string, []int) {
 //  @return [[]Video] video数组
 func (m Video) GetHotVideos(num int, classification ...string) []Video {
 	videos := []Video{}
-	seter := Orm.QueryTable(m.TableName())
+	seter := Orm.QueryTable(m.TableName()).Filter("state", 0)
 	if len(classification) != 0 {
 		seter = seter.Filter("classification", classification[0])
 	}
@@ -133,7 +135,7 @@ func (m Video) GetHotVideos(num int, classification ...string) []Video {
 //  @param  classicition [...string] 为空则为全部
 //  @return [int]
 func (m Video) GetVideoCount(classicition ...string) int {
-	seter := Orm.QueryTable(m.TableName())
+	seter := Orm.QueryTable(m.TableName()).Filter("state", 0)
 	if len(classicition) != 0 {
 		seter = seter.Filter("classification", classicition[0])
 	}
@@ -232,7 +234,7 @@ func (m Video) GetSortVideoList(page, limit int, filterMap map[string]interface{
 //  @return [error]
 func (m Video) getVideoList(page, limit int, mapper map[string]interface{}, sorts ...string) ([]Video, int, error) {
 	list := []Video{}
-	seter := Orm.QueryTable(m.TableName())
+	seter := Orm.QueryTable(m.TableName()).Filter("state", 0)
 	for key, value := range mapper {
 		if value == "" {
 			continue
@@ -400,6 +402,7 @@ func (m Video) Add(v Video) RespJson {
 	// 设置初始化信息
 	v.Pubtime = utils.GetNowTimeString()
 	v.Passed = "审核通过"
+	v.State = 0
 	timeStr := utils.GetNowTimeString()
 	v.CreateAt, v.UpdateAt = timeStr, timeStr
 	_, err := Orm.Insert(&v)
@@ -414,18 +417,20 @@ func (m Video) Add(v Video) RespJson {
 }
 
 // 更新旧的video，使用旧的进行调用，参数为新的video
-//  @param  v [Video] 新的video
+//  @param  v [*Video] 新的video
 //  @return [RespJson]
-func (m Video) Update(v Video) RespJson {
-	cols := m.GetDifCols(v)
+func (m Video) Update(v *Video, cols ...string) RespJson {
+	if len(cols) == 0 {
+		cols = m.GetDifCols(*v)
+	}
 	resp := RespJson{Code: DO_ERROR}
 	if len(cols) == 0 {
 		resp.Msg = "信息未更改，更新失败"
 		return resp
 	}
-	_, err := Orm.Update(&v, cols...)
+	_, err := Orm.Update(v, cols...)
 	if err != nil {
-		resp.Msg = "更新信息失败<br/>" + err.Error()
+		resp.Msg = "更新信息失败"
 		log.Println(resp.Msg, err)
 	} else {
 		resp.Msg = "更新信息成功"
@@ -434,19 +439,12 @@ func (m Video) Update(v Video) RespJson {
 	return resp
 }
 
-// 删除参数中的video，只需要提供id属性
-//  @param  v [Video]
+// 删除参数中的video，只需要提供id属性，更改为设置state属性为1
+//  @param  v [*Video]
 //  @return [RespJson]
-func (m Video) Delete(v Video) RespJson {
-	resp := RespJson{Code: DO_ERROR}
-	_, err := Orm.Delete(&v, "id")
-	if err != nil {
-		resp.Msg = "删除类型" + v.Videoname + "失败: " + err.Error()
-		log.Println(resp.Msg, err)
-	} else {
-		resp.Code = DO_SUCCESS
-		resp.Msg = "删除类型" + v.Videoname + "成功"
-	}
+func (m Video) Delete(v *Video) RespJson {
+	v.State = 0
+	resp := v.Update(v, "state")
 	return resp
 }
 

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../static/lib/layui-v2.6.3/css/layui.css" media="all">
+    <link rel="stylesheet" href="../../static/css/public.css" media="all">
+    <link rel="stylesheet" href="../../static/css/custom.css">
+    <!-- <link rel="stylesheet" href="../../static/css/admin/videoadd.css"> -->
+    <script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
+    <script src="../../static/js/admin/postlist.js" charset="utf-8"></script>
+    <title>Document</title>
+    <style>
+        .layuimini-container {
+            padding: 10px 0 10px 0;
+            min-width: 930px;
+        }
+        .main {
+            margin-left: 30px;
+            width: 900px;
+        }
+
+        .box-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 5px 0;
+            padding-left: 5px;
+        }
+
+        .box-item {
+            display: grid;
+            padding: 5px 0px;
+            grid-template-columns: 160px auto;
+            border: 1px solid #eee;
+            border-bottom: none;
+        }
+        .item-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid #eee;
+        }
+
+        .item-content {
+            position: relative;
+            padding-left: 10px;
+        }
+
+        label {
+            display: inline-block;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        input[type=text] {
+            display: inline-block;
+            border: 1px solid #eee;
+            height: 36px;
+            width: 240px;
+            text-indent: 0.5em;
+        }
+
+        .button-box {
+            padding: 10px 0 0 170px;
+        }
+
+        .layui-table-cell {
+            height: auto;
+        }
+
+        #add-post {
+            position: absolute;
+            top: 0;
+            right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layuimini-container">
+        <div class="main">
+            <div class="conent">
+                <div class="box-title">添加海报</div>
+                <div class="box-item">
+                    <div class="item-title">输入视频ID</div>
+                    <div class="item-content">
+                        <input type="text" name="videoid" placeholder="请输入视频ID">
+                        <button class="layui-btn layui-btn-normal" id="add-post">添&emsp;加</button>
+                    </div>
+                </div>
+                <div class="box-item" style="border-bottom: 1px solid #eee;">
+                    <div class="item-title">获取海报图片</div>
+                    <div class="item-content">
+                        <div class="uploadImgBox" style="width: 657px; height: 288px;">
+                            <img src="" alt="" class="uploadImg" id="post-image">
+                            <div class="layui-upload-drag uploadImgBtn" id="post-upload-btn">
+                                <p>点击上传图片，或将图片拖拽到此处</p>
+                            </div>
+                        </div>
+                        <input type="text" name="postlogo" id="post-input" lay-verify="required" lay-reqtext="封面不能为空"
+                            style="display: none;">
+                    </div>
+                </div>
+            </div>
+            <div class="table-box">
+                <div class="box-title">海报列表</div>
+                <table class="layui-hide" id="postlist-table" lay-filter="currentTableFilter"></table>
+            </div>
+        </div>
+</body>
+
+</html>

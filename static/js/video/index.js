@@ -59,14 +59,15 @@ var setNavJump = function () {
  * 获取用户登录后的盒子内容
  * @param  logo 用户头像
  * @param  name 用户名
+ * @param  userid 用户ID
  * @return 返回用户登陆后的盒子内容
  */
-var LoadUserBox = function (logo, name) {
+var LoadUserBox = function (logo, name, userid) {
     return '<a href="javascript:;" class="user-zone"><img src="' + logo + '" class="layui-nav-img"></a>' +
         '<dl class="layui-nav-child">' +
         '    <dd>' + name + '</dd>' +
-        '    <dd><a href="javascript:;" class="user-zone"><i class="fa fa-user" aria-hidden="true"></i> 个人空间</a></dd>' +
-        '    <dd><a href="javascript:;" id="login-out"><i class="fa fa-sign-out" aria-hidden="true"></i> 退出登录</a></dd>' +
+        '    <dd><a href="/userzone.html?id='+ userid +'" target="_blank" class="user-zone"><i class="fa fa-user" aria-hidden="true"></i> 个人空间</a></dd>' +
+        '    <dd><a href="javascript:;" target="_blank" id="login-out"><i class="fa fa-sign-out" aria-hidden="true"></i> 退出登录</a></dd>' +
         '</dl>';
 };
 
@@ -95,9 +96,8 @@ var ResetFilterAndSort = function () {
 
 /******* 
  * 设置用户登陆后的盒子中的链接跳转
- * @param  userid 用户id
  */
-var LoadUserFunc = function (userid) {
+var LoadUserFunc = function () {
     $("#login-out").on('click', function () {
         $.ajax({
             url: "../common/logout.json"
@@ -113,8 +113,8 @@ var LoadUserFunc = function (userid) {
         })
     });
 
-    $(".user-zone").on('click', function () {
-        window.location = '/userzone.html?id=' + userid;
-    });
+    // $(".user-zone").on('click', function () {
+    //     window.location = '/userzone.html?id=' + userid;
+    // });
 };
 

@@ -22,6 +22,7 @@ $(function () {
         success: function (res) {
             if (res.code == 0) {
                 userid = res.data.id;
+                LoadUserFunc();
                 // 设置收藏按钮
                 DoAjax("../video/scorer.json", "GET", {
                     "userid": userid,
@@ -29,7 +30,6 @@ $(function () {
                 }, function (res) {
                     if (res.code == 0) {
                         setVideoRate(true, res.data / 2);
-                        LoadUserFunc();
                     } else {
                         setVideoRate();
                     }
@@ -46,7 +46,7 @@ $(function () {
                 })
 
                 // 设置用户框
-                $(".user-box").eq(0).html(LoadUserBox(res.data.logo, res.data.name))
+                $(".user-box").eq(0).html(LoadUserBox(res.data.logo, res.data.name, userid))
                 $("#review-send-content").attr("placeholder", "发表你的评论吧！");
                 $("#review-send-content").removeAttr("disabled");
             } else {

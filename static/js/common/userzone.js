@@ -171,7 +171,7 @@ var appendListItemToDom = function (obj, prefix, data) {
             '        <img src="' + data[i].videoinfo.videologo + '" alt="">' +
             '    </div>' +
             '    <div class="item-info">' +
-            '        <a href="/play.html?id=' + data[i].videoinfo.videologo + '" class="item-title">' + data[i].videoinfo.videoname + '</a>' +
+            '        <a href="/play.html?id=' + data[i].videoinfo.id + '" class="item-title">' + data[i].videoinfo.videoname + '</a>' +
             '        <div class="item-type"><i class="fa fa-bookmark" aria-hidden="true"></i> ' + data[i].videoinfo.classification + '/' + data[i].videoinfo.typename + '</div>' +
             '        <div class="item-time"><i class="fa fa-clock-o" aria-hidden="true"></i> ' + data[i].pubtime + '</div>' +
             '    </div>' +

@@ -110,10 +110,10 @@ func (c *VideoController) Searcher() {
 	search := c.Input().Get("search")
 	page := 1
 	limit := 999
-	var mapper = map[string]interface{} {
+	var mapper = map[string]interface{}{
 		"videoname": search,
 	}
-	resp := new (models.Video).GetSortVideoShowInfoList(page, limit, mapper)
+	resp := new(models.Video).GetSortVideoShowInfoList(page, limit, mapper)
 	c.Data["json"] = resp
 	c.ServeJSON()
 }
@@ -298,6 +298,40 @@ func (c *VideoController) Deletehistory() {
 	cid := utils.Atoi(c.Input().Get("id"))
 	history := &models.History{Id: cid}
 	resp := history.Delete(history)
+	c.Data["json"] = resp
+	c.ServeJSON()
+}
+
+// ############ post
+
+// json类型进行增删单个post，获取整个post列表
+//  @mathod  POST、GET、DELETE
+//  @param   DELETE: id(postid)
+//  @param   POST(add): postlogo 和 videoid
+//  @return  RespJson, 其中resp.data=id(postid)
+//  @return  GET: RespJson, 其中resp.data=[]post
+func (c *VideoController) Poster() {
+	method := c.Ctx.Request.Method
+	var resp models.RespJson
+	switch method {
+	case "POST":
+		post := &models.Post{
+			Postlogo: c.Input().Get("postlogo"),
+			Videoid: utils.Atoi(c.Input().Get("videoid")),
+		}
+		resp = post.Add(post)
+	case "GET":
+		post := &models.Post{
+			Id:  utils.Atoi(c.Input().Get("id")),
+			Videoid: utils.Atoi(c.Input().Get("videoid")),
+		}
+		resp = post.GetPostList()
+	case "DELETE":
+		post := &models.Post{
+			Id: utils.Atoi(c.Input().Get("id")),
+		}
+		resp = post.Delete(post)
+	}
 	c.Data["json"] = resp
 	c.ServeJSON()
 }

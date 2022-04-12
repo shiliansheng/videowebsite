@@ -28,8 +28,8 @@ $(function () {
         type: "GET",
         success: function (res) {
             if (res.code == 0) {
-                $(".user-box").eq(0).html(LoadUserBox(res.data.logo, res.data.name))
-                LoadUserFunc(res.data.id)
+                $(".user-box").eq(0).html(LoadUserBox(res.data.logo, res.data.name, res.data.id))
+                LoadUserFunc()
             } else {
                 $(".user-box").eq(0).html(LoadLoginBox());
             }

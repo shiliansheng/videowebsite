@@ -210,13 +210,21 @@ func (c *CommonController) Videoinfo() {
 	c.ServeJSON()
 }
 
+// ### post
+
+func (c *CommonController) Postlist() {
+	resp := new(models.Post).GetPostList()
+	c.Data["json"] = resp
+	c.ServeJSON()
+}
+
 // ### file
 
 // 上传文件，调用方式：common/uploader?type=filetype-belong
 func (c *CommonController) Uploader() {
 	typeinfo := strings.Split(c.Input().Get("type"), "-")
 	storepath := beego.AppConfig.String("storepath")
-	resp := models.FileRespJson{Code: models.DO_ERROR}
+	resp := models.FileRespJson{Code: models.STD_ERROR}
 	if len(typeinfo) == 0 {
 		resp.Msg = "请求出错"
 	} else {

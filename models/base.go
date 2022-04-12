@@ -59,7 +59,7 @@ func init() {
 	if err != nil {
 		fmt.Println("register database(", dbConnStr, ") failed:", err)
 	}
-	orm.RegisterModel(new(SystemMenu), new(User), new(Video), new(VideoType), new(Review), new(Score), new(Collect), new(History))
+	orm.RegisterModel(new(SystemMenu), new(User), new(Video), new(VideoType), new(Review), new(Score), new(Collect), new(History), new(Post))
 
 	Orm = orm.NewOrm()
 	log.SetFlags(log.LstdFlags | log.Llongfile)

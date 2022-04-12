@@ -216,11 +216,11 @@ header .nav {
 }
 
 .item-info .item-title {
-	padding-bottom: 18px;
 	font-size: 17px;
 	font-weight: bold;
 	line-height: 24px;
-	height: 48px;
+	height: 51px;
+	margin-bottom: 15px;
 	display: -webkit-box !important;
 	text-overflow: ellipsis;
 	word-break: break-all;
