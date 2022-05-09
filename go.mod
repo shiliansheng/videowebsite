@@ -13,6 +13,7 @@ require (
 )
 
 require (
+	github.com/dchest/captcha v0.0.0-20200903113550-03f5f0333e1f
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
 	golang.org/x/crypto v0.0.0-20210513164829-c07d793c2f9a // indirect

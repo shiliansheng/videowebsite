@@ -7,7 +7,8 @@ const (
 	DO_REMAIN  = 2
 
 	// false
-	DO_FALSE = 1000
+	DO_FALSE         = 1000
+	DO_CAPTCHA_FALSE = 1001
 
 	// standard code
 	STD_SUCCESS = 200

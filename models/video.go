@@ -262,7 +262,6 @@ func (m Video) getVideoList(page, limit int, mapper map[string]interface{}, sort
 			seter = seter.OrderBy("-viewnum")
 		} else {
 			seter = seter.OrderBy("-update_at")
-
 		}
 	}
 	_, err := seter.Limit(limit, limit*(page-1)).All(&list)

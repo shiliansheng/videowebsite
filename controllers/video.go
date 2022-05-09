@@ -3,16 +3,30 @@ package controllers
 import (
 	"videowebsite/models"
 	"videowebsite/utils"
+
+	"github.com/astaxie/beego/cache"
+	"github.com/astaxie/beego/utils/captcha"
 )
 
 type VideoController struct {
 	BaseController
 }
 
+var cpt *captcha.Captcha
+
+func init() {
+	store := cache.NewMemoryCache()
+	cpt = captcha.NewWithFilter("/captcha/", store) //一定要写在构造函数里面，要不然第一次打开页面有可能是X
+	cpt.ChallengeNums = 4
+	cpt.StdWidth = 100
+	cpt.StdHeight = 40
+}
+
 // ################ 网页首页 home页
 func (c *VideoController) Home() {
 	c.Data["TopVideo"] = new(models.Video).GetHotVideos(6)
 	c.Data["RecommandVideo"] = new(models.Video).GetHotVideos(14)
+	c.Data["Carousels"] = new(models.Post).GetPostUrls().Data
 	c.TplName = "video/home.html"
 }
 
@@ -45,13 +59,19 @@ func (c *VideoController) Library() {
 func (c *VideoController) Login() {
 	ext := c.Ctx.Input.Param(":ext")
 	if ext == "json" {
-		resp := new(models.User).Login(c.Input().Get("username"), c.Input().Get("password"))
-		if resp.Code == models.DO_SUCCESS {
-			// user := resp.Data.(models.User)
-			c.SetSession("user", resp.Data)
-			resp.Data = "/"
+		resp := *models.NewRespJson()
+		if !cpt.VerifyReq(c.Ctx.Request) {
+			resp.Code = models.DO_CAPTCHA_FALSE
+			resp.Msg = "验证码错误"
 		} else {
-			resp.Data = nil
+			resp = new(models.User).Login(c.Input().Get("username"), c.Input().Get("password"))
+			if resp.Code == models.DO_SUCCESS {
+				// user := resp.Data.(models.User)
+				c.SetSession("user", resp.Data)
+				resp.Data = "/"
+			} else {
+				resp.Data = nil
+			}
 		}
 		c.Data["json"] = resp
 		c.ServeJSON()
@@ -317,12 +337,12 @@ func (c *VideoController) Poster() {
 	case "POST":
 		post := &models.Post{
 			Postlogo: c.Input().Get("postlogo"),
-			Videoid: utils.Atoi(c.Input().Get("videoid")),
+			Videoid:  utils.Atoi(c.Input().Get("videoid")),
 		}
 		resp = post.Add(post)
 	case "GET":
 		post := &models.Post{
-			Id:  utils.Atoi(c.Input().Get("id")),
+			Id:      utils.Atoi(c.Input().Get("id")),
 			Videoid: utils.Atoi(c.Input().Get("videoid")),
 		}
 		resp = post.GetPostList()

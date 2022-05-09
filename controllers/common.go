@@ -12,6 +12,7 @@ import (
 	"videowebsite/utils"
 
 	"github.com/astaxie/beego"
+	"github.com/dchest/captcha"
 )
 
 type CommonController struct {
@@ -45,7 +46,6 @@ func (c *CommonController) Userinfo() {
 	c.Data["json"] = resp
 	c.ServeJSON()
 }
-
 
 // 获取登录信息
 //  @method  GET
@@ -216,6 +216,12 @@ func (c *CommonController) Postlist() {
 	resp := new(models.Post).GetPostList()
 	c.Data["json"] = resp
 	c.ServeJSON()
+}
+
+// ###### captcha
+
+func (c *CommonController) Captcha() {
+	captcha.Server(140, 38)
 }
 
 // ### file

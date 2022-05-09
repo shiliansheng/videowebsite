@@ -17,6 +17,7 @@ func init() {
 	beego.Router("/play", &controllers.VideoController{}, "*:Play")
 	beego.Router("/userzone", &controllers.CommonController{}, "*:Userzone")
 	beego.Router("/register", &controllers.CommonController{}, "*:Register")
+	// beego.Router("/captcha/*", &controllers.CommonController{}, "*:Captcha")
 	beego.AutoRouter(&controllers.VideoController{})
 
 	// beego.Router("/video/:modulename([\\w]+)[.]?*", &controllers.VideoController{})

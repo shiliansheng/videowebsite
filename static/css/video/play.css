@@ -1,7 +1,7 @@
 .layui-body {
 	/* border: 1px solid #eee; */
 	display: grid;
-	grid-template-columns: 915px auto;
+	grid-template-columns: 915px 285px;
 }
 
 .video-box {
@@ -117,7 +117,7 @@
 .info-box .info-title {
 	display: inline-block;
 	height: 40px;
-	letter-spacing: 2px;
+	letter-spacing: 0px;
 	font-size: 24px;
 	font-weight: bold;
 }

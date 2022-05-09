@@ -55,6 +55,7 @@ $(function () {
                     "placeholder": "请登录后发表评论.",
                     "disabled": "disabled"
                 });
+                setVideoRate(true, 0)
             }
         },
     });

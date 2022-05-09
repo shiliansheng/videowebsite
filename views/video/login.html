@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="../../static/img/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="../../static/lib/layui-v2.6.3/css/layui.css" media="all">
     <link rel="stylesheet" href="../../static/css/common/login.css">
     <script src="../../static/lib/layui-v2.6.3/layui.js" charset="utf-8"></script>
@@ -13,7 +14,6 @@
     <script src="../../static/js/common/login.js" charset="utf-8"></script>
     <title>Document</title>
 </head>
-
 <body>
     <div class="container">
         <div class="login-box">
@@ -30,6 +30,11 @@
                     <label class="layui-icon layui-icon-password" for="password"></label>
                     <input type="password" name="password" lay-verify="required|password" placeholder="请输入密码" autocomplete="off"
                         class="layui-input" value="">
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-icon layui-icon-vercode" for="catptcha"></label>
+                    <input type="text" name="captcha" lay-verify="required" placeholder="请输入验证码" autocomplete="off" class="layui-input" value="">
+                    <div class="captcha-box">{{create_captcha}}</div>
                 </div>
                 <div class="layui-form-item">
                     <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住密码">

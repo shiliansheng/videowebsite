@@ -1,5 +1,5 @@
 <div class="layui-header">
-    <div class="website-logo">VIDEO WEBSITE</div>
+    <a href="/" class="website-logo"><img src="../../static/img/videowebsite.png" alt="" style="height: 98%; padding-bottom: 2px;"></a>
     <ul class="layui-nav" lay-filter="nav-items">
         <li class="layui-nav-item" id="home"><a href="/">首页</a></li>
         <li class="layui-nav-item" id="movie"><a href="javascript:;" data-a="movie">电影</a></li>

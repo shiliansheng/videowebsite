@@ -74,6 +74,27 @@ func (m Post) GetPostList() RespJson {
 	return *resp
 }
 
+// 获取海报链接列表。获取需要展示的海表列表的地址
+//  @return [RespJson] RespJson.Data=[]string (海报地址)
+func (m Post) GetPostUrls() RespJson {
+	resp := NewRespJson()
+	urlList := []string{}
+	list := []Post{}
+	if _, err := Orm.QueryTable(m.TableName()).Filter("state", 0).OrderBy("-pubtime").All(&list); err == nil {
+		resp.Code = DO_SUCCESS
+		resp.Msg = "获取海报列表成功"
+		resp.Count = len(list)
+		for _, pie := range list {
+			urlList = append(urlList, pie.Postlogo)
+		}
+		resp.Data = urlList
+	} else {
+		resp.Msg = "获取海报列表失败"
+		log.Println(resp.Msg, err)
+	}
+	return *resp
+}
+
 // 传递Post指针，必须含有Videoid和Postlogo两项内容
 //  @param  p [*Post]
 //  @return [RespJson]
